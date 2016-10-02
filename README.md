@@ -1,2 +1,2 @@
-# parallex-background-image
-js parallex background-image
+# parallax-background-image
+js parallax background-image

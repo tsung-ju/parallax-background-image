@@ -37,7 +37,7 @@
     image.src = src
   }
 
-  function parallex (elements, from, to) {
+  function parallax (elements, from, to) {
     from = from != null ? from : 0
     to = to != null ? to : 1
     forEachElement(elements, function (element) {
@@ -59,5 +59,5 @@
       })
     })
   }
-  window.parallex = parallex
+  window.parallax = parallax
 }())

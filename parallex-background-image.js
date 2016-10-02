@@ -49,7 +49,7 @@
         pollScrollProgress(element, function (progress) {
           var elementHeight = element.clientHeight
           var elementWidth = element.clientWidth
-          var scaledImageHeight = imageHeight * elementHeight / elementWidth
+          var scaledImageHeight = imageHeight * elementWidth / imageWidth
           var overflowY = scaledImageHeight - elementHeight
           if (overflowY <= 0) return
           var positionY = (from + (to - from) * progress) * overflowY

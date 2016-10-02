@@ -53,7 +53,7 @@
           var overflowY = scaledImageHeight - elementHeight
           if (overflowY <= 0) return
           var positionY = (from + (to - from) * progress) * overflowY
-          positionY = Math.round(positionY / 2 - positionY) + 'px'
+          positionY = Math.round(positionY / 2 - overflowY) + 'px'
           element.style.backgroundPosition = positionX + ' ' + positionY
         })
       })

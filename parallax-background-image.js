@@ -67,7 +67,7 @@
 
           var positionY = startPositionY + deltaPositionY * progress
 
-          element.style.backgroundPosition = positionX + ' ' + Math.round(positionY) + 'px'
+          element.style.backgroundPosition = '0' + ' ' + Math.round(positionY) + 'px'
         })
       })
     })

@@ -46,7 +46,6 @@
       var url = parseCssUrl(backgroundImage)
       var cssSize = style.getPropertyValue('background-size')
       var cssPosition = style.getPropertyValue('background-position')
-      var positionX = cssPosition.split(' ')[0]
       getImageSize(url, function (imageWidth, imageHeight) {
         pollScrollProgress(element, function (progress) {
           var elementHeight = element.clientHeight

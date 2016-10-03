@@ -43,7 +43,8 @@
     forEachElement(elements, function (element) {
       var style = window.getComputedStyle(element)
       var backgroundImage = style.getPropertyValue('background-image')
-      var positionX = style.getPropertyValue('background-position').split(' ')[0]
+      var cssPosition = style.getPropertyValue('background-position')
+      var positionX = cssPosition.split(' ')[0]
       var url = parseCssUrl(backgroundImage)
       getImageSize(url, function (imageWidth, imageHeight) {
         pollScrollProgress(element, function (progress) {
@@ -52,11 +53,14 @@
           
           var scaledImageHeight = imageHeight * elementWidth / imageWidth
           
+          if (scaledImageHeight <= elementHeight) {
+              element.style.backgroundPosition = cssPosition
+              return
+          }
+          
           var startOffset = from * scaledImageHeight
           var deltaOffset = (to - from) * scaledImageHeight
-          
-          if (Math.abs(deltaOffset) <= elementHeight) return
-          
+           
           var startPositionY = -fromOffset + (-elementHeight) / 2 + scaledImageHeight / 2
           var deltaPositionY = elementHeight - deltaOffset
           var positionY = startPositionY + deltaPositionY * progress

@@ -49,12 +49,19 @@
         pollScrollProgress(element, function (progress) {
           var elementHeight = element.clientHeight
           var elementWidth = element.clientWidth
+          
           var scaledImageHeight = imageHeight * elementWidth / imageWidth
-          var overflowY = scaledImageHeight - elementHeight
-          if (overflowY <= 0) return
-          var positionY = (from + (to - from) * progress) * overflowY
-          positionY = Math.round(positionY / 2 - overflowY) + 'px'
-          element.style.backgroundPosition = positionX + ' ' + positionY
+          
+          var startOffset = from * scaledImageHeight
+          var deltaOffset = (to - from) * scaledImageHeight
+          
+          if (Math.abs(deltaOffset) <= elementHeight) return
+          
+          var startPositionY = -fromOffset + (-elementHeight) / 2 + scaledImageHeight / 2
+          var deltaPositionY = elementHeight - deltaOffset
+          var positionY = startPositionY + deltaPositionY * progress
+          
+          element.style.backgroundPosition = positionX + ' ' + Math.round(positionY) + 'px'
         })
       })
     })

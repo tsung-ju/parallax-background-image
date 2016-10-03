@@ -18,12 +18,12 @@ could be:
 
 ### fromPosition
 
-position appear first
+position appears first when scrolling down
 
 0 means top of the image, 1 means bottom of the image.
 
 ### toPosition
-position appear last
+position appears last
 
 ## Example
 

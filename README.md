@@ -18,13 +18,12 @@ could be:
 
 ### fromPosition
 
-position appear first.
+position appear first
 
 0 means top of the image, 1 means bottom of the image.
 
 ### toPosition
-position appear last.
-
+position appear last
 
 ## Example
 
@@ -33,6 +32,6 @@ parallax('.target', 0.2, 0.4)
 ```
 
 ```javascript
-var target = document.querySelectorAll('.target')
-parallax(target, 1, 0.2)
+var targets = document.querySelectorAll('.target')
+parallax(targets, 1, 0.2)
 ```

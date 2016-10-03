@@ -19,7 +19,7 @@
     function poll () {
       var rect = element.getBoundingClientRect()
       var height = rect.bottom - rect.top
-      var progress = rect.bottom / (height + window.innerHeight)
+      var progress = 1 - rect.bottom / (height + window.innerHeight)
       if (progress > 0 && progress < 1 && progress !== lastProgress) {
         lastProgress = progress
         callback(progress)

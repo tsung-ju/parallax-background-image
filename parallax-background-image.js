@@ -13,63 +13,77 @@
     return str.match(/url\(['"]?(.*?)['"]?\)/)[1]
   }
 
-  function pollScrollProgress (element, callback) {
-    var lastProgress = null
-
-    function poll () {
-      var rect = element.getBoundingClientRect()
-      var height = rect.bottom - rect.top
-      var progress = 1 - rect.bottom / (height + window.innerHeight)
-      if (progress > 0 && progress < 1 && progress !== lastProgress) {
-        lastProgress = progress
-        callback(progress)
-      }
-      window.requestAnimationFrame(poll)
-    }
-    poll()
-  }
-
-  function getImageSize (src, callback) {
+  function loadImage (src, callback) {
     var image = new Image()
     image.onload = function () {
-      callback(image.naturalWidth, image.naturalHeight)
+      callback(image)
     }
     image.src = src
   }
 
-  function parallax (elements, from, to) {
+  function Parallax (wrapper, perspective) {
+    perspective = perspective != null ? perspective : 1000
+
+    if (typeof wrapper === 'string') wrapper = document.querySelector(wrapper)
+
+    wrapper.style.position = 'fixed'
+    wrapper.style.top = '0'
+    wrapper.style.right = '0'
+    wrapper.style.bottom = '0'
+    wrapper.style.left = '0'
+    wrapper.style.overflowY = 'scroll'
+    wrapper.style.perspective = perspective.toString() + 'px'
+    wrapper.style.perspectiveOrigin = '0 0'
+
+    this.perspective = perspective
+  }
+
+  Parallax.prototype.injectBackground = function (target, from, to) {
     from = from != null ? from : 0
     to = to != null ? to : 1
-    forEachElement(elements, function (element) {
+
+    var perspective = this.perspective
+
+    forEachElement(target, function (element) {
       var style = window.getComputedStyle(element)
+      if (style.getPropertyValue('position') === 'static') {
+        element.style.position = 'relative'
+      }
+      element.style.overflow = 'hidden'
       var backgroundImage = style.getPropertyValue('background-image')
       var url = parseCssUrl(backgroundImage)
-      var cssSize = style.getPropertyValue('background-size')
-      var cssPosition = style.getPropertyValue('background-position')
-      getImageSize(url, function (imageWidth, imageHeight) {
-        pollScrollProgress(element, function (progress) {
-          var elementHeight = element.clientHeight
-          var elementWidth = element.clientWidth
 
-          var scaledImageHeight = imageHeight * elementWidth / imageWidth
+      loadImage(url, function (image) {
+        image.style.position = 'absolute'
+        image.style.left = '0'
+        image.style.top = '0'
+        image.style.width = '100%'
+        image.style.height = 'auto'
+        image.style.transformOrigin = '0 0 0'
+        image.style.pointerEvents = 'none'
 
-          if (scaledImageHeight <= elementHeight) {
-            element.style.backgroundSize = cssSize
-            element.style.backgroundPosition = cssPosition
-            return
-          }
+        function updateTransform () {
+          var rect = element.getBoundingClientRect()
+          var fromPosition = from * image.clientHeight
+          var toPosition = to * image.clientHeight
+          var delta = toPosition - fromPosition
+          var translateZ = perspective * (delta - rect.height) / (delta + window.innerHeight)
+          var scale = (perspective - translateZ) / perspective
+          var translateY = rect.height - scale * toPosition
+          var translateX = rect.left * (-translateZ) / perspective
+          image.style.transform =
+              'translateX(' + Math.round(translateX) + 'px)' + ' ' +
+              'translateY(' + Math.round(translateY) + 'px)' + ' ' +
+              'translateZ(' + Math.round(translateZ) + 'px)' + ' ' +
+              'scale(' + scale + ',' + scale + ')'
+          window.requestAnimationFrame(updateTransform)
+        }
 
-          element.style.backgroundSize = elementWidth + 'px' + ' ' + 'auto'
+        updateTransform()
 
-          var startPositionY = -from * scaledImageHeight
-          var deltaPositionY = elementHeight - (to - from) * scaledImageHeight
-
-          var positionY = startPositionY + deltaPositionY * progress
-
-          element.style.backgroundPosition = '0' + ' ' + Math.round(positionY) + 'px'
-        })
+        element.insertBefore(image, element.firstChild)
       })
     })
   }
-  window.parallax = parallax
+  window.Parallax = Parallax
 }())

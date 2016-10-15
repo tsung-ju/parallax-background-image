@@ -17,6 +17,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       _extends(viewport.style, {
         overflowY: 'scroll',
+        transformStyle: 'flat',
         perspective: perspective + 'px',
         perspectiveOrigin: '0 0'
       });

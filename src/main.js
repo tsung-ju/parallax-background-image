@@ -5,6 +5,7 @@
 
       Object.assign(viewport.style, {
         overflowY: 'scroll',
+        transformStyle: 'flat',
         perspective: perspective + 'px',
         perspectiveOrigin: '0 0'
       })

@@ -13,7 +13,7 @@
       this.perspective = perspective
     }
 
-    add (elements, initialPosition = '0px', velocityScale = 0.8, createBackground = Parallax.before) {
+    add (elements, velocityScale = 0.8, backgroundPosition = '0px', createBackground = Parallax.before) {
       if (velocityScale < 0) throw new RangeError('velocityScale must be positive')
 
       forEachElement(elements, element => {
@@ -28,28 +28,29 @@
           Object.assign(style, {
             position: 'absolute',
             left: '0',
-            top: '0',
+            top: backgroundPosition,
             width: '100%',
             transformOrigin: '0 0 0',
             pointerEvents: 'none'
           })
 
           let lastWidth = null
+          let lastHeight = null
           let lastLeft = null
           const updateStyle = () => {
-            const {width, left} = element.getBoundingClientRect()
-            if (lastWidth !== width || lastLeft !== left) {
-              lastLeft = left
+            const {width, height, left} = element.getBoundingClientRect()
+            if (lastWidth !== width || lastHeight !== height || lastLeft !== left) {
               lastWidth = width
+              lastHeight = height
+              lastLeft = left
 
               const backgroundHeight = image.naturalHeight * (width / image.naturalWidth)
-
               const scale = 1 / velocityScale
 
               style.height = backgroundHeight + 'px'
               style.transform = `
                 translateX(${left * (scale - 1)}px)
-                translateY(calc((100vh + ${initialPosition}) * ${scale} - 100vh))
+                translateY(calc((50vh - 50%) * ${scale} - (50vh - ${height})))
                 translateZ(${this.perspective * (1 - scale)}px)
                 scale(${scale}, ${scale})`
             }

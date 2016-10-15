@@ -21,7 +21,7 @@
         if (elementStyle.position === 'static') {
           element.style.position = 'relative'
         }
-        elementStyle.overflowY = 'hidden'
+        element.style.overflowY = 'hidden'
         loadImage(parseCssUrl(elementStyle.backgroundImage), image => {
           const style = createBackground(element, image)
 

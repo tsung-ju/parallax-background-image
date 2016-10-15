@@ -1,6 +1,6 @@
 (function () {
   class Parallax {
-    constructor (viewport = document.body, perspective = 1000) {
+    constructor (viewport, perspective = 1000) {
       if (typeof viewport === 'string') viewport = document.querySelector(viewport)
 
       Object.assign(viewport.style, {

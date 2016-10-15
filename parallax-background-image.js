@@ -42,7 +42,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (elementStyle.position === 'static') {
             element.style.position = 'relative';
           }
-          element.style.overflowY = 'hidden';
+          element.style.overflow = 'hidden';
           loadImage(parseCssUrl(elementStyle.backgroundImage), function (image) {
             var style = createBackground(element, image);
 

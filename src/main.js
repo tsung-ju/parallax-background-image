@@ -34,15 +34,17 @@
             pointerEvents: 'none'
           })
 
+          let cache = []
           let lastWidth = null
           let lastHeight = null
           let lastLeft = null
+          let lastViewportHeight = null
           const updateStyle = () => {
             const {width, height, left} = element.getBoundingClientRect()
-            if (lastWidth !== width || lastHeight !== height || lastLeft !== left) {
-              lastWidth = width
-              lastHeight = height
-              lastLeft = left
+            const viewportHeight = this.viewport.clientHeight
+            const deps = [width, height, left, viewportHeight]
+            if (deps.some((dep, i) => cache[i] !== dep)) {
+              cache = deps
 
               const backgroundHeight = image.naturalHeight * (width / image.naturalWidth)
               const scale = 1 / velocityScale
@@ -50,7 +52,7 @@
               style.height = backgroundHeight + 'px'
               style.transform = `
                 translateX(${left * (scale - 1)}px)
-                translateY(calc((50vh - 50%) * ${scale} - (50vh - ${height}px)))
+                translateY(${((viewportHeight - backgroundHeight) * scale -  (viewportHeight - height)) / 2}px)
                 translateZ(${this.perspective * (1 - scale)}px)
                 scale(${scale}, ${scale})`
             }

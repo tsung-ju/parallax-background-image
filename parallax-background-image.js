@@ -55,9 +55,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               pointerEvents: 'none'
             });
 
+            var cache = [];
             var lastWidth = null;
             var lastHeight = null;
             var lastLeft = null;
+            var lastViewportHeight = null;
             var updateStyle = function updateStyle() {
               var _element$getBoundingC = element.getBoundingClientRect();
 
@@ -65,16 +67,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               var height = _element$getBoundingC.height;
               var left = _element$getBoundingC.left;
 
-              if (lastWidth !== width || lastHeight !== height || lastLeft !== left) {
-                lastWidth = width;
-                lastHeight = height;
-                lastLeft = left;
+              var viewportHeight = _this.viewport.clientHeight;
+              var deps = [width, height, left, viewportHeight];
+              if (deps.some(function (dep, i) {
+                return cache[i] !== dep;
+              })) {
+                cache = deps;
 
                 var backgroundHeight = image.naturalHeight * (width / image.naturalWidth);
                 var scale = 1 / velocityScale;
 
                 style.height = backgroundHeight + 'px';
-                style.transform = '\n                translateX(' + left * (scale - 1) + 'px)\n                translateY(calc((50vh - 50%) * ' + scale + ' - (50vh - ' + height + 'px)))\n                translateZ(' + _this.perspective * (1 - scale) + 'px)\n                scale(' + scale + ', ' + scale + ')';
+                style.transform = '\n                translateX(' + left * (scale - 1) + 'px)\n                translateY(' + ((viewportHeight - backgroundHeight) * scale - (viewportHeight - height)) / 2 + 'px)\n                translateZ(' + _this.perspective * (1 - scale) + 'px)\n                scale(' + scale + ', ' + scale + ')';
               }
               window.requestAnimationFrame(updateStyle);
             };

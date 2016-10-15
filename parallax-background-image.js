@@ -28,7 +28,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     _createClass(Parallax, [{
       key: 'add',
       value: function add(elements) {
-        var initialPosition = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '0';
+        var initialPosition = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '0px';
 
         var _this = this;
 
@@ -42,6 +42,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (elementStyle.position === 'static') {
             element.style.position = 'relative';
           }
+          elementStyle.overflowY = 'hidden';
           loadImage(parseCssUrl(elementStyle.backgroundImage), function (image) {
             var style = createBackground(element, image);
 
@@ -54,19 +55,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               pointerEvents: 'none'
             });
 
-            var lastRatio = null;
+            var lastWidth = null;
             var lastLeft = null;
             var updateStyle = function updateStyle() {
               var _element$getBoundingC = element.getBoundingClientRect();
 
-              var height = _element$getBoundingC.height;
               var width = _element$getBoundingC.width;
               var left = _element$getBoundingC.left;
 
-              var ratio = height / width;
-              if (lastRatio !== ratio || lastLeft !== left) {
+              if (lastWidth !== width || lastLeft !== left) {
                 lastLeft = left;
-                lastRatio = ratio;
+                lastWidth = width;
 
                 var backgroundHeight = image.naturalHeight * (width / image.naturalWidth);
 

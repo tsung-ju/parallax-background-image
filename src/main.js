@@ -13,7 +13,7 @@
       this.perspective = perspective
     }
 
-    add (elements, initialPosition = '0', velocityScale = 0.8, createBackground = Parallax.before) {
+    add (elements, initialPosition = '0px', velocityScale = 0.8, createBackground = Parallax.before) {
       if (velocityScale < 0) throw new RangeError('velocityScale must be positive')
 
       forEachElement(elements, element => {
@@ -21,6 +21,7 @@
         if (elementStyle.position === 'static') {
           element.style.position = 'relative'
         }
+        elementStyle.overflowY = 'hidden'
         loadImage(parseCssUrl(elementStyle.backgroundImage), image => {
           const style = createBackground(element, image)
 
@@ -33,14 +34,13 @@
             pointerEvents: 'none'
           })
 
-          let lastRatio = null
+          let lastWidth = null
           let lastLeft = null
           const updateStyle = () => {
-            const {height, width, left} = element.getBoundingClientRect()
-            const ratio = height / width
-            if (lastRatio !== ratio || lastLeft !== left) {
+            const {width, left} = element.getBoundingClientRect()
+            if (lastWidth !== width || lastLeft !== left) {
               lastLeft = left
-              lastRatio = ratio
+              lastWidth = width
 
               const backgroundHeight = image.naturalHeight * (width / image.naturalWidth)
 

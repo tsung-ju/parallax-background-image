@@ -68,7 +68,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 lastLeft = left;
                 lastRatio = ratio;
 
-                var backgroundHeight = image.naturalHeight * (height / width);
+                var backgroundHeight = image.naturalHeight * (width / image.naturalWidth);
 
                 var scale = 1 / velocityScale;
 
@@ -97,7 +97,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var className = CLASS_NAME_PREFIX + nextId++;
       element.classList.add(className);
 
-      var rule = '.' + className + '::before {\n        content: \' \';\n      }';
+      var rule = '.' + className + '::before {\n        content: \'\';\n        background-image: url(' + image.src + ');\n        background-size: 100% 100%;\n      }';
 
       var index = styleSheet.insertRule(rule, 0);
 

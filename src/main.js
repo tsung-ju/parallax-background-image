@@ -42,7 +42,7 @@
               lastLeft = left
               lastRatio = ratio
 
-              const backgroundHeight = image.naturalHeight * (height / width)
+              const backgroundHeight = image.naturalHeight * (width / image.naturalWidth)
 
               const scale = 1 / velocityScale
 
@@ -73,7 +73,9 @@
       element.classList.add(className)
 
       const rule = `.${className}::before {
-        content: ' ';
+        content: '';
+        background-image: url(${image.src});
+        background-size: 100% 100%;
       }`
 
       const index = styleSheet.insertRule(rule, 0)

@@ -50,7 +50,7 @@
               style.height = backgroundHeight + 'px'
               style.transform = `
                 translateX(${left * (scale - 1)}px)
-                translateY(calc((50vh - 50%) * ${scale} - (50vh - ${height})))
+                translateY(calc((50vh - 50%) * ${scale} - (50vh - ${height}px)))
                 translateZ(${this.perspective * (1 - scale)}px)
                 scale(${scale}, ${scale})`
             }

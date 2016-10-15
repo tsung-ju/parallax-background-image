@@ -29,7 +29,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     _createClass(Parallax, [{
       key: 'add',
       value: function add(elements) {
-        var initialPosition = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+        var initialPosition = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '0';
 
         var _this = this;
 
@@ -55,22 +55,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               pointerEvents: 'none'
             });
 
+            var cache = [];
             var updateStyle = function updateStyle() {
-              var elementRect = element.getBoundingClientRect();
-              var elementDisplacement = (window.innerHeight + elementRect.height) * -1;
+              var _element$getBoundingC = element.getBoundingClientRect();
 
-              var backgroundHeight = image.naturalHeight * elementRect.height / elementRect.width;
-              var backgroundInitialPosition = initialPosition * backgroundHeight;
-              var backgroundDisplacement = velocityScale * elementDisplacement;
+              var height = _element$getBoundingC.height;
+              var width = _element$getBoundingC.width;
+              var left = _element$getBoundingC.left;
 
-              var scale = elementDisplacement / (backgroundDisplacement - backgroundInitialPosition);
-              var translateZ = _this.perspective * (1 - scale);
-              var translateY = (window.innerHeight - backgroundDisplacement) * scale + elementRect.height;
-              var translateX = elementRect.left * (scale - 1);
+              var deps = [height / width, left];
+              if (deps.some(function (v, i) {
+                return cache[i] !== v;
+              })) {
+                cache = deps;
+                var backgroundHeight = image.naturalHeight * (height / width);
 
-              style.height = backgroundHeight + 'px';
-              style.transform = 'translate3d(' + translateX + 'px, ' + translateY + 'px, ' + translateZ + 'px) scale(' + scale + ', ' + scale + ')';
+                var scale = 1 / velocityScale;
 
+                style.height = backgroundHeight + 'px';
+                style.transform = '\n                translateX(' + _this.perspective * (1 - scale) + 'px)\n                translateY(calc((100vh + ' + initialPosition + ') * ' + scale + ' - 100vh))\n                translateZ(' + elementRect.left * (scale - 1) + 'px)\n                scale(' + scale + ', ' + scale + ')';
+              }
               window.requestAnimationFrame(updateStyle);
             };
             updateStyle();

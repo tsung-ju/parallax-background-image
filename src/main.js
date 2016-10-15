@@ -13,7 +13,7 @@
       this.perspective = perspective
     }
 
-    add (elements, initialPosition = 0, velocityScale = 0.8, createBackground = Parallax.before) {
+    add (elements, initialPosition = '0', velocityScale = 0.8, createBackground = Parallax.before) {
       if (velocityScale < 0) throw new RangeError('velocityScale must be positive')
 
       forEachElement(elements, element => {
@@ -33,22 +33,23 @@
             pointerEvents: 'none'
           })
 
+          let cache = []
           const updateStyle = () => {
-            const elementRect = element.getBoundingClientRect()
-            const elementDisplacement = (window.innerHeight + elementRect.height) * -1
+            const {height, width, left} = element.getBoundingClientRect()
+            const deps = [height / width, left]
+            if (deps.some((v, i) => cache[i] !== v)) {
+              cache = deps
+              const backgroundHeight = image.naturalHeight * (height / width)
 
-            const backgroundHeight = image.naturalHeight * elementRect.height / elementRect.width
-            const backgroundInitialPosition = initialPosition * backgroundHeight
-            const backgroundDisplacement = velocityScale * elementDisplacement
+              const scale = 1 / velocityScale
 
-            const scale = elementDisplacement / (backgroundDisplacement - backgroundInitialPosition)
-            const translateZ = this.perspective * (1 - scale)
-            const translateY = (window.innerHeight - backgroundDisplacement) * scale + elementRect.height
-            const translateX = elementRect.left * (scale - 1)
-
-            style.height = backgroundHeight + 'px'
-            style.transform = `translate3d(${translateX}px, ${translateY}px, ${translateZ}px) scale(${scale}, ${scale})`
-
+              style.height = backgroundHeight + 'px'
+              style.transform = `
+                translateX(${this.perspective * (1 - scale)}px)
+                translateY(calc((100vh + ${initialPosition}) * ${scale} - 100vh))
+                translateZ(${elementRect.left * (scale - 1)}px)
+                scale(${scale}, ${scale})`
+            }
             window.requestAnimationFrame(updateStyle)
           }
           updateStyle()

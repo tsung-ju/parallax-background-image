@@ -1,37 +1,38 @@
 # parallax-background-image
-js parallax background-image
-
-## Usage
-
+A helper for creating pure CSS parallax background image effects.
+Inspired by <http://keithclark.co.uk/articles/pure-css-parallax-websites/>
+# Basic usage
 ```javascript
-parallax(target, fromPosition, toPosition)
+var parallax = new Parallax('#wrapper')
+parallax.add('.slower', 0.9)
+parallax.add('.faster', 1.2)
 ```
 
-### target
+# API
 
-target element(s)
+## Class: Parallax
 
-could be:
-- an element
-- an array of elements
-- a CSS selector
+### `new Parallax(viewport[, perspective])`
 
-### fromPosition
+* `viewport` HTMLElement - The 3D viewport
+* `perspective` Number - Default is `1000`
 
-position appears first when scrolling down
+### Static Properties
 
-0 means top of the image, 1 means bottom of the image.
+#### `Parallax.img`
+A `Function` for passing to `parallax.add`
 
-### toPosition
-position appears last
+#### `Parallax.before`
+A `Function` for passing to `parallax.add`
 
-## Example
+### Instance Methods
 
-```javascript
-parallax('.target', 0.2, 0.4)
-```
-
-```javascript
-var targets = document.querySelectorAll('.target')
-parallax(targets, 1, 0.2)
-```
+#### `parallax.add(elements[, velocityScale, backgroundPosition, createBackground])`
+* `elements` - Parent element of background image; can be:
+  * A CSS selector
+  * A HTMLElement
+  * A NodeList
+  * An Array of HTMLElements
+* `velocityScale` Number - `velocity of the background = velocity of the element * velocityScale`. Must be in the range `(0, 1) ∪ (1, Infinity)`. Default is `0.8`
+* `backgroundPosition` String - Position of the background (relative to the parent element) when the parent is at the center of the viewport; can be any valid CSS length. Default is `0px`
+* `createBackground` Function - Default is `Parallax.before`

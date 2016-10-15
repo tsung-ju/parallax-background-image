@@ -55,7 +55,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               pointerEvents: 'none'
             });
 
-            var cache = [];
+            var lastRatio = null;
+            var lastLeft = null;
             var updateStyle = function updateStyle() {
               var _element$getBoundingC = element.getBoundingClientRect();
 
@@ -63,17 +64,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               var width = _element$getBoundingC.width;
               var left = _element$getBoundingC.left;
 
-              var deps = [height / width, left];
-              if (deps.some(function (v, i) {
-                return cache[i] !== v;
-              })) {
-                cache = deps;
+              var ratio = height / width;
+              if (lastRatio !== ratio || lastLeft !== left) {
+                lastLeft = left;
+                lastRatio = ratio;
+
                 var backgroundHeight = image.naturalHeight * (height / width);
 
                 var scale = 1 / velocityScale;
 
                 style.height = backgroundHeight + 'px';
-                style.transform = '\n                translateX(' + _this.perspective * (1 - scale) + 'px)\n                translateY(calc((100vh + ' + initialPosition + ') * ' + scale + ' - 100vh))\n                translateZ(' + elementRect.left * (scale - 1) + 'px)\n                scale(' + scale + ', ' + scale + ')';
+                style.transform = '\n                translateX(' + _this.perspective * (1 - scale) + 'px)\n                translateY(calc((100vh + ' + initialPosition + ') * ' + scale + ' - 100vh))\n                translateZ(' + left * (scale - 1) + 'px)\n                scale(' + scale + ', ' + scale + ')';
               }
               window.requestAnimationFrame(updateStyle);
             };

@@ -33,12 +33,15 @@
             pointerEvents: 'none'
           })
 
-          let cache = []
+          let lastRatio = null
+          let lastLeft = null
           const updateStyle = () => {
             const {height, width, left} = element.getBoundingClientRect()
-            const deps = [height / width, left]
-            if (deps.some((v, i) => cache[i] !== v)) {
-              cache = deps
+            const ratio = height / width
+            if (lastRatio !== ratio || lastLeft !== left) {
+              lastLeft = left
+              lastRatio = ratio
+
               const backgroundHeight = image.naturalHeight * (height / width)
 
               const scale = 1 / velocityScale
@@ -47,7 +50,7 @@
               style.transform = `
                 translateX(${this.perspective * (1 - scale)}px)
                 translateY(calc((100vh + ${initialPosition}) * ${scale} - 100vh))
-                translateZ(${elementRect.left * (scale - 1)}px)
+                translateZ(${left * (scale - 1)}px)
                 scale(${scale}, ${scale})`
             }
             window.requestAnimationFrame(updateStyle)

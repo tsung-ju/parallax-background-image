@@ -78,7 +78,7 @@
 
       const index = styleSheet.insertRule(rule, 0)
 
-      return styleSheet.cssRules[index]
+      return styleSheet.cssRules[index].style
     }
   }())
 

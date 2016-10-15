@@ -101,7 +101,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       var index = styleSheet.insertRule(rule, 0);
 
-      return styleSheet.cssRules[index];
+      return styleSheet.cssRules[index].style;
     };
   }();
 

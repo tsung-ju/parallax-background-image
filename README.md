@@ -1,5 +1,5 @@
 # parallax-background-image
-A helper for creating pure CSS parallax background image effects.
+A helper for creating pure CSS parallax background image effects. Works well on mobile devices!
 Inspired by <http://keithclark.co.uk/articles/pure-css-parallax-websites/>
 # Basic usage
 ```javascript

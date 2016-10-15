@@ -101,8 +101,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   }();
 
-  Parallax.img = function (element, image, callback) {
+  Parallax.img = function (element, image) {
     element.insertBefore(image, element.firstChild);
+    return image.style;
   };
 
   function createStyleSheet() {

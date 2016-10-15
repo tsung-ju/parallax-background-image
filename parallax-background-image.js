@@ -7,6 +7,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 (function () {
+  var CLASS_NAME_PARENT = 'parallax-parent';
+  var styleSheet = createStyleSheet();
+  styleSheet.insertRule('\n    .' + CLASS_NAME_PARENT + ' > * {\n      isolation: isolate;\n    }\n  ', 0);
+
   var Parallax = function () {
     function Parallax(viewport) {
       var perspective = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1000;
@@ -39,6 +43,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (velocityScale < 0) throw new RangeError('velocityScale must be positive');
 
         forEachElement(elements, function (element) {
+          element.classList.add(CLASS_NAME_PARENT);
           var elementStyle = window.getComputedStyle(element);
           if (elementStyle.position === 'static') {
             element.style.position = 'relative';
@@ -95,11 +100,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   Parallax.before = function () {
     var CLASS_NAME_PREFIX = 'parallax-background-';
     var nextId = 0;
-    var styleSheet = null;
-
     return function (element, image) {
-      if (styleSheet == null) styleSheet = createStyleSheet();
-
       var className = CLASS_NAME_PREFIX + nextId++;
       element.classList.add(className);
 

@@ -1,4 +1,12 @@
 (function () {
+  const CLASS_NAME_PARENT = 'parallax-parent'
+  const styleSheet = createStyleSheet()
+  styleSheet.insertRule(`
+    .${CLASS_NAME_PARENT} > * {
+      isolation: isolate;
+    }
+  `, 0)
+  
   class Parallax {
     constructor (viewport, perspective = 1000) {
       if (typeof viewport === 'string') viewport = document.querySelector(viewport)
@@ -18,6 +26,7 @@
       if (velocityScale < 0) throw new RangeError('velocityScale must be positive')
 
       forEachElement(elements, element => {
+        element.classList.add(CLASS_NAME_PARENT)
         const elementStyle = window.getComputedStyle(element)
         if (elementStyle.position === 'static') {
           element.style.position = 'relative'
@@ -68,11 +77,7 @@
   Parallax.before = (function () {
     const CLASS_NAME_PREFIX = 'parallax-background-'
     let nextId = 0
-    let styleSheet = null
-
     return (element, image) => {
-      if (styleSheet == null) styleSheet = createStyleSheet()
-
       const className = CLASS_NAME_PREFIX + nextId++
       element.classList.add(className)
 

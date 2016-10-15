@@ -72,7 +72,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 var scale = 1 / velocityScale;
 
                 style.height = backgroundHeight + 'px';
-                style.transform = '\n                translateX(' + _this.perspective * (1 - scale) + 'px)\n                translateY(calc((100vh + ' + initialPosition + ') * ' + scale + ' - 100vh))\n                translateZ(' + left * (scale - 1) + 'px)\n                scale(' + scale + ', ' + scale + ')';
+                style.transform = '\n                translateX(' + left * (scale - 1) + 'px)\n                translateY(calc((100vh + ' + initialPosition + ') * ' + scale + ' - 100vh))\n                translateZ(' + _this.perspective * (1 - scale) + 'px)\n                scale(' + scale + ', ' + scale + ')';
               }
               window.requestAnimationFrame(updateStyle);
             };

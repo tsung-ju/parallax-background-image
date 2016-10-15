@@ -48,9 +48,9 @@
 
               style.height = backgroundHeight + 'px'
               style.transform = `
-                translateX(${this.perspective * (1 - scale)}px)
+                translateX(${left * (scale - 1)}px)
                 translateY(calc((100vh + ${initialPosition}) * ${scale} - 100vh))
-                translateZ(${left * (scale - 1)}px)
+                translateZ(${this.perspective * (1 - scale)}px)
                 scale(${scale}, ${scale})`
             }
             window.requestAnimationFrame(updateStyle)

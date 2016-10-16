@@ -38,7 +38,7 @@
           Object.assign(style, {
             position: 'absolute',
             left: '0',
-            top: backgroundPosition,
+            top: '0',
             width: '100%',
             transformOrigin: '0 0 0',
             pointerEvents: 'none'
@@ -58,6 +58,7 @@
               style.height = backgroundHeight + 'px'
               style.transform = `
                 translateX(${left * (scale - 1)}px)
+                translateY(calc(${backgroundPosition} * ${scale}))
                 translateY(${((viewportHeight - backgroundHeight) * scale - (viewportHeight - height)) / 2}px)
                 translateZ(${this.perspective * (1 - scale)}px)
                 scale(${scale}, ${scale})`

@@ -107,7 +107,9 @@
     if (typeof elements === 'string') {
       elements = document.querySelectorAll(elements)
     }
-    for (let element of elements) callback(element)
+    for (let i = 0; i < elements.length; i++) {
+      callback(elements[i])
+    }
   }
 
   function parseCssUrl (str) {

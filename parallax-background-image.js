@@ -55,7 +55,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _extends(style, {
               position: 'absolute',
               left: '0',
-              top: backgroundPosition,
+              top: '0',
               width: '100%',
               transformOrigin: '0 0 0',
               pointerEvents: 'none'
@@ -125,28 +125,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     if (typeof elements === 'string') {
       elements = document.querySelectorAll(elements);
     }
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-      for (var _iterator = elements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var element = _step.value;
-        callback(element);
-      }
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
+    for (var i = 0; i < elements.length; i++) {
+      callback(elements[i]);
     }
   }
 

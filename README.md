@@ -3,10 +3,16 @@ A helper for creating pure CSS parallax background image effects. Works well on 
 Inspired by <http://keithclark.co.uk/articles/pure-css-parallax-websites/>
 # Basic usage
 ```javascript
+/*initial script*/
 var parallax = new Parallax('#wrapper')
-parallax.add('.slower', 0.9)
-parallax.add('.faster', 1.2)
+
+/*for background move slower than scroll*/
+parallax.add('.your-selector', 0.9)
+
+/*for background move slower than scroll*/
+parallax.add('.your-selector', 1.2)
 ```
+Please note that value > 1 makes background images move faster than scroll speed, and move slower when the value is < 1 .
 
 # API
 
@@ -15,7 +21,7 @@ parallax.add('.faster', 1.2)
 ### `new Parallax(viewport[, perspective])`
 
 * `viewport` HTMLElement - The 3D viewport
-* `perspective` Number - Default is `1000`
+* `perspective` Number - Default `1000`
 
 ### Static Properties
 

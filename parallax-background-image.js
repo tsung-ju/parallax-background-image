@@ -62,10 +62,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             });
 
             var cache = [];
-            var lastWidth = null;
-            var lastHeight = null;
-            var lastLeft = null;
-            var lastViewportHeight = null;
             var updateStyle = function updateStyle() {
               var _element$getBoundingC = element.getBoundingClientRect();
 

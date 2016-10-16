@@ -6,7 +6,7 @@
       isolation: isolate;
     }
   `, 0)
-  
+
   class Parallax {
     constructor (viewport, perspective = 1000) {
       if (typeof viewport === 'string') viewport = document.querySelector(viewport)
@@ -45,10 +45,6 @@
           })
 
           let cache = []
-          let lastWidth = null
-          let lastHeight = null
-          let lastLeft = null
-          let lastViewportHeight = null
           const updateStyle = () => {
             const {width, height, left} = element.getBoundingClientRect()
             const viewportHeight = this.viewport.clientHeight
@@ -62,7 +58,7 @@
               style.height = backgroundHeight + 'px'
               style.transform = `
                 translateX(${left * (scale - 1)}px)
-                translateY(${((viewportHeight - backgroundHeight) * scale -  (viewportHeight - height)) / 2}px)
+                translateY(${((viewportHeight - backgroundHeight) * scale - (viewportHeight - height)) / 2}px)
                 translateZ(${this.perspective * (1 - scale)}px)
                 scale(${scale}, ${scale})`
             }

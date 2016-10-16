@@ -2,10 +2,15 @@
 A helper for creating pure CSS parallax background image effects. Works well on mobile devices!
 Inspired by <http://keithclark.co.uk/articles/pure-css-parallax-websites/>
 # Basic usage
+###Script initialization
 ```javascript
-/*initial script*/
 var parallax = new Parallax('#wrapper')
+```
+Generally just add a wrapper in html under `<body>`.
+Please note that NOT to directly use `.body` because of its special overflow behavior.
 
+###Apply parallax effect
+```javascript
 /*for background move slower than scroll*/
 parallax.add('.your-selector', 0.9)
 
@@ -22,6 +27,7 @@ Please note that value > 1 makes background images move faster than scroll speed
 
 * `viewport` HTMLElement - The 3D viewport
 * `perspective` Number - Default `1000`
+Basically no need to change. But if background moves very fast, bigger value will have a better accuracy.
 
 ### Static Properties
 
@@ -39,6 +45,6 @@ A `Function` for passing to `parallax.add`
   * A HTMLElement
   * A NodeList
   * An Array of HTMLElements
-* `velocityScale` Number - `velocity of the background = velocity of the element * velocityScale`. Must be in the range `(0, 1) ∪ (1, Infinity)`. Default is `0.8`
-* `backgroundPosition` String - Position of the background (relative to the parent element) when the parent is at the center of the viewport; can be any valid CSS length. Default is `0px`
-* `createBackground` Function - Default is `Parallax.before`
+* `velocityScale` Number - `velocity of the background = velocity of the element * velocityScale`. Must be in the range `(0, 1) ∪ (1, Infinity)`. Default `0.8`
+* `backgroundPosition` String - Position of the background (relative to the parent element) when the parent is at the center of the viewport; can be any valid CSS length. Default `0px`
+* `createBackground` Function - Default `Parallax.before`

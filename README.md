@@ -13,10 +13,10 @@ Please note that NOT to directly use `.body` because of its special overflow beh
 
 ###Apply parallax effect
 ```javascript
-/* Slows down the background image (to 90% of the scroll speed). */
+/* Slows down their background image (to 90% of the scroll speed). */
 parallax.add('.your-selector', 0.9)
 
-/* Speeds up the background image (to 120% of the scroll speed). */
+/* Speeds up their background image (to 120% of the scroll speed). */
 parallax.add('.another-selector', 1.2)
 ```
 

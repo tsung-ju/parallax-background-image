@@ -1,6 +1,8 @@
 # parallax-background-image
 A helper for creating pure CSS parallax background image effects. Works well on mobile devices!
+
 Inspired by <http://keithclark.co.uk/articles/pure-css-parallax-websites/>
+
 # Basic usage
 ###Script initialization
 ```javascript
@@ -11,13 +13,12 @@ Please note that NOT to directly use `.body` because of its special overflow beh
 
 ###Apply parallax effect
 ```javascript
-/*for background move slower than scroll*/
+/* Slows down the background image (to 90% of the scroll speed). */
 parallax.add('.your-selector', 0.9)
 
-/*for background move slower than scroll*/
-parallax.add('.your-selector', 1.2)
+/* Speeds up the background image (to 120% of the scroll speed). */
+parallax.add('.another-selector', 1.2)
 ```
-Please note that value > 1 makes background images move faster than scroll speed, and move slower when the value is < 1 .
 
 # API
 

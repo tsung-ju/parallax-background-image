@@ -4,14 +4,38 @@ A helper for creating pure CSS parallax background image effects. Works well on 
 Inspired by <http://keithclark.co.uk/articles/pure-css-parallax-websites/>
 
 # Basic usage
-###Script initialization
+
+### Setup
+Wrap all your site content inside a wrapper element with fixed position and 100% width/height.
+
+Please note that NOT to directly use `<body>` as the wrapper because of its special behavior.
+
+For example,
+```html
+<html>
+  <head>
+    <style>
+      #wrapper {
+        position: fixed;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="#wrapper">
+      <!-- your content here -->
+    </div>
+  </body>
+<html>
+```
+
+Then in your script,
 ```javascript
 var parallax = new Parallax('#wrapper')
 ```
-Generally just add a wrapper in html under `<body>`.
-Please note that NOT to directly use `.body` because of its special overflow behavior.
 
-###Apply parallax effect
+### Apply parallax effect
 ```javascript
 /* Slows down their background image (to 90% of the scroll speed). */
 parallax.add('.your-selector', 0.9)

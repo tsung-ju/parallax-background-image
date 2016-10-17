@@ -33,12 +33,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     _createClass(Parallax, [{
       key: 'add',
       value: function add(elements) {
-        var velocityScale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.8;
-
         var _this = this;
 
-        var backgroundPosition = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '0px';
-        var createBackground = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Parallax.before;
+        var velocityScale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.8;
+        var createBackground = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Parallax.before;
 
         if (velocityScale < 0) throw new RangeError('velocityScale must be positive');
 
@@ -80,7 +78,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 var scale = 1 / velocityScale;
 
                 style.height = backgroundHeight + 'px';
-                style.transform = '\n                translateX(' + left * (scale - 1) + 'px)\n                translateY(calc(' + backgroundPosition + ' * ' + scale + '))\n                translateY(' + ((viewportHeight - backgroundHeight) * scale - (viewportHeight - height)) / 2 + 'px)\n                translateZ(' + _this.perspective * (1 - scale) + 'px)\n                scale(' + scale + ', ' + scale + ')';
+                style.transform = '\n                translateX(' + left * (scale - 1) + 'px)\n                translateY(' + ((viewportHeight - backgroundHeight) * scale - (viewportHeight - height)) / 2 + 'px)\n                translateZ(' + _this.perspective * (1 - scale) + 'px)\n                scale(' + scale + ', ' + scale + ')';
               }
               window.requestAnimationFrame(updateStyle);
             };

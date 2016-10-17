@@ -22,7 +22,7 @@
       this.perspective = perspective
     }
 
-    add (elements, velocityScale = 0.8, backgroundPosition = '0px', createBackground = Parallax.before) {
+    add (elements, velocityScale = 0.8, createBackground = Parallax.before) {
       if (velocityScale < 0) throw new RangeError('velocityScale must be positive')
 
       forEachElement(elements, element => {
@@ -58,7 +58,6 @@
               style.height = backgroundHeight + 'px'
               style.transform = `
                 translateX(${left * (scale - 1)}px)
-                translateY(calc(${backgroundPosition} * ${scale}))
                 translateY(${((viewportHeight - backgroundHeight) * scale - (viewportHeight - height)) / 2}px)
                 translateZ(${this.perspective * (1 - scale)}px)
                 scale(${scale}, ${scale})`

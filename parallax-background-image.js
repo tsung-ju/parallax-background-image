@@ -79,7 +79,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 var scale = 1 / velocityScale;
 
-                style.height = backgroundHeight + 'px';
                 style.transform = '\n                scale(' + baseScale + ', ' + baseScale + ')\n                translateX(' + left * (scale - 1) + 'px)\n                translateY(' + ((viewportHeight - backgroundHeight) * scale - (viewportHeight - height)) / 2 + 'px)\n                translateZ(' + _this.perspective * (1 - scale) + 'px)\n                scale(' + scale + ', ' + scale + ')';
               }
               window.requestAnimationFrame(updateStyle);

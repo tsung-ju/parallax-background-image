@@ -60,7 +60,6 @@
 
               const scale = 1 / velocityScale
 
-              style.height = backgroundHeight + 'px'
               style.transform = `
                 scale(${baseScale}, ${baseScale})
                 translateX(${left * (scale - 1)}px)

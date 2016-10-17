@@ -28,7 +28,7 @@ parallax.add('.another-selector', 1.2)
 
 * `viewport` HTMLElement - The 3D viewport
 * `perspective` Number - Default `1000`
-Basically no need to change. But if background moves very fast, bigger value will have a better accuracy.
+In most cases, you won't need to change it. But if you need to make backgrounds move very fast, bigger value will (probably) improve accuracy.
 
 ### Static Properties
 

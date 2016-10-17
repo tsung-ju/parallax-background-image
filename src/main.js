@@ -39,7 +39,6 @@
             position: 'absolute',
             left: '0',
             top: '0',
-            width: '100%',
             transformOrigin: '0 0 0',
             pointerEvents: 'none'
           })
@@ -52,11 +51,18 @@
             if (deps.some((dep, i) => cache[i] !== dep)) {
               cache = deps
 
-              const backgroundHeight = image.naturalHeight * (width / image.naturalWidth)
+              const backgroundHeight = Math.max(
+                  image.naturalHeight * (width / image.naturalWidth),
+                  Math.min(height - Math.abs(velocityScale - 1) * (viewportHeight + height),
+                           viewportHeight - velocityScale * (viewportHeight + height)))
+
+              const baseScale = backgroundHeight / image.naturalHeight
+
               const scale = 1 / velocityScale
 
               style.height = backgroundHeight + 'px'
               style.transform = `
+                scale(${baseScale}, ${baseScale})
                 translateX(${left * (scale - 1)}px)
                 translateY(${((viewportHeight - backgroundHeight) * scale - (viewportHeight - height)) / 2}px)
                 translateZ(${this.perspective * (1 - scale)}px)
@@ -79,6 +85,8 @@
 
       const rule = `.${className}::before {
         content: '';
+        width: ${image.naturalWidth}px;
+        height: ${image.naturalHeight}px;
         background-image: url(${image.src});
         background-size: 100% 100%;
       }`
@@ -90,6 +98,8 @@
   }())
 
   Parallax.img = (element, image) => {
+    image.width = image.naturalWidth
+    image.height = image.naturalHeight
     element.insertBefore(image, element.firstChild)
     return image.style
   }

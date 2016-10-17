@@ -54,7 +54,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               position: 'absolute',
               left: '0',
               top: '0',
-              width: '100%',
               transformOrigin: '0 0 0',
               pointerEvents: 'none'
             });
@@ -74,11 +73,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               })) {
                 cache = deps;
 
-                var backgroundHeight = image.naturalHeight * (width / image.naturalWidth);
+                var backgroundHeight = Math.max(image.naturalHeight * (width / image.naturalWidth), Math.min(height - Math.abs(velocityScale - 1) * (viewportHeight + height), viewportHeight - velocityScale * (viewportHeight + height)));
+
+                var baseScale = backgroundHeight / image.naturalHeight;
+
                 var scale = 1 / velocityScale;
 
                 style.height = backgroundHeight + 'px';
-                style.transform = '\n                translateX(' + left * (scale - 1) + 'px)\n                translateY(' + ((viewportHeight - backgroundHeight) * scale - (viewportHeight - height)) / 2 + 'px)\n                translateZ(' + _this.perspective * (1 - scale) + 'px)\n                scale(' + scale + ', ' + scale + ')';
+                style.transform = '\n                scale(' + baseScale + ', ' + baseScale + ')\n                translateX(' + left * (scale - 1) + 'px)\n                translateY(' + ((viewportHeight - backgroundHeight) * scale - (viewportHeight - height)) / 2 + 'px)\n                translateZ(' + _this.perspective * (1 - scale) + 'px)\n                scale(' + scale + ', ' + scale + ')';
               }
               window.requestAnimationFrame(updateStyle);
             };
@@ -98,7 +100,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var className = CLASS_NAME_PREFIX + nextId++;
       element.classList.add(className);
 
-      var rule = '.' + className + '::before {\n        content: \'\';\n        background-image: url(' + image.src + ');\n        background-size: 100% 100%;\n      }';
+      var rule = '.' + className + '::before {\n        content: \'\';\n        width: ' + image.naturalWidth + 'px;\n        height: ' + image.naturalHeight + 'px;\n        background-image: url(' + image.src + ');\n        background-size: 100% 100%;\n      }';
 
       var index = styleSheet.insertRule(rule, 0);
 
@@ -107,6 +109,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   }();
 
   Parallax.img = function (element, image) {
+    image.width = image.naturalWidth;
+    image.height = image.naturalHeight;
     element.insertBefore(image, element.firstChild);
     return image.style;
   };

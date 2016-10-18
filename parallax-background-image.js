@@ -73,7 +73,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               })) {
                 cache = deps;
 
-                var backgroundHeight = Math.max(image.naturalHeight * (width / image.naturalWidth), Math.min(height + Math.abs(velocityScale - 1) * (viewportHeight + height), viewportHeight + velocityScale * (viewportHeight + height)), Math.min(height - Math.abs(velocityScale - 1) * (viewportHeight + height), viewportHeight - velocityScale * (viewportHeight + height)));
+                var backgroundHeight = Math.max(image.naturalHeight * (width / image.naturalWidth), Math.min(height - Math.abs(velocityScale - 1) * (viewportHeight + height), viewportHeight - velocityScale * (viewportHeight + height)));
 
                 var baseScale = backgroundHeight / image.naturalHeight;
 

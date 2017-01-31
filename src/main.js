@@ -53,8 +53,8 @@
 
               const backgroundHeight = Math.max(
                   image.naturalHeight * (width / image.naturalWidth),
-                  Math.min(height - Math.abs(velocityScale - 1) * (viewportHeight + height),
-                           viewportHeight - velocityScale * (viewportHeight + height)))
+                  Math.min(height + Math.abs(velocityScale - 1) * (viewportHeight + height),
+                           viewportHeight + velocityScale * (viewportHeight + height)))
 
               const baseScale = backgroundHeight / image.naturalHeight
 

@@ -60,11 +60,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             var cache = [];
             var updateStyle = function updateStyle() {
-              var _element$getBoundingC = element.getBoundingClientRect();
-
-              var width = _element$getBoundingC.width;
-              var height = _element$getBoundingC.height;
-              var left = _element$getBoundingC.left;
+              var _element$getBoundingC = element.getBoundingClientRect(),
+                  width = _element$getBoundingC.width,
+                  height = _element$getBoundingC.height,
+                  left = _element$getBoundingC.left;
 
               var viewportHeight = _this.viewport.clientHeight;
               var deps = [width, height, left, viewportHeight];
@@ -73,7 +72,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               })) {
                 cache = deps;
 
-                var backgroundHeight = Math.max(image.naturalHeight * (width / image.naturalWidth), Math.min(height - Math.abs(velocityScale - 1) * (viewportHeight + height), viewportHeight - velocityScale * (viewportHeight + height)));
+                var backgroundHeight = Math.max(image.naturalHeight * (width / image.naturalWidth), Math.min(height + Math.abs(velocityScale - 1) * (viewportHeight + height), viewportHeight + velocityScale * (viewportHeight + height)));
 
                 var baseScale = backgroundHeight / image.naturalHeight;
 

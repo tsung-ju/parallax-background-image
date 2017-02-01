@@ -14,7 +14,7 @@ export const defaultOptions = {
     translateX: 0,
     translateY: 0,
     backgroundImage: getCSSBackgroundImage,
-    createBackground: insertImg
+    createBackground: pseudoBefore
 }
 
 export function fromPartial (options: Partial<Options>): Options {

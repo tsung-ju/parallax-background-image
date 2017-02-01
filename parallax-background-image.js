@@ -101,7 +101,7 @@ const insertImg = (el, image) => {
     img.height = image.naturalHeight;
     img.width = image.naturalWidth;
     img.src = image.src;
-    el.appendChild(img);
+    el.insertBefore(img, el.firstElementChild);
     return new StyleBackground(img.style);
 };
 const styleSheet = appendStyleSheet();

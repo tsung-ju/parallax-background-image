@@ -69,7 +69,7 @@ export const insertImg: CreateBackground = (el: Element, image: HTMLImageElement
     img.width = image.naturalWidth
     img.src = image.src
 
-    el.appendChild(img)
+    el.insertBefore(img, el.firstElementChild)
     return new StyleBackground(img.style)
 }
 

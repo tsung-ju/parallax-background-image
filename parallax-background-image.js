@@ -95,16 +95,14 @@ class StyleBackground {
             scale(${this.state.scale}, ${this.state.scale})`;
     }
 }
-const pseudoBefore = (el, image) => {
-    const rule = `[${ATTR_PARALLAX_ELEMENT}="${el.getAttribute(ATTR_PARALLAX_ELEMENT)}"]::before {
-        content: '';
-        width: ${image.naturalWidth}px;
-        height: ${image.naturalHeight}px;
-        background-image: url(${image.src});
-        background-size: 100% 100%;
-      }`;
-    const index = styleSheet.insertRule(rule, 0);
-    return new StyleBackground(styleSheet.cssRules[index].style);
+
+const insertImg = (el, image) => {
+    const img = document.createElement('img');
+    img.height = image.naturalHeight;
+    img.width = image.naturalWidth;
+    img.src = image.src;
+    el.appendChild(img);
+    return new StyleBackground(img.style);
 };
 const styleSheet = appendStyleSheet();
 
@@ -113,7 +111,7 @@ const defaultOptions = {
     translateX: 0,
     translateY: 0,
     backgroundImage: getCSSBackgroundImage,
-    createBackground: pseudoBefore
+    createBackground: insertImg
 };
 function fromPartial(options) {
     return Object.assign({}, defaultOptions, options);

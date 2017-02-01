@@ -55,11 +55,22 @@ export const pseudoBefore: CreateBackground = (el: Element, image: HTMLImageElem
         height: ${image.naturalHeight}px;
         background-image: url(${image.src});
         background-size: 100% 100%;
-      }`
+    }`
 
-      const index = styleSheet.insertRule(rule, 0)
+    const index = styleSheet.insertRule(rule, 0)
 
-      return new StyleBackground((styleSheet.cssRules[index] as CSSStyleRule).style)
+    return new StyleBackground((styleSheet.cssRules[index] as CSSStyleRule).style)
+}
+
+export const insertImg: CreateBackground = (el: Element, image: HTMLImageElement) => {
+    const img = document.createElement('img')
+
+    img.height = image.naturalHeight
+    img.width = image.naturalWidth
+    img.src = image.src
+
+    el.appendChild(img)
+    return new StyleBackground(img.style)
 }
 
 const styleSheet: CSSStyleSheet = appendStyleSheet()

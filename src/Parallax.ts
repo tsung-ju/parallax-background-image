@@ -90,8 +90,9 @@ function watchChange<T extends any[]> (getParams: () => T, action: (params: T) =
             cache = newParams
             action(newParams)
         }
+        window.requestAnimationFrame(watch)
     }
-    window.requestAnimationFrame(watch)
+    watch()
 }
 
 function calcMinimalHeight ({ viewportHeight, elementHeight, velocityScale }) {

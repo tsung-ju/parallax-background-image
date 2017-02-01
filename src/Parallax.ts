@@ -47,7 +47,7 @@ export class Parallax {
 
         type Params = [number, number, number, number]
 
-        function getParams (): Params {
+        const getParams: () => Params = () => {
             const {width: elementWidth, height: elementHeight, left} = element.getBoundingClientRect()
             const viewportHeight = this.viewport.height
             return [elementWidth, elementHeight, left, viewportHeight]

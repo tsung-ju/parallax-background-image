@@ -114,9 +114,6 @@ class ScaleBackground {
     }
 }
 __decorate([
-    mobx.action
-], ScaleBackground.prototype, "updateTransform", null);
-__decorate([
     mobx.computed
 ], ScaleBackground.prototype, "height", null);
 __decorate([
@@ -134,7 +131,7 @@ class CoverElement extends ScaleBackground {
     get minimalHeight() {
         const { height: viewportHeight } = this.element.viewport;
         const { height: elementHeight } = this.element;
-        const coverElementTop = this.velocityScale > 0
+        const coverElementTop = this.velocityScale > 1
             ? elementHeight + (this.velocityScale - 1) * (viewportHeight + elementHeight)
             : elementHeight + (1 - this.velocityScale) * (viewportHeight - elementHeight);
         const coverWindowTop = viewportHeight + this.velocityScale * (viewportHeight - elementHeight);

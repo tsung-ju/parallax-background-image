@@ -5,6 +5,8 @@ Inspired by <http://keithclark.co.uk/articles/pure-css-parallax-websites/>
 
 ## Work in progress!
 
+# [Example](https://ray851107.github.io/parallax-background-image/demo.html)
+
 # Basic usage
 
 ### Setup
@@ -40,11 +42,15 @@ var parallax = new Parallax('#wrapper')
 ### Apply parallax effect
 ```javascript
 /* Slows down their background image (to 90% of the scroll speed). */
-parallax.add('.your-selector', 0.9)
+parallax.add('.your-selector', { velocityScale: 0.9 })
 
 /* Speeds up their background image (to 120% of the scroll speed). */
-parallax.add('.another-selector', 1.2)
+parallax.add('.another-selector', { velocityScale: 1.2 })
+
+/* use custom background image */
+parallax.add('.custom-background-image', { backgroundImage: 'http://domain/xxx.jpg' })
 ```
+For complete example see `demo.html`
 
 # Dependencies
 * [MobX.js](https://mobx.js.org/)

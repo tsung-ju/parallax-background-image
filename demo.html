@@ -1,0 +1,36 @@
+<style>
+#wrapper {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+}
+#wrapper > div {
+    height: 30vh;
+    width: 100%;
+}
+#slow1 {
+    background-image: url(https://images.unsplash.com/photo-1446305341947-847fd13db6c4);
+}
+#dual > div {
+    width: 50%;
+    height: 100%;
+    float: left; 
+}
+</style>
+<div id="wrapper">
+    <div id="slow1" class="slow"></div>
+    <div id="fast" style="height: 40vh"></div>
+    <div id="slow2" class="slow" style="background-image: url(https://images.unsplash.com/photo-1470171119584-533105644520)"></div>
+    <div id="dual">
+        <div id="left" style="background-image: url(https://images.unsplash.com/photo-1465566829994-b8da8cae5909)"></div>
+        <div id="right" style="background-image: url(https://images.unsplash.com/photo-1465576482687-69f0e0d47126)"></div>
+    <div>
+</div>
+<script src="https://unpkg.com/mobx@3.0.2/lib/mobx.umd.min.js"></script>
+<script src="./parallax-background-image.min.js"></script>
+<script>
+var parallax = new Parallax('#wrapper')
+parallax.add('.slow', {velocityScale: 0.8})
+parallax.add('#fast', {velocityScale: 1.5, backgroundImage: 'https://images.unsplash.com/photo-1485609315582-cfffa02888e8'})
+parallax.add('#dual > div', {velocityScale: 0.3})
+</script>

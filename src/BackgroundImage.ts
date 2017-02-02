@@ -1,4 +1,4 @@
-export type ToBackgroundImage = 'string' | ((el: Element) => string)
+export type ToBackgroundImage = string | ((el: Element) => string)
 
 export function loadBackgroundImage (el: Element, getImage: ToBackgroundImage): Promise<HTMLImageElement> {
     if (typeof getImage === 'string') {

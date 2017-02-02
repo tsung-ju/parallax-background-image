@@ -1,9 +1,11 @@
 import {ATTR_PARALLAX_ELEMENT} from './Constants'
-import {ToElement, ToElementArray, toElementArray} from './ToElement'
+import {ToElement, toElement, ToElementArray, toElementArray} from './ToElement'
 import {loadBackgroundImage} from './BackgroundImage'
 import {Options, fromPartial} from './Options'
 import {prependStyleSheet} from './StyleSheet'
 import {Viewport} from './Viewport'
+import {ParallaxElement} from './ParallaxElement'
+import {autorun} from 'mobx'
 
 initialize()
 
@@ -26,7 +28,7 @@ export class Parallax {
     viewport: Viewport
 
     constructor (element: ToElement<HTMLElement>, perspective: number = 1000) {
-        this.viewport = new Viewport(element, perspective)
+        this.viewport = new Viewport(toElement(element), perspective)
     }
 
     add (elements: ToElementArray<HTMLElement>, partial: Partial<Options> = {}): Promise<null>[] {
@@ -41,37 +43,22 @@ export class Parallax {
 
     async addElement (element: HTMLElement, options: Options) {
         const image = await loadBackgroundImage(element, options.backgroundImage)
-        element.setAttribute(ATTR_PARALLAX_ELEMENT, getNextElementId())
 
-        const background = options.createBackground(element, image)
+        const parallaxElement = new ParallaxElement(element, this.viewport)
 
-        type Params = [number, number, number, number]
+        const background = options.createBackground(parallaxElement, image, options.velocityScale)
 
-        const getParams: () => Params = () => {
-            const {width: elementWidth, height: elementHeight, left} = element.getBoundingClientRect()
+        autorun(() => {
+            const {width: elementWidth, height: elementHeight, left} = parallaxElement
             const viewportHeight = this.viewport.height
-            return [elementWidth, elementHeight, left, viewportHeight]
-        }
-
-        watchChange<Params>(getParams, ([elementWidth, elementHeight, left, viewportHeight]) => {
-            const minimalHeight = calcMinimalHeight({ viewportHeight, velocityScale: options.velocityScale, elementHeight })
-            const minimalWidth = elementWidth
-
-            const baseScale = coverScale({
-                height: image.naturalHeight,
-                width: image.naturalWidth,
-                minimalHeight,
-                minimalWidth})
-            
-            const backgroundHeight = baseScale * image.naturalHeight
 
             const scale = 1 / options.velocityScale
 
             background.update({
+                scale,
                 translateX: left * (scale - 1),
-                translateY: ((viewportHeight - backgroundHeight) * scale - (viewportHeight - elementHeight)) / 2,
+                translateY: ((viewportHeight - background.height) * scale - (viewportHeight - elementHeight)) / 2,
                 translateZ: this.viewport.perspective * (1 - scale),
-                scale: baseScale * scale
             })
         })
     }
@@ -93,17 +80,4 @@ function watchChange<T extends any[]> (getParams: () => T, action: (params: T) =
         window.requestAnimationFrame(watch)
     }
     watch()
-}
-
-function calcMinimalHeight ({ viewportHeight, elementHeight, velocityScale }) {
-    const coverElementTop = velocityScale > 0
-        ? elementHeight + (velocityScale - 1) * (viewportHeight + elementHeight)
-        : elementHeight + (1 - velocityScale) * (viewportHeight - elementHeight)
-    const coverWindowTop = viewportHeight + velocityScale * (viewportHeight - elementHeight)
-
-    return Math.max(coverElementTop, coverWindowTop)
-}
-
-function coverScale ({ width, height, minimalWidth, minimalHeight }) {
-    return Math.max(minimalHeight / height, minimalWidth / width)
 }

@@ -1,4 +1,4 @@
-(function () {
+(function (mobx) {
 'use strict';
 
 const ATTR_PARALLAX_ELEMENT = 'data-parallax-element';
@@ -68,6 +68,12 @@ function createStyleElement() {
     return style;
 }
 
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 const initialState = {
     scale: 1,
     translateX: 0,
@@ -75,9 +81,11 @@ const initialState = {
     translateZ: 0
 };
 class StyleBackground {
-    constructor(style) {
-        this.state = initialState;
+    constructor(style, width, height) {
+        this.state = mobx.observable(initialState);
         this.style = style;
+        this.width = width;
+        this.height = height;
         Object.assign(style, {
             position: 'absolute',
             left: '0',
@@ -85,18 +93,84 @@ class StyleBackground {
             transformOrigin: '0 0 0',
             pointerEvents: 'none'
         });
+        mobx.autorun(() => {
+            this.style.transform = `
+                translateX(${this.state.translateX}px)
+                translateY(${this.state.translateY}px)
+                translateZ(${this.state.translateZ}px)
+                scale(${this.state.scale}, ${this.state.scale})`;
+        });
     }
     update(patch) {
         Object.assign(this.state, patch);
-        this.style.transform = `
-            translateX(${this.state.translateX}px)
-            translateY(${this.state.translateY}px)
-            translateZ(${this.state.translateZ}px)
-            scale(${this.state.scale}, ${this.state.scale})`;
     }
 }
+__decorate([
+    mobx.observable
+], StyleBackground.prototype, "state", void 0);
+__decorate([
+    mobx.action
+], StyleBackground.prototype, "update", null);
+class ScaleBackground {
+    constructor(background) {
+        this.background = background;
+    }
+    update(patch) {
+        if (patch.scale != null) {
+            patch.scale *= this.scale;
+        }
+        this.background.update(patch);
+    }
+    get height() {
+        return this.background.height * this.scale;
+    }
+    get width() {
+        return this.background.width * this.scale;
+    }
+}
+__decorate([
+    mobx.action
+], ScaleBackground.prototype, "update", null);
+__decorate([
+    mobx.computed
+], ScaleBackground.prototype, "height", null);
+__decorate([
+    mobx.computed
+], ScaleBackground.prototype, "width", null);
+class CoverElement extends ScaleBackground {
+    constructor(background, element, velocityScale) {
+        super(background);
+        this.element = element;
+        this.velocityScale = velocityScale;
+    }
+    get scale() {
+        return Math.max(this.minimalHeight / this.element.height, this.minimalWidth / this.element.width);
+    }
+    get minimalHeight() {
+        const { height: viewportHeight } = this.element.viewport;
+        const { height: elementHeight } = this.element;
+        const coverElementTop = this.velocityScale > 0
+            ? elementHeight + (this.velocityScale - 1) * (viewportHeight + elementHeight)
+            : elementHeight + (1 - this.velocityScale) * (viewportHeight - elementHeight);
+        const coverWindowTop = viewportHeight + this.velocityScale * (viewportHeight - elementHeight);
+        return Math.max(coverElementTop, coverWindowTop);
+    }
+    get minimalWidth() {
+        return this.element.width;
+    }
+}
+__decorate([
+    mobx.computed
+], CoverElement.prototype, "scale", null);
+__decorate([
+    mobx.computed
+], CoverElement.prototype, "minimalHeight", null);
+__decorate([
+    mobx.computed
+], CoverElement.prototype, "minimalWidth", null);
+
 const pseudoBefore = (el, image) => {
-    const rule = `[${ATTR_PARALLAX_ELEMENT}="${el.getAttribute(ATTR_PARALLAX_ELEMENT)}"]::before {
+    const rule = `[${ATTR_PARALLAX_ELEMENT}="${el.id}"]::before {
         content: '';
         width: ${image.naturalWidth}px;
         height: ${image.naturalHeight}px;
@@ -104,7 +178,8 @@ const pseudoBefore = (el, image) => {
         background-size: 100% 100%;
     }`;
     const index = styleSheet.insertRule(rule, 0);
-    return new StyleBackground(styleSheet.cssRules[index].style);
+    const style = styleSheet.cssRules[index].style;
+    return new StyleBackground(style, image.naturalWidth, image.naturalHeight);
 };
 
 const styleSheet = appendStyleSheet();
@@ -114,15 +189,32 @@ const defaultOptions = {
     translateX: 0,
     translateY: 0,
     backgroundImage: getCSSBackgroundImage,
-    createBackground: pseudoBefore
+    createBackground(el, image, velocityScale) {
+        return new CoverElement(pseudoBefore(el, image, velocityScale), el, velocityScale);
+    }
 };
 function fromPartial(options) {
     return Object.assign({}, defaultOptions, options);
 }
 
+function observeBoundingClientRect(element) {
+    const boundingClientRect = mobx.observable(Object.assign({}, element.getBoundingClientRect()));
+    function watch() {
+        Object.assign(boundingClientRect, element.getBoundingClientRect());
+        window.requestAnimationFrame(watch);
+    }
+    watch();
+    return boundingClientRect;
+}
+
+var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 class Viewport {
     constructor(element, perspective) {
-        element = toElement(element);
         Object.assign(element.style, {
             overflowY: 'scroll',
             transformStyle: 'flat',
@@ -131,11 +223,53 @@ class Viewport {
         });
         this.element = element;
         this.perspective = perspective;
+        this.boundingClientRect = observeBoundingClientRect(element);
     }
     get height() {
-        return this.element.getBoundingClientRect().height;
+        return this.boundingClientRect.height;
     }
 }
+__decorate$1([
+    mobx.computed
+], Viewport.prototype, "height", null);
+
+var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+class ParallaxElement {
+    constructor(element, viewport) {
+        this.id = ParallaxElement.getNextId();
+        this.element = element;
+        this.boundingClientRect = observeBoundingClientRect(element);
+        this.viewport = viewport;
+        this.element.setAttribute(ATTR_PARALLAX_ELEMENT, this.id);
+    }
+    get width() {
+        return this.boundingClientRect.width;
+    }
+    get height() {
+        return this.boundingClientRect.height;
+    }
+    get left() {
+        return this.boundingClientRect.left;
+    }
+    static getNextId() {
+        return `${ParallaxElement.nextId++}`;
+    }
+}
+ParallaxElement.nextId = 0;
+__decorate$2([
+    mobx.computed
+], ParallaxElement.prototype, "width", null);
+__decorate$2([
+    mobx.computed
+], ParallaxElement.prototype, "height", null);
+__decorate$2([
+    mobx.computed
+], ParallaxElement.prototype, "left", null);
 
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -162,7 +296,7 @@ function initialize() {
 }
 class Parallax {
     constructor(element, perspective = 1000) {
-        this.viewport = new Viewport(element, perspective);
+        this.viewport = new Viewport(toElement(element), perspective);
     }
     add(elements, partial = {}) {
         const options = fromPartial(partial);
@@ -175,61 +309,23 @@ class Parallax {
     addElement(element, options) {
         return __awaiter(this, void 0, void 0, function* () {
             const image = yield loadBackgroundImage(element, options.backgroundImage);
-            element.setAttribute(ATTR_PARALLAX_ELEMENT, getNextElementId());
-            const background = options.createBackground(element, image);
-            const getParams = () => {
-                const { width: elementWidth, height: elementHeight, left } = element.getBoundingClientRect();
+            const parallaxElement = new ParallaxElement(element, this.viewport);
+            const background = options.createBackground(parallaxElement, image, options.velocityScale);
+            mobx.autorun(() => {
+                const { width: elementWidth, height: elementHeight, left } = parallaxElement;
                 const viewportHeight = this.viewport.height;
-                return [elementWidth, elementHeight, left, viewportHeight];
-            };
-            watchChange(getParams, ([elementWidth, elementHeight, left, viewportHeight]) => {
-                const minimalHeight = calcMinimalHeight({ viewportHeight, velocityScale: options.velocityScale, elementHeight });
-                const minimalWidth = elementWidth;
-                const baseScale = coverScale({
-                    height: image.naturalHeight,
-                    width: image.naturalWidth,
-                    minimalHeight,
-                    minimalWidth
-                });
-                const backgroundHeight = baseScale * image.naturalHeight;
                 const scale = 1 / options.velocityScale;
                 background.update({
+                    scale,
                     translateX: left * (scale - 1),
-                    translateY: ((viewportHeight - backgroundHeight) * scale - (viewportHeight - elementHeight)) / 2,
+                    translateY: ((viewportHeight - background.height) * scale - (viewportHeight - elementHeight)) / 2,
                     translateZ: this.viewport.perspective * (1 - scale),
-                    scale: baseScale * scale
                 });
             });
         });
     }
 }
-const getNextElementId = (function () {
-    let nextId = 0;
-    return () => `${nextId++}`;
-}());
-function watchChange(getParams, action) {
-    let cache = [];
-    function watch() {
-        const newParams = getParams();
-        if (newParams.some((param, i) => cache[i] !== param)) {
-            cache = newParams;
-            action(newParams);
-        }
-        window.requestAnimationFrame(watch);
-    }
-    watch();
-}
-function calcMinimalHeight({ viewportHeight, elementHeight, velocityScale }) {
-    const coverElementTop = velocityScale > 0
-        ? elementHeight + (velocityScale - 1) * (viewportHeight + elementHeight)
-        : elementHeight + (1 - velocityScale) * (viewportHeight - elementHeight);
-    const coverWindowTop = viewportHeight + velocityScale * (viewportHeight - elementHeight);
-    return Math.max(coverElementTop, coverWindowTop);
-}
-function coverScale({ width, height, minimalWidth, minimalHeight }) {
-    return Math.max(minimalHeight / height, minimalWidth / width);
-}
 
 window['Parallax'] = Parallax;
 
-}());
+}(mobx));

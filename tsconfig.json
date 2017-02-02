@@ -2,9 +2,12 @@
     "compilerOptions": {
         "target": "es6",
         "module": "es6",
-        "outDir": "lib"
+        "moduleResolution": "node",
+        "rootDir": ".",
+        "outDir": "lib",
+        "experimentalDecorators": true
     },
-    "files": [
-        "src/main.ts"
+    "include": [
+        "src/**/*.ts"
     ]
 }

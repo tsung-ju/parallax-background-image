@@ -126,7 +126,7 @@ class CoverElement extends ScaleBackground {
         this.velocityScale = velocityScale;
     }
     get scale() {
-        return Math.max(this.minimalHeight / this.element.height, this.minimalWidth / this.element.width);
+        return Math.max(this.minimalHeight / this.background.height, this.minimalWidth / this.background.width);
     }
     get minimalHeight() {
         const { height: viewportHeight } = this.element.viewport;

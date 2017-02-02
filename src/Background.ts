@@ -73,7 +73,7 @@ export class CoverElement extends ScaleBackground {
     }
 
     @computed get scale (): number {
-        return Math.max(this.minimalHeight / this.element.height, this.minimalWidth / this.element.width)
+        return Math.max(this.minimalHeight / this.background.height, this.minimalWidth / this.background.width)
     }
 
     @computed get minimalHeight (): number {

@@ -395,6 +395,7 @@ function initialize() {
 class Parallax {
     constructor(element, perspective = 1000) {
         this.viewport = new Viewport(toElement(element), perspective);
+        this.elements = new Set();
     }
     add(elements, partial = {}) {
         const options = fromPartial(partial);

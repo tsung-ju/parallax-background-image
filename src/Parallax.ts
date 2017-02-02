@@ -31,6 +31,7 @@ export class Parallax {
 
     constructor (element: ToElement<HTMLElement>, perspective: number = 1000) {
         this.viewport = new Viewport(toElement(element), perspective)
+        this.elements = new Set()
     }
 
     add (elements: ToElementArray<HTMLElement>, partial: Partial<Options> = {}): Promise<null>[] {

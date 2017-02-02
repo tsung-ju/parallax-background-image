@@ -1,5 +1,9 @@
 export default {
     entry: 'lib/main.js',
     dest: 'parallax-background-image.js',
-    format: 'iife'
+    format: 'iife',
+    external: ['mobx'],
+    globals: {
+        mobx: 'mobx'
+    }
 }

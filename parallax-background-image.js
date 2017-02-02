@@ -409,7 +409,9 @@ class Parallax {
             const image = yield loadBackgroundImage(element, options.backgroundImage);
             const parallaxElement = new ParallaxElement(element, this.viewport);
             const background = options.createBackground(parallaxElement, image, options.velocityScale);
-            background.setTransform(new ParallaxTransform(parallaxElement, background, options.velocityScale));
+            const transform = new ParallaxTransform(parallaxElement, background, options.velocityScale);
+            background.setTransform(transform);
+            this.elements.add({ parallaxElement, background, transform });
         });
     }
 }

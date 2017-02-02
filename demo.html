@@ -1,29 +1,55 @@
 <style>
+body {
+    margin: 0;
+}
 #wrapper {
     position: fixed;
     height: 100%;
     width: 100%;
 }
 #wrapper > div {
-    height: 30vh;
+    height: 50vh;
     width: 100%;
 }
 #slow1 {
-    background-image: url(https://images.unsplash.com/photo-1446305341947-847fd13db6c4);
+    background-image: url(https://images.unsplash.com/photo-1446305341947-847fd13db6c4?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max);
 }
 #dual > div {
     width: 50%;
     height: 100%;
     float: left; 
 }
+.text {
+    vertical-align: center;
+    padding: 10px;
+    position: absolute;
+    left: 0;
+    width: auto;
+    height: 100%;
+    color: white;
+    background: linear-gradient(rgba(50, 50, 50, 0.9), rgba(50, 50, 50, 0.3));
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: xx-large;
+}
+
 </style>
 <div id="wrapper">
-    <div id="slow1" class="slow"></div>
-    <div id="fast" style="height: 40vh"></div>
-    <div id="slow2" class="slow" style="background-image: url(https://images.unsplash.com/photo-1470171119584-533105644520)"></div>
+    <div id="slow1" class="slow">
+        <div class="text">A slow div</div>
+    </div>
+    <div id="fast" style="height: 60vh">
+        <div class="text">A fast div</div>
+    </div>
+    <div id="slow2" class="slow" style="background-image: url(https://images.unsplash.com/photo-1470171119584-533105644520?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max)">
+        <div class="text">slow div 2</div>
+    </div>
     <div id="dual">
-        <div id="left" style="background-image: url(https://images.unsplash.com/photo-1465566829994-b8da8cae5909)"></div>
-        <div id="right" style="background-image: url(https://images.unsplash.com/photo-1465576482687-69f0e0d47126)"></div>
+        <div id="left" style="background-image: url(https://images.unsplash.com/photo-1465566829994-b8da8cae5909?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max)">
+            <div class="text">div div</div>
+        </div>
+        <div id="right" style="background-image: url(https://images.unsplash.com/photo-1465576482687-69f0e0d47126?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max)">
+            <div class="text">much div wow</div>
+        </div>
     <div>
 </div>
 <script src="https://unpkg.com/mobx@3.0.2/lib/mobx.umd.min.js"></script>
@@ -31,6 +57,6 @@
 <script>
 var parallax = new Parallax('#wrapper')
 parallax.add('.slow', {velocityScale: 0.8})
-parallax.add('#fast', {velocityScale: 1.5, backgroundImage: 'https://images.unsplash.com/photo-1485609315582-cfffa02888e8'})
+parallax.add('#fast', {velocityScale: 1.5, backgroundImage: 'https://images.unsplash.com/photo-1444460381791-02e0621c12f4?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max'})
 parallax.add('#dual > div', {velocityScale: 0.3})
 </script>

@@ -119,10 +119,10 @@ __decorate([
 __decorate([
     mobx.computed
 ], ScaleBackground.prototype, "width", null);
-class CoverElement extends ScaleBackground {
-    constructor(background, element, velocityScale) {
+class CoverScaleBackground extends ScaleBackground {
+    constructor(background, coveredElement, velocityScale) {
         super(background);
-        this.element = element;
+        this.element = coveredElement;
         this.velocityScale = velocityScale;
     }
     get scale() {
@@ -143,13 +143,20 @@ class CoverElement extends ScaleBackground {
 }
 __decorate([
     mobx.computed
-], CoverElement.prototype, "scale", null);
+], CoverScaleBackground.prototype, "scale", null);
 __decorate([
     mobx.computed
-], CoverElement.prototype, "minimalHeight", null);
+], CoverScaleBackground.prototype, "minimalHeight", null);
 __decorate([
     mobx.computed
-], CoverElement.prototype, "minimalWidth", null);
+], CoverScaleBackground.prototype, "minimalWidth", null);
+function coverElement(createBackground, coveredElement = null) {
+    return (el, image, velocityScale) => {
+        coveredElement = coveredElement || el;
+        const background = createBackground(el, image, velocityScale);
+        return new CoverScaleBackground(background, coveredElement, velocityScale);
+    };
+}
 const pseudoBefore = (el, image) => {
     const rule = `[${ATTR_PARALLAX_ELEMENT}="${el.id}"]::before {
         content: '';
@@ -162,7 +169,14 @@ const pseudoBefore = (el, image) => {
     const style = styleSheet.cssRules[index].style;
     return new StyleBackground(style, image.naturalWidth, image.naturalHeight);
 };
-
+const insertImg = (el, image) => {
+    const img = document.createElement('img');
+    img.height = image.naturalHeight;
+    img.width = image.naturalWidth;
+    img.src = image.src;
+    el.element.insertBefore(img, el.element.firstElementChild);
+    return new StyleBackground(img.style, image.naturalWidth, image.naturalHeight);
+};
 const styleSheet = appendStyleSheet();
 
 const defaultOptions = {
@@ -170,9 +184,7 @@ const defaultOptions = {
     translateX: 0,
     translateY: 0,
     backgroundImage: getCSSBackgroundImage,
-    createBackground(el, image, velocityScale) {
-        return new CoverElement(pseudoBefore(el, image, velocityScale), el, velocityScale);
-    }
+    createBackground: coverElement(pseudoBefore)
 };
 function fromPartial(options) {
     return Object.assign({}, defaultOptions, options);
@@ -341,6 +353,10 @@ class Parallax {
         });
     }
 }
+Parallax.getCSSBackgroundImage = getCSSBackgroundImage;
+Parallax.pesudoBefore = pseudoBefore;
+Parallax.insertImg = insertImg;
+Parallax.coverElement = coverElement;
 
 window['Parallax'] = Parallax;
 

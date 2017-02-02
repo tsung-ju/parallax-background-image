@@ -2,12 +2,12 @@ import {autorun} from 'mobx'
 
 import {ATTR_PARALLAX_ELEMENT} from './Constants'
 import {ToElement, toElement, ToElementArray, toElementArray} from './ToElement'
-import {loadBackgroundImage} from './BackgroundImage'
+import {getCSSBackgroundImage, loadBackgroundImage} from './BackgroundImage'
 import {Options, fromPartial} from './Options'
 import {prependStyleSheet} from './StyleSheet'
 import {Viewport} from './Viewport'
 import {ParallaxElement} from './ParallaxElement'
-import {Background} from './Background'
+import {Background, coverElement, pseudoBefore, insertImg} from './Background'
 import {Transform, parallaxTransform} from './Transform'
 
 initialize()
@@ -28,6 +28,11 @@ function initialize () {
 }
 
 export class Parallax {
+    static getCSSBackgroundImage = getCSSBackgroundImage
+    static pesudoBefore = pseudoBefore
+    static insertImg = insertImg
+    static coverElement = coverElement
+
     viewport: Viewport
 
     constructor (element: ToElement<HTMLElement>, perspective: number = 1000) {

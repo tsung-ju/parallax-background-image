@@ -62,13 +62,13 @@ abstract class ScaleBackground implements Background {
     }
 }
 
-export class CoverElement extends ScaleBackground {
+export class CoverScaleBackground extends ScaleBackground {
     element: ParallaxElement
     velocityScale: number
     
-    constructor (background: Background, element: ParallaxElement, velocityScale: number) {
+    constructor (background: Background, coveredElement: ParallaxElement, velocityScale: number) {
         super(background)
-        this.element = element
+        this.element = coveredElement
         this.velocityScale = velocityScale
     }
 
@@ -96,6 +96,14 @@ export class CoverElement extends ScaleBackground {
 }
 
 export type CreateBackground = (el: ParallaxElement, image: HTMLImageElement, velocityScale: number) => Background
+
+export function coverElement(createBackground: CreateBackground, coveredElement: ParallaxElement=null): CreateBackground {
+    return (el: ParallaxElement, image: HTMLImageElement, velocityScale: number) => {
+        coveredElement = coveredElement || el
+        const background = createBackground(el, image, velocityScale)
+        return new CoverScaleBackground(background, coveredElement, velocityScale)
+    }
+}
 
 export const pseudoBefore: CreateBackground = (el: ParallaxElement, image: HTMLImageElement) => {
     const rule = `[${ATTR_PARALLAX_ELEMENT}="${el.id}"]::before {

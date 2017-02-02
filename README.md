@@ -46,6 +46,11 @@ parallax.add('.your-selector', 0.9)
 parallax.add('.another-selector', 1.2)
 ```
 
+# Dependencies
+* [MobX.js](https://mobx.js.org/)
+```html
+<script src="https://unpkg.com/mobx@3.0.2/lib/mobx.umd.min.js"></script>
+```
 # API
 
 ## Class: Parallax

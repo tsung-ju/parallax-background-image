@@ -263,15 +263,44 @@ function fromPartial(options) {
     return Object.assign({}, defaultOptions, options);
 }
 
-function observeBoundingClientRect(element) {
-    const boundingClientRect = mobx.observable(Object.assign({}, element.getBoundingClientRect()));
-    function watch() {
-        Object.assign(boundingClientRect, element.getBoundingClientRect());
-        window.requestAnimationFrame(watch);
+var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+class ObservableBoundingClientRect {
+    constructor(element) {
+        const watch = () => {
+            const rect = element.getBoundingClientRect();
+            mobx.transaction(() => {
+                for (let key of ['bottom', 'height', 'left', 'right', 'top', 'width']) {
+                    this[key] = rect[key];
+                }
+            });
+            window.requestAnimationFrame(watch);
+        };
+        watch();
     }
-    watch();
-    return boundingClientRect;
 }
+__decorate$3([
+    mobx.observable
+], ObservableBoundingClientRect.prototype, "bottom", void 0);
+__decorate$3([
+    mobx.observable
+], ObservableBoundingClientRect.prototype, "height", void 0);
+__decorate$3([
+    mobx.observable
+], ObservableBoundingClientRect.prototype, "left", void 0);
+__decorate$3([
+    mobx.observable
+], ObservableBoundingClientRect.prototype, "right", void 0);
+__decorate$3([
+    mobx.observable
+], ObservableBoundingClientRect.prototype, "top", void 0);
+__decorate$3([
+    mobx.observable
+], ObservableBoundingClientRect.prototype, "width", void 0);
 
 var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -289,7 +318,7 @@ class Viewport {
         });
         this.element = element;
         this.perspective = perspective;
-        this.boundingClientRect = observeBoundingClientRect(element);
+        this.boundingClientRect = new ObservableBoundingClientRect(element);
     }
     get height() {
         return this.boundingClientRect.height;
@@ -299,7 +328,7 @@ __decorate$2([
     mobx.computed
 ], Viewport.prototype, "height", null);
 
-var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
@@ -309,7 +338,7 @@ class ParallaxElement {
     constructor(element, viewport) {
         this.id = ParallaxElement.getNextId();
         this.element = element;
-        this.boundingClientRect = observeBoundingClientRect(element);
+        this.boundingClientRect = new ObservableBoundingClientRect(element);
         this.viewport = viewport;
         this.element.setAttribute(ATTR_PARALLAX_ELEMENT, this.id);
     }
@@ -327,13 +356,13 @@ class ParallaxElement {
     }
 }
 ParallaxElement.nextId = 0;
-__decorate$3([
+__decorate$4([
     mobx.computed
 ], ParallaxElement.prototype, "width", null);
-__decorate$3([
+__decorate$4([
     mobx.computed
 ], ParallaxElement.prototype, "height", null);
-__decorate$3([
+__decorate$4([
     mobx.computed
 ], ParallaxElement.prototype, "left", null);
 

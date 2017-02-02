@@ -5,7 +5,7 @@ import {Options, fromPartial} from './Options'
 import {prependStyleSheet} from './StyleSheet'
 import {Viewport} from './Viewport'
 import {ParallaxElement} from './ParallaxElement'
-import {autorun} from 'mobx'
+import {ParallaxTransform} from './Transform'
 
 initialize()
 
@@ -47,37 +47,6 @@ export class Parallax {
         const parallaxElement = new ParallaxElement(element, this.viewport)
 
         const background = options.createBackground(parallaxElement, image, options.velocityScale)
-
-        autorun(() => {
-            const {width: elementWidth, height: elementHeight, left} = parallaxElement
-            const viewportHeight = this.viewport.height
-
-            const scale = 1 / options.velocityScale
-
-            background.update({
-                scale,
-                translateX: left * (scale - 1),
-                translateY: ((viewportHeight - background.height) * scale - (viewportHeight - elementHeight)) / 2,
-                translateZ: this.viewport.perspective * (1 - scale),
-            })
-        })
+        background.setTransform(new ParallaxTransform(parallaxElement, background, options.velocityScale))
     }
-}
-
-const getNextElementId = (function () {
-    let nextId = 0
-    return () => `${nextId++}`
-}())
-
-function watchChange<T extends any[]> (getParams: () => T, action: (params: T) => any) {
-    let cache = []
-    function watch() {
-        const newParams = getParams()
-        if (newParams.some((param, i) => cache[i] !== param)) {
-            cache = newParams
-            action(newParams)
-        }
-        window.requestAnimationFrame(watch)
-    }
-    watch()
 }

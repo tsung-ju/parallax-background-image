@@ -3,31 +3,17 @@ import {action, computed, observable, autorun} from 'mobx'
 import {ATTR_PARALLAX_ELEMENT} from './Constants'
 import {appendStyleSheet} from './StyleSheet'
 import {ParallaxElement} from './ParallaxElement'
-
-export interface State {
-    scale: number
-    translateX: number
-    translateY: number
-    translateZ: number
-}
-
-export const initialState: State = {
-    scale: 1,
-    translateX: 0,
-    translateY: 0,
-    translateZ: 0
-}
+import {Transform, mapTransform} from './Transform'
 
 export interface Background {
     readonly width: number
     readonly height: number
     
-    update (patch: Partial<State>)
+    setTransform (transform: Transform)
 }
 
 class StyleBackground implements Background {
-    @observable state: State = observable(initialState)
-    style: CSSStyleDeclaration
+    readonly style: CSSStyleDeclaration
     readonly width: number
     readonly height: number
     
@@ -43,18 +29,17 @@ class StyleBackground implements Background {
             transformOrigin: '0 0 0',
             pointerEvents: 'none'
         })
-        autorun(() => {
-            this.style.transform = `
-                translateX(${this.state.translateX}px)
-                translateY(${this.state.translateY}px)
-                translateZ(${this.state.translateZ}px)
-                scale(${this.state.scale}, ${this.state.scale})`
-        })
     }
 
     @action
-    update (patch: Partial<State>) {
-        Object.assign(this.state, patch)
+    setTransform (transform: Transform) {
+        autorun(() => {
+            this.style.transform = `
+                translateX(${transform.translateX}px)
+                translateY(${transform.translateY}px)
+                translateZ(${transform.translateZ}px)
+                scale(${transform.scale}, ${transform.scale})`
+        })
     }
 }
 
@@ -67,13 +52,11 @@ abstract class ScaleBackground implements Background {
     }
 
     @action
-    update (patch: Partial<State>) {
-        if (patch.scale != null) {
-            patch.scale *= this.scale
-        }
-        this.background.update(patch)
+    setTransform (transform: Transform) {
+        this.background.setTransform(mapTransform(transform, transform => {
+            return { scale: transform.scale * this.scale }
+        }))
     }
-
     @computed get height (): number {
         return this.background.height * this.scale
     }
@@ -112,10 +95,6 @@ export class CoverElement extends ScaleBackground {
     @computed get minimalWidth (): number {
         return this.element.width
     }
-
-}
-
-export class Translate {
 
 }
 

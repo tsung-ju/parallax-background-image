@@ -68,21 +68,93 @@ function createStyleElement() {
     return style;
 }
 
+var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+class ParallaxTransform {
+    constructor(element, background, velocityScale) {
+        this.element = element;
+        this.background = background;
+        this.velocityScale = velocityScale;
+    }
+    get scale() {
+        return 1 / this.velocityScale;
+    }
+    get translateX() {
+        return this.element.left * (this.scale - 1);
+    }
+    get translateY() {
+        const element = this.element;
+        const viewport = this.element.viewport;
+        return ((viewport.height - this.background.height) * this.scale - (viewport.height - element.height)) / 2;
+    }
+    get translateZ() {
+        return this.element.viewport.perspective * (1 - this.scale);
+    }
+}
+__decorate$1([
+    mobx.computed
+], ParallaxTransform.prototype, "scale", null);
+__decorate$1([
+    mobx.computed
+], ParallaxTransform.prototype, "translateX", null);
+__decorate$1([
+    mobx.computed
+], ParallaxTransform.prototype, "translateY", null);
+__decorate$1([
+    mobx.computed
+], ParallaxTransform.prototype, "translateZ", null);
+function mapTransform(transform, patcher) {
+    return new MapTransform(transform, patcher);
+}
+class MapTransform {
+    constructor(input, patcher) {
+        this.input = input;
+        this.patcher = patcher;
+    }
+    get patched() {
+        return Object.assign({}, this.input, this.patcher(this.input));
+    }
+    get scale() {
+        return this.patched.scale;
+    }
+    get translateX() {
+        return this.patched.translateX;
+    }
+    get translateY() {
+        return this.patched.translateY;
+    }
+    get translateZ() {
+        return this.patched.translateZ;
+    }
+}
+__decorate$1([
+    mobx.computed
+], MapTransform.prototype, "patched", null);
+__decorate$1([
+    mobx.computed
+], MapTransform.prototype, "scale", null);
+__decorate$1([
+    mobx.computed
+], MapTransform.prototype, "translateX", null);
+__decorate$1([
+    mobx.computed
+], MapTransform.prototype, "translateY", null);
+__decorate$1([
+    mobx.computed
+], MapTransform.prototype, "translateZ", null);
+
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-const initialState = {
-    scale: 1,
-    translateX: 0,
-    translateY: 0,
-    translateZ: 0
-};
 class StyleBackground {
     constructor(style, width, height) {
-        this.state = mobx.observable(initialState);
         this.style = style;
         this.width = width;
         this.height = height;
@@ -93,33 +165,28 @@ class StyleBackground {
             transformOrigin: '0 0 0',
             pointerEvents: 'none'
         });
+    }
+    setTransform(transform) {
         mobx.autorun(() => {
             this.style.transform = `
-                translateX(${this.state.translateX}px)
-                translateY(${this.state.translateY}px)
-                translateZ(${this.state.translateZ}px)
-                scale(${this.state.scale}, ${this.state.scale})`;
+                translateX(${transform.translateX}px)
+                translateY(${transform.translateY}px)
+                translateZ(${transform.translateZ}px)
+                scale(${transform.scale}, ${transform.scale})`;
         });
-    }
-    update(patch) {
-        Object.assign(this.state, patch);
     }
 }
 __decorate([
-    mobx.observable
-], StyleBackground.prototype, "state", void 0);
-__decorate([
     mobx.action
-], StyleBackground.prototype, "update", null);
+], StyleBackground.prototype, "setTransform", null);
 class ScaleBackground {
     constructor(background) {
         this.background = background;
     }
-    update(patch) {
-        if (patch.scale != null) {
-            patch.scale *= this.scale;
-        }
-        this.background.update(patch);
+    setTransform(transform) {
+        this.background.setTransform(mapTransform(transform, transform => {
+            return { scale: transform.scale * this.scale };
+        }));
     }
     get height() {
         return this.background.height * this.scale;
@@ -130,7 +197,7 @@ class ScaleBackground {
 }
 __decorate([
     mobx.action
-], ScaleBackground.prototype, "update", null);
+], ScaleBackground.prototype, "setTransform", null);
 __decorate([
     mobx.computed
 ], ScaleBackground.prototype, "height", null);
@@ -168,7 +235,6 @@ __decorate([
 __decorate([
     mobx.computed
 ], CoverElement.prototype, "minimalWidth", null);
-
 const pseudoBefore = (el, image) => {
     const rule = `[${ATTR_PARALLAX_ELEMENT}="${el.id}"]::before {
         content: '';
@@ -207,7 +273,7 @@ function observeBoundingClientRect(element) {
     return boundingClientRect;
 }
 
-var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
@@ -229,11 +295,11 @@ class Viewport {
         return this.boundingClientRect.height;
     }
 }
-__decorate$1([
+__decorate$2([
     mobx.computed
 ], Viewport.prototype, "height", null);
 
-var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
@@ -261,13 +327,13 @@ class ParallaxElement {
     }
 }
 ParallaxElement.nextId = 0;
-__decorate$2([
+__decorate$3([
     mobx.computed
 ], ParallaxElement.prototype, "width", null);
-__decorate$2([
+__decorate$3([
     mobx.computed
 ], ParallaxElement.prototype, "height", null);
-__decorate$2([
+__decorate$3([
     mobx.computed
 ], ParallaxElement.prototype, "left", null);
 
@@ -311,17 +377,7 @@ class Parallax {
             const image = yield loadBackgroundImage(element, options.backgroundImage);
             const parallaxElement = new ParallaxElement(element, this.viewport);
             const background = options.createBackground(parallaxElement, image, options.velocityScale);
-            mobx.autorun(() => {
-                const { width: elementWidth, height: elementHeight, left } = parallaxElement;
-                const viewportHeight = this.viewport.height;
-                const scale = 1 / options.velocityScale;
-                background.update({
-                    scale,
-                    translateX: left * (scale - 1),
-                    translateY: ((viewportHeight - background.height) * scale - (viewportHeight - elementHeight)) / 2,
-                    translateZ: this.viewport.perspective * (1 - scale),
-                });
-            });
+            background.setTransform(new ParallaxTransform(parallaxElement, background, options.velocityScale));
         });
     }
 }

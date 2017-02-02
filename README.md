@@ -3,6 +3,8 @@ A helper for creating pure CSS parallax background image effects. Works well on 
 
 Inspired by <http://keithclark.co.uk/articles/pure-css-parallax-websites/>
 
+## Work in progress!
+
 # Basic usage
 
 ### Setup
@@ -54,22 +56,41 @@ parallax.add('.another-selector', 1.2)
 * `perspective` Number - Default `1000`
   * In most cases, you won't need to change it. But if you need to make backgrounds move much faster than the scrolling speed, bigger value will (probably) improve accuracy.
 
-### Static Properties
-
-#### `Parallax.img`
-A `Function` for passing to `parallax.add`
-
-#### `Parallax.before`
-A `Function` for passing to `parallax.add`
-
 ### Instance Methods
 
-#### `parallax.add(elements[, velocityScale, backgroundPosition, createBackground])`
+#### `parallax.add(elements[, options])`
 * `elements` - Parent element of background image; can be:
   * A CSS selector
   * A HTMLElement
   * A NodeList
   * An Array of HTMLElements
-* `velocityScale` Number - `velocity of the background = velocity of the element * velocityScale`. Must be in the range `(0, 1) ∪ (1, Infinity)`. Default `0.8`
-* `backgroundPosition` String - Position of the background (relative to the parent element) when the parent is at the center of the viewport; can be any valid CSS length. Default `0px`
-* `createBackground` Function - Default `Parallax.before`
+* `options` Object (optional) 
+  * `velocityScale` Number (optional) - `velocity of the background = velocity of the element * velocityScale`. Must be positive. Default `0.8`
+  * `backgroundImage` ToBackgroundImage (optional) - Default `Parallax.getCSSBackgroundImage`
+  * `createBackground` CreateBackground (optional) - Default `Parallax.coverElement(Parallax.pesudeBefore)`
+
+### Static Properties
+
+#### `Parallax.insertImage`
+An instance of `CreateBackground`, prepend an `<img>` background to the element
+
+#### `Parallax.pesudeBefore`
+An instance of `CreateBackground`, use CSS `::before` to set background image 
+
+#### `Parallax.getCSSBackgroundImage`
+An instance of `ToBackgroundImage`, read background image from the computed style of the element
+
+### Static Methods
+
+#### `Parallax.coverElement(createBackground)`
+* `createBackground` CreateBackground
+
+Returns `CreateBackground`
+
+Scales the background to the minimum required size for it to always cover the element
+
+## Type: ToBackgroundImage = string | ((el: Element) => string)
+* `string` url of the image
+
+## Type: CreateBackground
+

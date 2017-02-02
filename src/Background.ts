@@ -49,8 +49,6 @@ abstract class ScaleBackground implements Background {
     constructor (background: Background) {
         this.background = background
     }
-
-    @action
     updateTransform (transform: Transform) {
         this.background.updateTransform(Object.assign({}, transform, {
             scale: transform.scale * this.scale
@@ -82,7 +80,7 @@ export class CoverElement extends ScaleBackground {
         const { height: viewportHeight } = this.element.viewport
         const { height: elementHeight } = this.element
 
-        const coverElementTop = this.velocityScale > 0
+        const coverElementTop = this.velocityScale > 1
             ? elementHeight + (this.velocityScale - 1) * (viewportHeight + elementHeight)
             : elementHeight + (1 - this.velocityScale) * (viewportHeight - elementHeight)
 

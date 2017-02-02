@@ -4,7 +4,7 @@
   "description": "js parallax background-image",
   "main": "parallax-background-image.js",
   "scripts": {
-    "build": "./node_modules/typescript/bin/tsc && ./node_modules/rollup/bin/rollup -c",
+    "build": "./node_modules/.bin/tsc && ./node_modules/.bin/rollup -c && ./node_modules/.bin/babili parallax-background-image.js --out-file parallax-background-image.min.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,7 +19,8 @@
   "homepage": "https://github.com/ray851107/parallax-background-image#readme",
   "devDependencies": {
     "rollup": "^0.41.4",
-    "typescript": "^2.1.5"
+    "typescript": "^2.1.5",
+    "babili": "0.0.10"
   },
   "dependencies": {
     "mobx": "^3.0.2"

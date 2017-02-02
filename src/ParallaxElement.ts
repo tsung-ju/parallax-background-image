@@ -2,7 +2,7 @@ import {computed} from 'mobx'
 
 import {ATTR_PARALLAX_ELEMENT} from './Constants'
 import {Viewport} from './Viewport'
-import {observeBoundingClientRect} from './ObserveBoundingClientRect'
+import {ObservableBoundingClientRect} from './ObservableBoundingClientRect'
 
 export class ParallaxElement {
     readonly id: string
@@ -13,7 +13,7 @@ export class ParallaxElement {
     constructor (element: HTMLElement, viewport: Viewport) {
         this.id = ParallaxElement.getNextId()
         this.element = element
-        this.boundingClientRect = observeBoundingClientRect(element)
+        this.boundingClientRect = new ObservableBoundingClientRect(element)
         this.viewport = viewport
 
         this.element.setAttribute(ATTR_PARALLAX_ELEMENT, this.id)

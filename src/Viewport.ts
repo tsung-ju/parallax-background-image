@@ -1,5 +1,5 @@
 import {computed} from 'mobx'
-import {observeBoundingClientRect} from './ObserveBoundingClientRect'
+import {ObservableBoundingClientRect} from './ObservableBoundingClientRect'
 
 export class Viewport {
     readonly element: HTMLElement
@@ -16,7 +16,7 @@ export class Viewport {
 
         this.element = element
         this.perspective = perspective
-        this.boundingClientRect = observeBoundingClientRect(element)
+        this.boundingClientRect = new ObservableBoundingClientRect(element)
     }
     @computed get height () {
         return this.boundingClientRect.height

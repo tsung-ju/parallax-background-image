@@ -272,15 +272,15 @@ var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, 
 class ObservableBoundingClientRect {
     constructor(element) {
         const watch = () => {
-            const rect = element.getBoundingClientRect();
-            mobx.transaction(() => {
-                for (let key of ['bottom', 'height', 'left', 'right', 'top', 'width']) {
-                    this[key] = rect[key];
-                }
-            });
+            this.update(element.getBoundingClientRect());
             window.requestAnimationFrame(watch);
         };
         watch();
+    }
+    update(rect) {
+        for (let key of ['bottom', 'height', 'left', 'right', 'top', 'width']) {
+            this[key] = rect[key];
+        }
     }
 }
 __decorate$3([
@@ -301,6 +301,9 @@ __decorate$3([
 __decorate$3([
     mobx.observable
 ], ObservableBoundingClientRect.prototype, "width", void 0);
+__decorate$3([
+    mobx.action
+], ObservableBoundingClientRect.prototype, "update", null);
 
 var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;

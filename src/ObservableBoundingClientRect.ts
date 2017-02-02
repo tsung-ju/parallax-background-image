@@ -1,4 +1,4 @@
-import {observable, transaction, IObservableObject} from 'mobx'
+import {observable, action, IObservableObject} from 'mobx'
 
 export class ObservableBoundingClientRect implements ClientRect {
     @observable bottom: number;
@@ -10,16 +10,17 @@ export class ObservableBoundingClientRect implements ClientRect {
 
     constructor (element: HTMLElement) {
         const watch = () => {
-            const rect = element.getBoundingClientRect()
-            transaction(() => {
-                for (let key of ['bottom', 'height', 'left', 'right', 'top', 'width']) {
-                    this[key] = rect[key]
-                }
-            })
+            this.update(element.getBoundingClientRect())
             window.requestAnimationFrame(watch)
         }
         watch()
-        
+    }
+
+    @action
+    update (rect: ClientRect) {
+        for (let key of ['bottom', 'height', 'left', 'right', 'top', 'width']) {
+            this[key] = rect[key]
+        }
     }
 }
 

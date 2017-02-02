@@ -68,85 +68,6 @@ function createStyleElement() {
     return style;
 }
 
-var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-class ParallaxTransform {
-    constructor(element, background, velocityScale) {
-        this.element = element;
-        this.background = background;
-        this.velocityScale = velocityScale;
-    }
-    get scale() {
-        return 1 / this.velocityScale;
-    }
-    get translateX() {
-        return this.element.left * (this.scale - 1);
-    }
-    get translateY() {
-        const element = this.element;
-        const viewport = this.element.viewport;
-        return ((viewport.height - this.background.height) * this.scale - (viewport.height - element.height)) / 2;
-    }
-    get translateZ() {
-        return this.element.viewport.perspective * (1 - this.scale);
-    }
-}
-__decorate$1([
-    mobx.computed
-], ParallaxTransform.prototype, "scale", null);
-__decorate$1([
-    mobx.computed
-], ParallaxTransform.prototype, "translateX", null);
-__decorate$1([
-    mobx.computed
-], ParallaxTransform.prototype, "translateY", null);
-__decorate$1([
-    mobx.computed
-], ParallaxTransform.prototype, "translateZ", null);
-function mapTransform(transform, patcher) {
-    return new MapTransform(transform, patcher);
-}
-class MapTransform {
-    constructor(input, patcher) {
-        this.input = input;
-        this.patcher = patcher;
-    }
-    get patched() {
-        return Object.assign({}, this.input, this.patcher(this.input));
-    }
-    get scale() {
-        return this.patched.scale;
-    }
-    get translateX() {
-        return this.patched.translateX;
-    }
-    get translateY() {
-        return this.patched.translateY;
-    }
-    get translateZ() {
-        return this.patched.translateZ;
-    }
-}
-__decorate$1([
-    mobx.computed
-], MapTransform.prototype, "patched", null);
-__decorate$1([
-    mobx.computed
-], MapTransform.prototype, "scale", null);
-__decorate$1([
-    mobx.computed
-], MapTransform.prototype, "translateX", null);
-__decorate$1([
-    mobx.computed
-], MapTransform.prototype, "translateY", null);
-__decorate$1([
-    mobx.computed
-], MapTransform.prototype, "translateZ", null);
-
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -166,7 +87,7 @@ class StyleBackground {
             pointerEvents: 'none'
         });
     }
-    setTransform(transform) {
+    updateTransform(transform) {
         mobx.autorun(() => {
             this.style.transform = `
                 translateX(${transform.translateX}px)
@@ -176,16 +97,13 @@ class StyleBackground {
         });
     }
 }
-__decorate([
-    mobx.action
-], StyleBackground.prototype, "setTransform", null);
 class ScaleBackground {
     constructor(background) {
         this.background = background;
     }
-    setTransform(transform) {
-        this.background.setTransform(mapTransform(transform, transform => {
-            return { scale: transform.scale * this.scale };
+    updateTransform(transform) {
+        this.background.updateTransform(Object.assign({}, transform, {
+            scale: transform.scale * this.scale
         }));
     }
     get height() {
@@ -197,7 +115,7 @@ class ScaleBackground {
 }
 __decorate([
     mobx.action
-], ScaleBackground.prototype, "setTransform", null);
+], ScaleBackground.prototype, "updateTransform", null);
 __decorate([
     mobx.computed
 ], ScaleBackground.prototype, "height", null);
@@ -263,7 +181,7 @@ function fromPartial(options) {
     return Object.assign({}, defaultOptions, options);
 }
 
-var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
@@ -283,29 +201,29 @@ class ObservableBoundingClientRect {
         }
     }
 }
-__decorate$3([
+__decorate$2([
     mobx.observable
 ], ObservableBoundingClientRect.prototype, "bottom", void 0);
-__decorate$3([
+__decorate$2([
     mobx.observable
 ], ObservableBoundingClientRect.prototype, "height", void 0);
-__decorate$3([
+__decorate$2([
     mobx.observable
 ], ObservableBoundingClientRect.prototype, "left", void 0);
-__decorate$3([
+__decorate$2([
     mobx.observable
 ], ObservableBoundingClientRect.prototype, "right", void 0);
-__decorate$3([
+__decorate$2([
     mobx.observable
 ], ObservableBoundingClientRect.prototype, "top", void 0);
-__decorate$3([
+__decorate$2([
     mobx.observable
 ], ObservableBoundingClientRect.prototype, "width", void 0);
-__decorate$3([
+__decorate$2([
     mobx.action
 ], ObservableBoundingClientRect.prototype, "update", null);
 
-var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
@@ -327,11 +245,11 @@ class Viewport {
         return this.boundingClientRect.height;
     }
 }
-__decorate$2([
+__decorate$1([
     mobx.computed
 ], Viewport.prototype, "height", null);
 
-var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
@@ -359,15 +277,26 @@ class ParallaxElement {
     }
 }
 ParallaxElement.nextId = 0;
-__decorate$4([
+__decorate$3([
     mobx.computed
 ], ParallaxElement.prototype, "width", null);
-__decorate$4([
+__decorate$3([
     mobx.computed
 ], ParallaxElement.prototype, "height", null);
-__decorate$4([
+__decorate$3([
     mobx.computed
 ], ParallaxElement.prototype, "left", null);
+
+function parallaxTransform(element, background, velocityScale) {
+    const scale = 1 / velocityScale;
+    const viewport = element.viewport;
+    return {
+        scale,
+        translateX: element.left * (scale - 1),
+        translateY: ((viewport.height - background.height) * scale - (viewport.height - element.height)) / 2,
+        translateZ: viewport.perspective * (1 - scale)
+    };
+}
 
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -395,7 +324,6 @@ function initialize() {
 class Parallax {
     constructor(element, perspective = 1000) {
         this.viewport = new Viewport(toElement(element), perspective);
-        this.elements = new Set();
     }
     add(elements, partial = {}) {
         const options = fromPartial(partial);
@@ -410,9 +338,9 @@ class Parallax {
             const image = yield loadBackgroundImage(element, options.backgroundImage);
             const parallaxElement = new ParallaxElement(element, this.viewport);
             const background = options.createBackground(parallaxElement, image, options.velocityScale);
-            const transform = new ParallaxTransform(parallaxElement, background, options.velocityScale);
-            background.setTransform(transform);
-            this.elements.add({ parallaxElement, background, transform });
+            mobx.autorun(() => {
+                background.updateTransform(parallaxTransform(parallaxElement, background, options.velocityScale));
+            });
         });
     }
 }

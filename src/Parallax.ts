@@ -1,3 +1,5 @@
+import {autorun} from 'mobx'
+
 import {ATTR_PARALLAX_ELEMENT} from './Constants'
 import {ToElement, toElement, ToElementArray, toElementArray} from './ToElement'
 import {loadBackgroundImage} from './BackgroundImage'
@@ -6,7 +8,7 @@ import {prependStyleSheet} from './StyleSheet'
 import {Viewport} from './Viewport'
 import {ParallaxElement} from './ParallaxElement'
 import {Background} from './Background'
-import {Transform, ParallaxTransform} from './Transform'
+import {Transform, parallaxTransform} from './Transform'
 
 initialize()
 
@@ -27,11 +29,9 @@ function initialize () {
 
 export class Parallax {
     viewport: Viewport
-    elements: Set<{parallaxElement: ParallaxElement, background: Background, transform: Transform}>
 
     constructor (element: ToElement<HTMLElement>, perspective: number = 1000) {
         this.viewport = new Viewport(toElement(element), perspective)
-        this.elements = new Set()
     }
 
     add (elements: ToElementArray<HTMLElement>, partial: Partial<Options> = {}): Promise<null>[] {
@@ -50,9 +50,8 @@ export class Parallax {
         const parallaxElement = new ParallaxElement(element, this.viewport)
 
         const background = options.createBackground(parallaxElement, image, options.velocityScale)
-        const transform = new ParallaxTransform(parallaxElement, background, options.velocityScale)
-        background.setTransform(transform)
-
-        this.elements.add({parallaxElement, background, transform})
+        autorun(() => {
+            background.updateTransform(parallaxTransform(parallaxElement, background, options.velocityScale))
+        })
     }
 }

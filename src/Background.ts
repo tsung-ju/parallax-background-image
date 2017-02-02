@@ -3,13 +3,13 @@ import {action, computed, observable, autorun} from 'mobx'
 import {ATTR_PARALLAX_ELEMENT} from './Constants'
 import {appendStyleSheet} from './StyleSheet'
 import {ParallaxElement} from './ParallaxElement'
-import {Transform, mapTransform} from './Transform'
+import {Transform} from './Transform'
 
 export interface Background {
     readonly width: number
     readonly height: number
     
-    setTransform (transform: Transform)
+    updateTransform (transform: Transform)
 }
 
 class StyleBackground implements Background {
@@ -31,8 +31,7 @@ class StyleBackground implements Background {
         })
     }
 
-    @action
-    setTransform (transform: Transform) {
+    updateTransform (transform: Transform) {
         autorun(() => {
             this.style.transform = `
                 translateX(${transform.translateX}px)
@@ -52,9 +51,9 @@ abstract class ScaleBackground implements Background {
     }
 
     @action
-    setTransform (transform: Transform) {
-        this.background.setTransform(mapTransform(transform, transform => {
-            return { scale: transform.scale * this.scale }
+    updateTransform (transform: Transform) {
+        this.background.updateTransform(Object.assign({}, transform, {
+            scale: transform.scale * this.scale
         }))
     }
     @computed get height (): number {

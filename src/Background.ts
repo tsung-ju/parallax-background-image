@@ -42,7 +42,7 @@ class StyleBackground implements Background {
     }
 }
 
-abstract class ScaleBackground implements Background {
+export abstract class ScaleBackground implements Background {
     background: Background
     abstract readonly scale: number
 

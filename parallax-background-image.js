@@ -26,11 +26,19 @@ function toElementArray(elements, parent = document) {
     }
 }
 
-function loadBackgroundImage(el, getImage) {
-    if (typeof getImage === 'string') {
-        return loadImage(getImage);
+function toFunction1(toFunc) {
+    if (typeof toFunc === 'function') {
+        return toFunc;
     }
-    return loadImage(getImage(el));
+    return (arg0) => toFunc;
+}
+function toAsyncFunction1(toFunc) {
+    const func = toFunction1(toFunc);
+    return (arg0) => new Promise(resolve => resolve(func(arg0)));
+}
+
+function loadBackgroundImage(el, getImage) {
+    return toAsyncFunction1(getImage)(el).then(loadImage);
 }
 function loadImage(src) {
     return new Promise((resolve, reject) => {

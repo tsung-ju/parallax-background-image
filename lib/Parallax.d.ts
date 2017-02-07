@@ -4,7 +4,7 @@ import { Viewport } from './Viewport';
 import { ParallaxElement } from './ParallaxElement';
 import { Background, coverElement } from './Background';
 export declare class Parallax {
-    static getCSSBackgroundImage: string | ((el: Element) => string);
+    static getCSSBackgroundImage: string | Promise<string> | ((arg0: Element) => string | Promise<string>);
     static pesudoBefore: (el: ParallaxElement, image: HTMLImageElement, velocityScale: number) => Background;
     static insertImg: (el: ParallaxElement, image: HTMLImageElement, velocityScale: number) => Background;
     static coverElement: typeof coverElement;

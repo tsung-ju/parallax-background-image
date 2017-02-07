@@ -36,7 +36,7 @@ export class Parallax {
     viewport: Viewport
     useFallback: boolean
 
-    constructor (element: ToElement<HTMLElement>, useFallback = !isChrome, perspective: number = 1000) {
+    constructor (element: ToElement<HTMLElement>, useFallback = !isChrome(), perspective: number = 1000) {
         if (useFallback) {
             perspective = 0
         }

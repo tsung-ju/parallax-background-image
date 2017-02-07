@@ -361,7 +361,7 @@ function initialize() {
     `, 0);
 }
 class Parallax {
-    constructor(element, useFallback = !isChrome, perspective = 1000) {
+    constructor(element, useFallback = !isChrome(), perspective = 1000) {
         if (useFallback) {
             perspective = 0;
         }

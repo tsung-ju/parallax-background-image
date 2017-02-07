@@ -1,10 +1,9 @@
-export type ToBackgroundImage = string | ((el: Element) => string)
+import {ToAsyncFunction1, toAsyncFunction1} from './ToFunction'
+
+export type ToBackgroundImage = ToAsyncFunction1<Element, string>
 
 export function loadBackgroundImage (el: Element, getImage: ToBackgroundImage): Promise<HTMLImageElement> {
-    if (typeof getImage === 'string') {
-        return loadImage(getImage)
-    }
-    return loadImage(getImage(el))
+    return toAsyncFunction1(getImage)(el).then(loadImage)
 }
 
 function loadImage (src: string): Promise<HTMLImageElement> {

@@ -328,10 +328,11 @@ function fallbackTransform(element, background, velocityScale) {
     const viewport = element.viewport;
     const viewportCenter = viewport.top + viewport.height / 2;
     const elementCenter = element.top + element.height / 2;
+    const backgroundCenter = element.top + background.height / 2;
     return {
         scale: 1,
         translateX: 0,
-        translateY: (elementCenter - viewportCenter) * velocityScale - background.height / 2,
+        translateY: (elementCenter - viewportCenter) * (velocityScale - 1) - (backgroundCenter - elementCenter),
         translateZ: 0
     };
 }

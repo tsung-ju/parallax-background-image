@@ -189,8 +189,6 @@ const styleSheet = appendStyleSheet();
 
 const defaultOptions = {
     velocityScale: 0.8,
-    translateX: 0,
-    translateY: 0,
     backgroundImage: getCSSBackgroundImage,
     createBackground: coverElement(pseudoBefore)
 };

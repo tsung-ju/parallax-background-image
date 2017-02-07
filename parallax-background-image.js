@@ -361,7 +361,7 @@ function initialize() {
     `, 0);
 }
 class Parallax {
-    constructor(element, useFallback = false, perspective = 1000) {
+    constructor(element, useFallback = !isChrome, perspective = 1000) {
         if (useFallback) {
             perspective = 0;
         }
@@ -392,6 +392,9 @@ Parallax.getCSSBackgroundImage = getCSSBackgroundImage;
 Parallax.pesudoBefore = pseudoBefore;
 Parallax.insertImg = insertImg;
 Parallax.coverElement = coverElement;
+function isChrome() {
+    return navigator.userAgent.indexOf('Chrmoe/') !== -1;
+}
 
 window['Parallax'] = Parallax;
 

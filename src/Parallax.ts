@@ -36,7 +36,7 @@ export class Parallax {
     viewport: Viewport
     useFallback: boolean
 
-    constructor (element: ToElement<HTMLElement>, useFallback = false, perspective: number = 1000) {
+    constructor (element: ToElement<HTMLElement>, useFallback = !isChrome, perspective: number = 1000) {
         if (useFallback) {
             perspective = 0
         }
@@ -65,4 +65,8 @@ export class Parallax {
             background.updateTransform(transform(parallaxElement, background, options.velocityScale))
         })
     }
+}
+
+function isChrome () {
+    return navigator.userAgent.indexOf('Chrmoe/') !== -1
 }

@@ -393,7 +393,7 @@ Parallax.pesudoBefore = pseudoBefore;
 Parallax.insertImg = insertImg;
 Parallax.coverElement = coverElement;
 function isChrome() {
-    return navigator.userAgent.indexOf('Chrmoe/') !== -1;
+    return navigator.userAgent.indexOf('Chrome/') !== -1;
 }
 
 window['Parallax'] = Parallax;

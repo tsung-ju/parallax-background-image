@@ -4,6 +4,8 @@ A helper for creating pure CSS parallax background image effects. Works well on 
 Inspired by <http://keithclark.co.uk/articles/pure-css-parallax-websites/>
 
 ## Work in progress!
+Currently CSS transform can only works on chromium-based browsers. A javascript-based fallback is used on other browsers.
+
 
 # [Example](https://ray851107.github.io/parallax-background-image/demo.html)
 
@@ -61,9 +63,10 @@ For complete example see `demo.html`
 
 ## Class: Parallax
 
-### `new Parallax(viewport[, perspective])`
+### `new Parallax(viewport[, useFallback , perspective])`
 
 * `viewport` HTMLElement - The 3D viewport
+* `useFallback` boolean - Whether to use the js-based fallback or not. Default `true` on non-chromium browsers.
 * `perspective` Number - Default `1000`
   * In most cases, you won't need to change it. But if you need to make backgrounds move much faster than the scrolling speed, bigger value will (probably) improve accuracy.
 

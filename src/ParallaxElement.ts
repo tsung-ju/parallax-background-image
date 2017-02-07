@@ -19,13 +19,13 @@ export class ParallaxElement {
         this.element.setAttribute(ATTR_PARALLAX_ELEMENT, this.id)
     }
 
-    @computed get width () {
+    @computed get width (): number {
         return this.boundingClientRect.width
     }
-    @computed get height () {
+    @computed get height (): number {
         return this.boundingClientRect.height
     }
-    @computed get left () {
+    @computed get left (): number {
         return this.boundingClientRect.left
     }
 

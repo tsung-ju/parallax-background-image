@@ -18,7 +18,7 @@ export class Viewport {
         this.perspective = perspective
         this.boundingClientRect = new ObservableBoundingClientRect(element)
     }
-    @computed get height () {
+    @computed get height (): number {
         return this.boundingClientRect.height
     }
 }

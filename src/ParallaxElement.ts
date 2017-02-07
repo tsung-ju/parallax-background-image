@@ -28,7 +28,9 @@ export class ParallaxElement {
     @computed get left (): number {
         return this.boundingClientRect.left
     }
-
+    @computed get top (): number {
+        return this.boundingClientRect.top
+    }
     private static nextId = 0
     private static getNextId (): string {
         return `${ParallaxElement.nextId++}`

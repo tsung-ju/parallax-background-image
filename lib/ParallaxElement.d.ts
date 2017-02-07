@@ -8,6 +8,7 @@ export declare class ParallaxElement {
     readonly width: number;
     readonly height: number;
     readonly left: number;
+    readonly top: number;
     private static nextId;
     private static getNextId();
 }

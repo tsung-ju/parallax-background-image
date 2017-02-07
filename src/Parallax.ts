@@ -8,7 +8,7 @@ import {prependStyleSheet} from './StyleSheet'
 import {Viewport} from './Viewport'
 import {ParallaxElement} from './ParallaxElement'
 import {Background, coverElement, pseudoBefore, insertImg} from './Background'
-import {Transform, parallaxTransform} from './Transform'
+import {Transform, parallaxTransform, fallbackTransform} from './Transform'
 
 initialize()
 
@@ -34,8 +34,12 @@ export class Parallax {
     static coverElement = coverElement
 
     viewport: Viewport
+    useFallback: boolean
 
-    constructor (element: ToElement<HTMLElement>, perspective: number = 1000) {
+    constructor (element: ToElement<HTMLElement>, useFallback = false, perspective: number = 1000) {
+        if (useFallback) {
+            perspective = 0
+        }
         this.viewport = new Viewport(toElement(element), perspective)
     }
 
@@ -55,6 +59,7 @@ export class Parallax {
         const parallaxElement = new ParallaxElement(element, this.viewport)
 
         const background = options.createBackground(parallaxElement, image, options.velocityScale)
+        const transform = this.useFallback ? fallbackTransform : parallaxTransform
         autorun(() => {
             background.updateTransform(parallaxTransform(parallaxElement, background, options.velocityScale))
         })

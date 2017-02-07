@@ -7,3 +7,4 @@ export interface Transform {
     readonly translateZ: number;
 }
 export declare function parallaxTransform(element: ParallaxElement, background: Background, velocityScale: number): Transform;
+export declare function fallbackTransform(element: ParallaxElement, background: Background, velocityScale: number): Transform;

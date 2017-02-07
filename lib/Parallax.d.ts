@@ -9,7 +9,8 @@ export declare class Parallax {
     static insertImg: (el: ParallaxElement, image: HTMLImageElement, velocityScale: number) => Background;
     static coverElement: typeof coverElement;
     viewport: Viewport;
-    constructor(element: ToElement<HTMLElement>, perspective?: number);
+    useFallback: boolean;
+    constructor(element: ToElement<HTMLElement>, useFallback?: boolean, perspective?: number);
     add(elements: ToElementArray<HTMLElement>, partial?: Partial<Options>): Promise<null>[];
     addElement(element: HTMLElement, options: Options): Promise<void>;
 }

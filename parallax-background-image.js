@@ -259,10 +259,16 @@ class Viewport {
     get height() {
         return this.boundingClientRect.height;
     }
+    get top() {
+        return this.boundingClientRect.top;
+    }
 }
 __decorate$1([
     mobx.computed
 ], Viewport.prototype, "height", null);
+__decorate$1([
+    mobx.computed
+], Viewport.prototype, "top", null);
 
 var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -287,6 +293,9 @@ class ParallaxElement {
     get left() {
         return this.boundingClientRect.left;
     }
+    get top() {
+        return this.boundingClientRect.top;
+    }
     static getNextId() {
         return `${ParallaxElement.nextId++}`;
     }
@@ -301,6 +310,9 @@ __decorate$3([
 __decorate$3([
     mobx.computed
 ], ParallaxElement.prototype, "left", null);
+__decorate$3([
+    mobx.computed
+], ParallaxElement.prototype, "top", null);
 
 function parallaxTransform(element, background, velocityScale) {
     const scale = 1 / velocityScale;
@@ -310,6 +322,17 @@ function parallaxTransform(element, background, velocityScale) {
         translateX: element.left * (scale - 1),
         translateY: ((viewport.height - background.height) * scale - (viewport.height - element.height)) / 2,
         translateZ: viewport.perspective * (1 - scale)
+    };
+}
+function fallbackTransform(element, background, velocityScale) {
+    const viewport = element.viewport;
+    const viewportCenter = viewport.top + viewport.height / 2;
+    const elementCenter = element.top + element.height / 2;
+    return {
+        scale: 1,
+        translateX: 0,
+        translateY: (elementCenter - viewportCenter) * velocityScale - background.height / 2,
+        translateZ: 0
     };
 }
 
@@ -337,7 +360,10 @@ function initialize() {
     `, 0);
 }
 class Parallax {
-    constructor(element, perspective = 1000) {
+    constructor(element, useFallback = false, perspective = 1000) {
+        if (useFallback) {
+            perspective = 0;
+        }
         this.viewport = new Viewport(toElement(element), perspective);
     }
     add(elements, partial = {}) {
@@ -353,6 +379,7 @@ class Parallax {
             const image = yield loadBackgroundImage(element, options.backgroundImage);
             const parallaxElement = new ParallaxElement(element, this.viewport);
             const background = options.createBackground(parallaxElement, image, options.velocityScale);
+            const transform = this.useFallback ? fallbackTransform : parallaxTransform;
             mobx.autorun(() => {
                 background.updateTransform(parallaxTransform(parallaxElement, background, options.velocityScale));
             });

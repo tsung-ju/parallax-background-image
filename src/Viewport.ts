@@ -21,4 +21,7 @@ export class Viewport {
     @computed get height (): number {
         return this.boundingClientRect.height
     }
+    @computed get top (): number {
+        return this.boundingClientRect.top
+    }
 }

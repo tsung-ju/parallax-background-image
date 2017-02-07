@@ -364,6 +364,7 @@ class Parallax {
         if (useFallback) {
             perspective = 0;
         }
+        this.useFallback = useFallback;
         this.viewport = new Viewport(toElement(element), perspective);
     }
     add(elements, partial = {}) {

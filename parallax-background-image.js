@@ -107,7 +107,7 @@ class SchedulerImpl {
     run() {
         const loop = () => {
             this.runOnce();
-            window.requestAnimationFrame(this.runOnce);
+            window.requestAnimationFrame(loop);
         };
         loop();
     }

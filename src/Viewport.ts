@@ -9,6 +9,7 @@ export class Viewport {
     constructor (element: HTMLElement, perspective: number) {
         Object.assign(element.style, {
             overflowY: 'scroll',
+            webkitOverflowScrolling: 'touch',
             transformStyle: 'flat',
             perspective: perspective + 'px',
             perspectiveOrigin: '0 0'

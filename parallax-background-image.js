@@ -286,6 +286,7 @@ class Viewport {
     constructor(element, perspective) {
         Object.assign(element.style, {
             overflowY: 'scroll',
+            webkitOverflowScrolling: 'touch',
             transformStyle: 'flat',
             perspective: perspective + 'px',
             perspectiveOrigin: '0 0'

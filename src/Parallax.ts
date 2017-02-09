@@ -9,7 +9,7 @@ import {Viewport} from './Viewport'
 import {ParallaxElement} from './ParallaxElement'
 import {Background, coverElement, pseudoBefore, insertImg} from './Background'
 import {Transform, parallaxTransform, fallbackTransform} from './Transform'
-import {scheduler} from './Scheduler'
+import {scheduler, Scheduler} from './Scheduler'
 
 initialize()
 
@@ -32,6 +32,7 @@ function initialize () {
 }
 
 export class Parallax {
+    static scheduler: Scheduler = scheduler
     static getCSSBackgroundImage = getCSSBackgroundImage
     static pesudoBefore = pseudoBefore
     static insertImg = insertImg

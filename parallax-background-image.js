@@ -428,6 +428,7 @@ class Parallax {
         });
     }
 }
+Parallax.scheduler = scheduler;
 Parallax.getCSSBackgroundImage = getCSSBackgroundImage;
 Parallax.pesudoBefore = pseudoBefore;
 Parallax.insertImg = insertImg;

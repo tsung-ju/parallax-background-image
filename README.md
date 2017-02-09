@@ -1,11 +1,12 @@
 # parallax-background-image
-A helper for creating pure CSS parallax background image effects. Works well on mobile devices!
+A helper for creating pure CSS parallax background image effects.
+It calculates and sets the css transform property and the minimum required size of the background.
+Works well on mobile devices!
 
 Inspired by <http://keithclark.co.uk/articles/pure-css-parallax-websites/>
 
 ## Work in progress!
 Currently CSS transform can only works on chromium-based browsers. A javascript-based fallback is used on other browsers.
-
 
 # [Example](https://ray851107.github.io/parallax-background-image/demo.html)
 
@@ -80,15 +81,15 @@ For complete example see `demo.html`
   * An Array of HTMLElements
 * `options` Object (optional) 
   * `velocityScale` Number (optional) - `velocity of the background = velocity of the element * velocityScale`. Must be positive. Default `0.8`
-  * `backgroundImage` ToBackgroundImage (optional) - Default `Parallax.getCSSBackgroundImage`
-  * `createBackground` CreateBackground (optional) - Default `Parallax.coverElement(Parallax.pesudeBefore)`
+  * `backgroundImage` string (optional) - url to the background image
+  * `createBackground` CreateBackground (optional) - Default `Parallax.coverElement(Parallax.pseudoBefore)`
 
 ### Static Properties
 
 #### `Parallax.insertImage`
 An instance of `CreateBackground`, prepend an `<img>` background to the element
 
-#### `Parallax.pesudeBefore`
+#### `Parallax.pseudoBefore`
 An instance of `CreateBackground`, use CSS `::before` to set background image 
 
 #### `Parallax.getCSSBackgroundImage`
@@ -103,8 +104,4 @@ Returns `CreateBackground`
 
 Scales the background to the minimum required size for it to always cover the element
 
-## Type: ToBackgroundImage = string | ((el: Element) => string)
-* `string` url of the image
-
 ## Type: CreateBackground
-

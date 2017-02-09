@@ -19,11 +19,12 @@ class SchedulerImpl implements Scheduler {
     }
 
     runOnce (): void {
-        const { reads, writes } = this
+        const reads = this.reads
         this.reads = []
-        this.writes = []
-
         reads.forEach(task => task())
+
+        const writes = this.writes
+        this.writes = []
         writes.forEach(task => task())
     }
 

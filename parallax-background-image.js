@@ -98,10 +98,11 @@ class SchedulerImpl {
         this.writes.push(task);
     }
     runOnce() {
-        const { reads, writes } = this;
+        const reads = this.reads;
         this.reads = [];
-        this.writes = [];
         reads.forEach(task => task());
+        const writes = this.writes;
+        this.writes = [];
         writes.forEach(task => task());
     }
     run() {

@@ -367,6 +367,9 @@ function fallbackTransform(element, background) {
     const viewport = element.viewport;
     const viewportCenter = viewport.top + viewport.height / 2;
     const elementCenter = element.top + element.height / 2;
+    if (Math.abs(elementCenter - viewportCenter) > (viewport.height + element.height) / 2) {
+        return null;
+    }
     const backgroundCenter = element.top + background.height / 2;
     return {
         scale: 1,
@@ -421,9 +424,11 @@ class Parallax {
             const image = yield loadBackgroundImage(element, options.backgroundImage);
             const parallaxElement = new ParallaxElement(element, this.viewport, options.velocityScale);
             const background = options.createBackground(parallaxElement, image);
-            const transform = this.useFallback ? fallbackTransform : parallaxTransform;
+            const getTransform = this.useFallback ? fallbackTransform : parallaxTransform;
             mobx.autorun(() => {
-                background.updateTransform(transform(parallaxElement, background));
+                const transform = getTransform(parallaxElement, background);
+                if (transform != null)
+                    background.updateTransform(transform);
             });
         });
     }

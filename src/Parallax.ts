@@ -65,9 +65,10 @@ export class Parallax {
         const parallaxElement = new ParallaxElement(element, this.viewport, options.velocityScale)
 
         const background = options.createBackground(parallaxElement, image)
-        const transform = this.useFallback ? fallbackTransform : parallaxTransform
+        const getTransform = this.useFallback ? fallbackTransform : parallaxTransform
         autorun(() => {
-            background.updateTransform(transform(parallaxElement, background))
+            const transform = getTransform(parallaxElement, background)
+            if (transform != null) background.updateTransform(transform)
         })
     }
 }

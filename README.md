@@ -1,6 +1,6 @@
 # parallax-background-image
 A helper for creating pure CSS parallax background image effects.
-It calculates and sets the css transform property and the minimum required size of the background.
+It calculates and sets the css transform property and the size of the background.
 Works well on mobile devices!
 
 Inspired by <http://keithclark.co.uk/articles/pure-css-parallax-websites/>

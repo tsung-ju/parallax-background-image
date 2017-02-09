@@ -74,5 +74,6 @@ export class Parallax {
 }
 
 function isChrome () {
-    return navigator.userAgent.indexOf('Chrome/') !== -1
+    const {userAgent} = navigator
+    return userAgent.includes('Chrome/') && ! userAgent.includes('Edge/')
 }

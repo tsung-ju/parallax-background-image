@@ -441,7 +441,8 @@ Parallax.pesudoBefore = pseudoBefore;
 Parallax.insertImg = insertImg;
 Parallax.coverElement = coverElement;
 function isChrome() {
-    return navigator.userAgent.indexOf('Chrome/') !== -1;
+    const { userAgent } = navigator;
+    return userAgent.includes('Chrome/') && !userAgent.includes('Edge/');
 }
 
 window['Parallax'] = Parallax;

@@ -4,6 +4,7 @@ import {ATTR_PARALLAX_ELEMENT} from './Constants'
 import {appendStyleSheet} from './StyleSheet'
 import {ParallaxElement} from './ParallaxElement'
 import {Transform} from './Transform'
+import {scheduler} from './Scheduler'
 
 export interface Background {
     readonly width: number
@@ -32,7 +33,7 @@ class StyleBackground implements Background {
     }
 
     updateTransform (transform: Transform) {
-        window.requestAnimationFrame(() => {
+        scheduler.write(() => {
             this.style.transform = `
                 translateX(${transform.translateX}px)
                 translateY(${transform.translateY}px)

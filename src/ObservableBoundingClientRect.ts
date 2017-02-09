@@ -1,4 +1,5 @@
 import {observable, action, IObservableObject} from 'mobx'
+import {scheduler} from './Scheduler'
 
 export class ObservableBoundingClientRect implements ClientRect {
     @observable bottom: number;
@@ -11,7 +12,7 @@ export class ObservableBoundingClientRect implements ClientRect {
     constructor (element: HTMLElement) {
         const watch = () => {
             this.update(element.getBoundingClientRect())
-            window.requestAnimationFrame(watch)
+            scheduler.read(watch)
         }
         watch()
     }

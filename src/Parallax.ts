@@ -9,6 +9,7 @@ import {Viewport} from './Viewport'
 import {ParallaxElement} from './ParallaxElement'
 import {Background, coverElement, pseudoBefore, insertImg} from './Background'
 import {Transform, parallaxTransform, fallbackTransform} from './Transform'
+import {scheduler} from './Scheduler'
 
 initialize()
 
@@ -19,12 +20,15 @@ function initialize () {
             position: relative;
         }
     `, 0)
+
     styleSheet.insertRule(`
         [${ATTR_PARALLAX_ELEMENT}] {
             position: relative;
             overflow: hidden;
         }
     `, 0)
+
+    scheduler.run()
 }
 
 export class Parallax {

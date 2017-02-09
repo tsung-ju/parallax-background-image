@@ -86,6 +86,34 @@ function createStyleElement() {
     return style;
 }
 
+class SchedulerImpl {
+    constructor() {
+        this.reads = [];
+        this.writes = [];
+    }
+    read(task) {
+        this.reads.push(task);
+    }
+    write(task) {
+        this.writes.push(task);
+    }
+    runOnce() {
+        const { reads, writes } = this;
+        this.reads = [];
+        this.writes = [];
+        reads.forEach(task => task());
+        writes.forEach(task => task());
+    }
+    run() {
+        const loop = () => {
+            this.runOnce();
+            window.requestAnimationFrame(this.runOnce);
+        };
+        loop();
+    }
+}
+const scheduler = new SchedulerImpl();
+
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -106,7 +134,7 @@ class StyleBackground {
         });
     }
     updateTransform(transform) {
-        window.requestAnimationFrame(() => {
+        scheduler.write(() => {
             this.style.transform = `
                 translateX(${transform.translateX}px)
                 translateY(${transform.translateY}px)
@@ -215,7 +243,7 @@ class ObservableBoundingClientRect {
     constructor(element) {
         const watch = () => {
             this.update(element.getBoundingClientRect());
-            window.requestAnimationFrame(watch);
+            scheduler.read(watch);
         };
         watch();
     }
@@ -369,6 +397,7 @@ function initialize() {
             overflow: hidden;
         }
     `, 0);
+    scheduler.run();
 }
 class Parallax {
     constructor(element, useFallback = !isChrome(), perspective = 1000) {

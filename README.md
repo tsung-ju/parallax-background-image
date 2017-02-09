@@ -92,9 +92,6 @@ An instance of `CreateBackground`, prepend an `<img>` background to the element
 #### `Parallax.pseudoBefore`
 An instance of `CreateBackground`, use CSS `::before` to set background image 
 
-#### `Parallax.getCSSBackgroundImage`
-An instance of `ToBackgroundImage`, read background image from the computed style of the element
-
 ### Static Methods
 
 #### `Parallax.coverElement(createBackground)`

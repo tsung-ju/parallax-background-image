@@ -1,6 +1,48 @@
 (function (mobx) {
 'use strict';
 
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+
+
+
+
+
+
+function __decorate(decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+
+
+
+
+
+function __awaiter(thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
 const ATTR_PARALLAX_ELEMENT = 'data-parallax-element';
 
 function toElement(element, parent = document) {
@@ -26,14 +68,6 @@ function toElementArray(elements, parent = document) {
     }
 }
 
-var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 function toFunction(toFunc) {
     if (typeof toFunc === 'function') {
         return toFunc;
@@ -43,7 +77,7 @@ function toFunction(toFunc) {
 function toAsyncFunction(toFunc) {
     const func = toFunction(toFunc);
     return function () {
-        return __awaiter$1(this, arguments, void 0, function* () { return yield func.apply(this, arguments); });
+        return __awaiter(this, arguments, void 0, function* () { return yield func.apply(this, arguments); });
     };
 }
 
@@ -115,12 +149,6 @@ class SchedulerImpl {
 }
 const scheduler = new SchedulerImpl();
 
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 class StyleBackground {
     constructor(style, width, height) {
         this.style = style;
@@ -234,12 +262,6 @@ function fromPartial(options) {
     return Object.assign({}, defaultOptions, options);
 }
 
-var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 class ObservableBoundingClientRect {
     constructor(element) {
         const watch = () => {
@@ -254,34 +276,28 @@ class ObservableBoundingClientRect {
         }
     }
 }
-__decorate$2([
+__decorate([
     mobx.observable
 ], ObservableBoundingClientRect.prototype, "bottom", void 0);
-__decorate$2([
+__decorate([
     mobx.observable
 ], ObservableBoundingClientRect.prototype, "height", void 0);
-__decorate$2([
+__decorate([
     mobx.observable
 ], ObservableBoundingClientRect.prototype, "left", void 0);
-__decorate$2([
+__decorate([
     mobx.observable
 ], ObservableBoundingClientRect.prototype, "right", void 0);
-__decorate$2([
+__decorate([
     mobx.observable
 ], ObservableBoundingClientRect.prototype, "top", void 0);
-__decorate$2([
+__decorate([
     mobx.observable
 ], ObservableBoundingClientRect.prototype, "width", void 0);
-__decorate$2([
+__decorate([
     mobx.action
 ], ObservableBoundingClientRect.prototype, "update", null);
 
-var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 class Viewport {
     constructor(element, perspective) {
         Object.assign(element.style, {
@@ -302,19 +318,13 @@ class Viewport {
         return this.boundingClientRect.top;
     }
 }
-__decorate$1([
+__decorate([
     mobx.computed
 ], Viewport.prototype, "height", null);
-__decorate$1([
+__decorate([
     mobx.computed
 ], Viewport.prototype, "top", null);
 
-var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 class ParallaxElement {
     constructor(element, viewport, velocityScale) {
         this.id = ParallaxElement.getNextId();
@@ -341,16 +351,16 @@ class ParallaxElement {
     }
 }
 ParallaxElement.nextId = 0;
-__decorate$3([
+__decorate([
     mobx.computed
 ], ParallaxElement.prototype, "width", null);
-__decorate$3([
+__decorate([
     mobx.computed
 ], ParallaxElement.prototype, "height", null);
-__decorate$3([
+__decorate([
     mobx.computed
 ], ParallaxElement.prototype, "left", null);
-__decorate$3([
+__decorate([
     mobx.computed
 ], ParallaxElement.prototype, "top", null);
 
@@ -381,14 +391,6 @@ function fallbackTransform(element, background) {
     };
 }
 
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 initialize();
 function initialize() {
     const styleSheet = prependStyleSheet();

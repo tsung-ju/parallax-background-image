@@ -1,9 +1,9 @@
-import {ToAsyncFunction1, toAsyncFunction1} from './ToFunction'
+import {ToAsyncFunction1, toAsyncFunction} from './ToFunction'
 
 export type ToBackgroundImage = ToAsyncFunction1<Element, string>
 
 export function loadBackgroundImage (el: Element, getImage: ToBackgroundImage): Promise<HTMLImageElement> {
-    return toAsyncFunction1(getImage)(el).then(loadImage)
+    return toAsyncFunction(getImage)(el).then(loadImage)
 }
 
 function loadImage (src: string): Promise<HTMLImageElement> {

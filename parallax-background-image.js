@@ -26,19 +26,29 @@ function toElementArray(elements, parent = document) {
     }
 }
 
-function toFunction1(toFunc) {
+var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+function toFunction(toFunc) {
     if (typeof toFunc === 'function') {
         return toFunc;
     }
-    return (arg0) => toFunc;
+    return () => toFunc;
 }
-function toAsyncFunction1(toFunc) {
-    const func = toFunction1(toFunc);
-    return (arg0) => new Promise(resolve => resolve(func(arg0)));
+function toAsyncFunction(toFunc) {
+    const func = toFunction(toFunc);
+    return function () {
+        return __awaiter$1(this, arguments, void 0, function* () { return yield func.apply(this, arguments); });
+    };
 }
 
 function loadBackgroundImage(el, getImage) {
-    return toAsyncFunction1(getImage)(el).then(loadImage);
+    return toAsyncFunction(getImage)(el).then(loadImage);
 }
 function loadImage(src) {
     return new Promise((resolve, reject) => {

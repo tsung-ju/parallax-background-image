@@ -15,13 +15,12 @@ export declare abstract class ScaleBackground implements Background {
 }
 export declare class CoverScaleBackground extends ScaleBackground {
     element: ParallaxElement;
-    velocityScale: number;
-    constructor(background: Background, coveredElement: ParallaxElement, velocityScale: number);
+    constructor(background: Background, coveredElement: ParallaxElement);
     readonly scale: number;
     readonly minimalHeight: number;
     readonly minimalWidth: number;
 }
-export declare type CreateBackground = (el: ParallaxElement, image: HTMLImageElement, velocityScale: number) => Background;
+export declare type CreateBackground = (el: ParallaxElement, image: HTMLImageElement) => Background;
 export declare function coverElement(createBackground: CreateBackground, coveredElement?: ParallaxElement): CreateBackground;
 export declare const pseudoBefore: CreateBackground;
 export declare const insertImg: CreateBackground;

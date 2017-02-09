@@ -57,12 +57,12 @@ export class Parallax {
     async addElement (element: HTMLElement, options: Options) {
         const image = await loadBackgroundImage(element, options.backgroundImage)
 
-        const parallaxElement = new ParallaxElement(element, this.viewport)
+        const parallaxElement = new ParallaxElement(element, this.viewport, options.velocityScale)
 
-        const background = options.createBackground(parallaxElement, image, options.velocityScale)
+        const background = options.createBackground(parallaxElement, image)
         const transform = this.useFallback ? fallbackTransform : parallaxTransform
         autorun(() => {
-            background.updateTransform(transform(parallaxElement, background, options.velocityScale))
+            background.updateTransform(transform(parallaxElement, background))
         })
     }
 }

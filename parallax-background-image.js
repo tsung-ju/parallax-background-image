@@ -126,21 +126,20 @@ __decorate([
     mobx.computed
 ], ScaleBackground.prototype, "width", null);
 class CoverScaleBackground extends ScaleBackground {
-    constructor(background, coveredElement, velocityScale) {
+    constructor(background, coveredElement) {
         super(background);
         this.element = coveredElement;
-        this.velocityScale = velocityScale;
     }
     get scale() {
         return Math.max(this.minimalHeight / this.background.height, this.minimalWidth / this.background.width);
     }
     get minimalHeight() {
         const { height: viewportHeight } = this.element.viewport;
-        const { height: elementHeight } = this.element;
-        const coverElementTop = this.velocityScale > 1
-            ? elementHeight + (this.velocityScale - 1) * (viewportHeight + elementHeight)
-            : elementHeight + (1 - this.velocityScale) * (viewportHeight - elementHeight);
-        const coverWindowTop = viewportHeight + this.velocityScale * (viewportHeight - elementHeight);
+        const { height: elementHeight, velocityScale } = this.element;
+        const coverElementTop = velocityScale > 1
+            ? elementHeight + (velocityScale - 1) * (viewportHeight + elementHeight)
+            : elementHeight + (1 - velocityScale) * (viewportHeight - elementHeight);
+        const coverWindowTop = viewportHeight + velocityScale * (viewportHeight - elementHeight);
         return Math.max(coverElementTop, coverWindowTop);
     }
     get minimalWidth() {
@@ -157,10 +156,10 @@ __decorate([
     mobx.computed
 ], CoverScaleBackground.prototype, "minimalWidth", null);
 function coverElement(createBackground, coveredElement = null) {
-    return (el, image, velocityScale) => {
+    return (el, image) => {
         coveredElement = coveredElement || el;
-        const background = createBackground(el, image, velocityScale);
-        return new CoverScaleBackground(background, coveredElement, velocityScale);
+        const background = createBackground(el, image);
+        return new CoverScaleBackground(background, coveredElement);
     };
 }
 const pseudoBefore = (el, image) => {
@@ -275,11 +274,12 @@ var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, 
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 class ParallaxElement {
-    constructor(element, viewport) {
+    constructor(element, viewport, velocityScale) {
         this.id = ParallaxElement.getNextId();
         this.element = element;
         this.boundingClientRect = new ObservableBoundingClientRect(element);
         this.viewport = viewport;
+        this.velocityScale = velocityScale;
         this.element.setAttribute(ATTR_PARALLAX_ELEMENT, this.id);
     }
     get width() {
@@ -312,8 +312,8 @@ __decorate$3([
     mobx.computed
 ], ParallaxElement.prototype, "top", null);
 
-function parallaxTransform(element, background, velocityScale) {
-    const scale = 1 / velocityScale;
+function parallaxTransform(element, background) {
+    const scale = 1 / element.velocityScale;
     const viewport = element.viewport;
     return {
         scale,
@@ -322,7 +322,7 @@ function parallaxTransform(element, background, velocityScale) {
         translateZ: viewport.perspective * (1 - scale)
     };
 }
-function fallbackTransform(element, background, velocityScale) {
+function fallbackTransform(element, background) {
     const viewport = element.viewport;
     const viewportCenter = viewport.top + viewport.height / 2;
     const elementCenter = element.top + element.height / 2;
@@ -330,7 +330,7 @@ function fallbackTransform(element, background, velocityScale) {
     return {
         scale: 1,
         translateX: 0,
-        translateY: (elementCenter - viewportCenter) * (velocityScale - 1) - (backgroundCenter - elementCenter),
+        translateY: (elementCenter - viewportCenter) * (element.velocityScale - 1) - (backgroundCenter - elementCenter),
         translateZ: 0
     };
 }
@@ -377,11 +377,11 @@ class Parallax {
     addElement(element, options) {
         return __awaiter(this, void 0, void 0, function* () {
             const image = yield loadBackgroundImage(element, options.backgroundImage);
-            const parallaxElement = new ParallaxElement(element, this.viewport);
-            const background = options.createBackground(parallaxElement, image, options.velocityScale);
+            const parallaxElement = new ParallaxElement(element, this.viewport, options.velocityScale);
+            const background = options.createBackground(parallaxElement, image);
             const transform = this.useFallback ? fallbackTransform : parallaxTransform;
             mobx.autorun(() => {
-                background.updateTransform(transform(parallaxElement, background, options.velocityScale));
+                background.updateTransform(transform(parallaxElement, background));
             });
         });
     }

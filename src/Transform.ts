@@ -10,8 +10,8 @@ export interface Transform {
     readonly translateZ: number
 }
 
-export function parallaxTransform (element: ParallaxElement, background: Background, velocityScale: number): Transform {
-    const scale = 1 / velocityScale
+export function parallaxTransform (element: ParallaxElement, background: Background): Transform {
+    const scale = 1 / element.velocityScale
     const viewport = element.viewport
     return {
         scale,
@@ -21,7 +21,7 @@ export function parallaxTransform (element: ParallaxElement, background: Backgro
     }
 }
 
-export function fallbackTransform (element: ParallaxElement, background: Background, velocityScale: number): Transform {
+export function fallbackTransform (element: ParallaxElement, background: Background): Transform {
     const viewport = element.viewport
     const viewportCenter = viewport.top + viewport.height / 2
     const elementCenter = element.top + element.height / 2
@@ -29,7 +29,7 @@ export function fallbackTransform (element: ParallaxElement, background: Backgro
     return {
         scale: 1,
         translateX: 0,
-        translateY: (elementCenter - viewportCenter) * (velocityScale - 1) - (backgroundCenter - elementCenter),
+        translateY: (elementCenter - viewportCenter) * (element.velocityScale - 1) - (backgroundCenter - elementCenter),
         translateZ: 0
     }
 }

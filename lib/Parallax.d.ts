@@ -5,8 +5,8 @@ import { ParallaxElement } from './ParallaxElement';
 import { Background, coverElement } from './Background';
 export declare class Parallax {
     static getCSSBackgroundImage: string | Promise<string> | ((arg0: Element) => string | Promise<string>);
-    static pesudoBefore: (el: ParallaxElement, image: HTMLImageElement, velocityScale: number) => Background;
-    static insertImg: (el: ParallaxElement, image: HTMLImageElement, velocityScale: number) => Background;
+    static pesudoBefore: (el: ParallaxElement, image: HTMLImageElement) => Background;
+    static insertImg: (el: ParallaxElement, image: HTMLImageElement) => Background;
     static coverElement: typeof coverElement;
     viewport: Viewport;
     useFallback: boolean;

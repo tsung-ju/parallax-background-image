@@ -4,7 +4,8 @@ export declare class ParallaxElement {
     readonly element: HTMLElement;
     readonly boundingClientRect: ClientRect;
     readonly viewport: Viewport;
-    constructor(element: HTMLElement, viewport: Viewport);
+    readonly velocityScale: number;
+    constructor(element: HTMLElement, viewport: Viewport, velocityScale: number);
     readonly width: number;
     readonly height: number;
     readonly left: number;

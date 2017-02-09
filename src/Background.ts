@@ -62,12 +62,10 @@ export abstract class ScaleBackground implements Background {
 
 export class CoverScaleBackground extends ScaleBackground {
     element: ParallaxElement
-    velocityScale: number
     
-    constructor (background: Background, coveredElement: ParallaxElement, velocityScale: number) {
+    constructor (background: Background, coveredElement: ParallaxElement) {
         super(background)
         this.element = coveredElement
-        this.velocityScale = velocityScale
     }
 
     @computed get scale (): number {
@@ -76,13 +74,13 @@ export class CoverScaleBackground extends ScaleBackground {
 
     @computed get minimalHeight (): number {
         const { height: viewportHeight } = this.element.viewport
-        const { height: elementHeight } = this.element
+        const { height: elementHeight, velocityScale } = this.element
 
-        const coverElementTop = this.velocityScale > 1
-            ? elementHeight + (this.velocityScale - 1) * (viewportHeight + elementHeight)
-            : elementHeight + (1 - this.velocityScale) * (viewportHeight - elementHeight)
+        const coverElementTop = velocityScale > 1
+            ? elementHeight + (velocityScale - 1) * (viewportHeight + elementHeight)
+            : elementHeight + (1 - velocityScale) * (viewportHeight - elementHeight)
 
-        const coverWindowTop = viewportHeight + this.velocityScale * (viewportHeight - elementHeight)
+        const coverWindowTop = viewportHeight + velocityScale * (viewportHeight - elementHeight)
 
         return Math.max(coverElementTop, coverWindowTop)
     }
@@ -90,16 +88,15 @@ export class CoverScaleBackground extends ScaleBackground {
     @computed get minimalWidth (): number {
         return this.element.width
     }
-
 }
 
-export type CreateBackground = (el: ParallaxElement, image: HTMLImageElement, velocityScale: number) => Background
+export type CreateBackground = (el: ParallaxElement, image: HTMLImageElement) => Background
 
 export function coverElement(createBackground: CreateBackground, coveredElement: ParallaxElement=null): CreateBackground {
-    return (el: ParallaxElement, image: HTMLImageElement, velocityScale: number) => {
+    return (el: ParallaxElement, image: HTMLImageElement) => {
         coveredElement = coveredElement || el
-        const background = createBackground(el, image, velocityScale)
-        return new CoverScaleBackground(background, coveredElement, velocityScale)
+        const background = createBackground(el, image)
+        return new CoverScaleBackground(background, coveredElement)
     }
 }
 

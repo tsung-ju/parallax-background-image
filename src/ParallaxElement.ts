@@ -9,13 +9,15 @@ export class ParallaxElement {
     readonly element: HTMLElement
     readonly boundingClientRect: ClientRect
     readonly viewport: Viewport
+    readonly velocityScale: number
 
-    constructor (element: HTMLElement, viewport: Viewport) {
+    constructor (element: HTMLElement, viewport: Viewport, velocityScale: number) {
         this.id = ParallaxElement.getNextId()
         this.element = element
         this.boundingClientRect = new ObservableBoundingClientRect(element)
         this.viewport = viewport
-
+        this.velocityScale = velocityScale
+    
         this.element.setAttribute(ATTR_PARALLAX_ELEMENT, this.id)
     }
 

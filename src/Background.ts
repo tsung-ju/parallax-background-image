@@ -32,11 +32,13 @@ class StyleBackground implements Background {
     }
 
     updateTransform (transform: Transform) {
-        this.style.transform = `
-            translateX(${transform.translateX}px)
-            translateY(${transform.translateY}px)
-            translateZ(${transform.translateZ}px)
-            scale(${transform.scale}, ${transform.scale})`
+        window.requestAnimationFrame(() => {
+            this.style.transform = `
+                translateX(${transform.translateX}px)
+                translateY(${transform.translateY}px)
+                translateZ(${transform.translateZ}px)
+                scale(${transform.scale}, ${transform.scale})`
+        })
     }
 }
 

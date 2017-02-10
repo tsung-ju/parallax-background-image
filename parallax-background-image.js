@@ -154,14 +154,16 @@ class Scheduler {
     }
     run() {
         this.running = true;
-        this.readRunner.run();
-        this.writeRunner.run();
-        if (this.readRunner.done && this.writeRunner.done) {
-            this.running = false;
-        }
-        else {
-            window.requestAnimationFrame(this.run.bind(this));
-        }
+        window.requestAnimationFrame(() => {
+            this.readRunner.run();
+            this.writeRunner.run();
+            if (this.readRunner.done && this.writeRunner.done) {
+                this.running = false;
+            }
+            else {
+                this.run();
+            }
+        });
     }
 }
 const scheduler = new Scheduler();

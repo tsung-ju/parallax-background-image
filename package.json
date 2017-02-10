@@ -24,6 +24,7 @@
     "typescript": "^2.1.5"
   },
   "dependencies": {
+    "dom-scheduler": "github:ray851107/dom-scheduler",
     "mobx": "^3.0.2",
     "tslib": "^1.5.0"
   }

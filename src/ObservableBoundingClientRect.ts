@@ -1,5 +1,5 @@
 import {observable, action, IObservableObject} from 'mobx'
-import {scheduler} from './Scheduler'
+import {scheduler} from 'dom-scheduler'
 
 export class ObservableBoundingClientRect implements ClientRect {
     @observable bottom: number;

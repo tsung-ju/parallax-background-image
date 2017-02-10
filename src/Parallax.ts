@@ -9,7 +9,7 @@ import {Viewport} from './Viewport'
 import {ParallaxElement} from './ParallaxElement'
 import {Background, coverElement, pseudoBefore, insertImg} from './Background'
 import {Transform, parallaxTransform, fallbackTransform} from './Transform'
-import {scheduler, Scheduler} from './Scheduler'
+import {scheduler, Scheduler} from 'dom-scheduler'
 
 initialize()
 
@@ -27,8 +27,6 @@ function initialize () {
             overflow: hidden;
         }
     `, 0)
-
-    scheduler.run()
 }
 
 export class Parallax {

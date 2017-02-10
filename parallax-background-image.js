@@ -120,34 +120,50 @@ function createStyleElement() {
     return style;
 }
 
-class SchedulerImpl {
+class Runner {
     constructor() {
-        this.reads = [];
-        this.writes = [];
+        this.tasks = [];
     }
-    read(task) {
-        this.reads.push(task);
+    get done() {
+        return this.tasks.length === 0;
     }
-    write(task) {
-        this.writes.push(task);
-    }
-    runOnce() {
-        const reads = this.reads;
-        this.reads = [];
-        reads.forEach(task => task());
-        const writes = this.writes;
-        this.writes = [];
-        writes.forEach(task => task());
+    schedule(task) {
+        this.tasks.push(task);
     }
     run() {
-        const loop = () => {
-            this.runOnce();
-            window.requestAnimationFrame(loop);
-        };
-        loop();
+        const tasks = this.tasks;
+        this.tasks = [];
+        tasks.forEach(task => task());
     }
 }
-const scheduler = new SchedulerImpl();
+class Scheduler {
+    constructor() {
+        this.readRunner = new Runner();
+        this.writeRunner = new Runner();
+        this.running = false;
+    }
+    read(task) {
+        this.readRunner.schedule(task);
+        this.run();
+    }
+    write(task) {
+        this.writeRunner.schedule(task);
+        this.run();
+    }
+    run() {
+        if (this.running)
+            return;
+        this.readRunner.run();
+        this.writeRunner.run();
+        if (this.readRunner.done && this.writeRunner.done) {
+            this.running = false;
+        }
+        else {
+            window.requestAnimationFrame(this.run.bind(this));
+        }
+    }
+}
+const scheduler = new Scheduler();
 
 class StyleBackground {
     constructor(style, width, height) {
@@ -405,7 +421,6 @@ function initialize() {
             overflow: hidden;
         }
     `, 0);
-    scheduler.run();
 }
 class Parallax {
     constructor(element, useFallback = !isChrome(), perspective = 1000) {

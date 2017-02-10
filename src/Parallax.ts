@@ -66,7 +66,7 @@ export class Parallax {
         const getTransform = this.useFallback ? fallbackTransform : parallaxTransform
         autorun(() => {
             const transform = getTransform(parallaxElement, background)
-            if (transform != null) background.updateTransform(transform)
+            background.updateTransform(transform)
         })
     }
 }

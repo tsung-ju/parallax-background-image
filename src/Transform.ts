@@ -21,16 +21,10 @@ export function parallaxTransform (element: ParallaxElement, background: Backgro
     }
 }
 
-export function fallbackTransform (element: ParallaxElement, background: Background): Transform | null {
+export function fallbackTransform (element: ParallaxElement, background: Background): Transform {
     const viewport = element.viewport
     const viewportCenter = viewport.top + viewport.height / 2
     const elementCenter = element.top + element.height / 2
-    
-    const threshold = viewport.height / 2
-    if (Math.abs(elementCenter - viewportCenter) - (viewport.height + element.height) / 2 > threshold) {
-        return null
-    }
-    
     const backgroundCenter = element.top + background.height / 2
     return {
         scale: 1,

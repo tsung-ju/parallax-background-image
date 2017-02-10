@@ -397,10 +397,6 @@ function fallbackTransform(element, background) {
     const viewport = element.viewport;
     const viewportCenter = viewport.top + viewport.height / 2;
     const elementCenter = element.top + element.height / 2;
-    const threshold = viewport.height / 2;
-    if (Math.abs(elementCenter - viewportCenter) - (viewport.height + element.height) / 2 > threshold) {
-        return null;
-    }
     const backgroundCenter = element.top + background.height / 2;
     return {
         scale: 1,
@@ -449,8 +445,7 @@ class Parallax {
             const getTransform = this.useFallback ? fallbackTransform : parallaxTransform;
             mobx.autorun(() => {
                 const transform = getTransform(parallaxElement, background);
-                if (transform != null)
-                    background.updateTransform(transform);
+                background.updateTransform(transform);
             });
         });
     }

@@ -144,15 +144,15 @@ class Scheduler {
     }
     read(task) {
         this.readRunner.schedule(task);
-        this.run();
+        if (!this.running)
+            this.run();
     }
     write(task) {
         this.writeRunner.schedule(task);
-        this.run();
+        if (!this.running)
+            this.run();
     }
     run() {
-        if (this.running)
-            return;
         this.running = true;
         this.readRunner.run();
         this.writeRunner.run();

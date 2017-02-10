@@ -153,6 +153,7 @@ class Scheduler {
     run() {
         if (this.running)
             return;
+        this.running = true;
         this.readRunner.run();
         this.writeRunner.run();
         if (this.readRunner.done && this.writeRunner.done) {

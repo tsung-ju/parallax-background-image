@@ -131,9 +131,10 @@ class Runner {
         this.tasks.push(task);
     }
     run() {
-        const tasks = this.tasks;
-        this.tasks = [];
-        tasks.forEach(task => task());
+        const length = this.tasks.length;
+        for (let i = 0; i < length; ++i) {
+            this.tasks.shift()();
+        }
     }
 }
 class Scheduler {

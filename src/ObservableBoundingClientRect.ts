@@ -19,9 +19,12 @@ export class ObservableBoundingClientRect implements ClientRect {
 
     @action
     update (rect: ClientRect) {
-        for (let key of ['bottom', 'height', 'left', 'right', 'top', 'width']) {
-            this[key] = rect[key]
-        }
+        this.bottom = rect.bottom
+        this.height = rect.height
+        this.left = rect.left
+        this.right = rect.right
+        this.top = rect.top
+        this.width = rect.width
     }
 }
 

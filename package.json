@@ -4,7 +4,7 @@
   "description": "js parallax background-image",
   "main": "parallax-background-image.js",
   "scripts": {
-    "build": "./node_modules/.bin/tsc && ./node_modules/.bin/rollup -c && ./node_modules/.bin/babili parallax-background-image.js --out-file parallax-background-image.min.js",
+    "build": "tsc && rollup -c && babili parallax-background-image.js --out-file parallax-background-image.min.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

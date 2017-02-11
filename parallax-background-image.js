@@ -183,13 +183,12 @@ class StyleBackground {
         });
     }
     updateTransform(transform) {
-        scheduler.write(() => {
-            this.style.transform = `
-                translateX(${transform.translateX}px)
-                translateY(${transform.translateY}px)
-                translateZ(${transform.translateZ}px)
-                scale(${transform.scale}, ${transform.scale})`;
-        });
+        const style = `
+            translateX(${transform.translateX}px)
+            translateY(${transform.translateY}px)
+            translateZ(${transform.translateZ}px)
+            scale(${transform.scale}, ${transform.scale})`;
+        scheduler.write(() => { this.style.transform = style; });
     }
 }
 class ScaleBackground {

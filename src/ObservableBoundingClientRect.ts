@@ -1,4 +1,4 @@
-import {observable, action, IObservableObject} from 'mobx'
+import {observable, action} from 'mobx'
 import {scheduler} from 'dom-scheduler'
 
 export class ObservableBoundingClientRect implements ClientRect {

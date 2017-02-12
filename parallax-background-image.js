@@ -444,6 +444,7 @@ class Parallax {
         return __awaiter(this, void 0, void 0, function* () {
             const image = yield loadBackgroundImage(element, options.backgroundImage);
             const parallaxElement = new ParallaxElement(element, this.viewport, options.velocityScale);
+            removeBackground(element);
             const background = options.createBackground(parallaxElement, image);
             const getTransform = this.useFallback ? fallbackTransform : parallaxTransform;
             mobx.autorun(() => {
@@ -461,6 +462,10 @@ Parallax.coverElement = coverElement;
 function isChrome() {
     const { userAgent } = navigator;
     return userAgent.includes('Chrome/') && !userAgent.includes('Edge/');
+}
+function removeBackground(element) {
+    element.style.setProperty('background', 'none', 'important');
+    element.style.setProperty('background-image', 'none', 'important');
 }
 
 window['Parallax'] = Parallax;

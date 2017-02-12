@@ -62,6 +62,8 @@ export class Parallax {
 
         const parallaxElement = new ParallaxElement(element, this.viewport, options.velocityScale)
 
+        removeBackground(element)
+
         const background = options.createBackground(parallaxElement, image)
         const getTransform = this.useFallback ? fallbackTransform : parallaxTransform
         autorun(() => {
@@ -74,4 +76,9 @@ export class Parallax {
 function isChrome () {
     const {userAgent} = navigator
     return userAgent.includes('Chrome/') && ! userAgent.includes('Edge/')
+}
+
+function removeBackground (element: HTMLElement) {
+    element.style.setProperty('background', 'none', 'important')
+    element.style.setProperty('background-image', 'none', 'important')
 }

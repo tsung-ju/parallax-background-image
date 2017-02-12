@@ -91,7 +91,7 @@ For complete example see `demo.html`
 An instance of `CreateBackground`, prepend an `<img>` background to the element.
 
 #### `Parallax.pseudoBefore`
-An instance of `CreateBackground`, use CSS `::before` to set background image. Note that this is much slower than `inserImg` when using js-based fallback.
+An instance of `CreateBackground`, use CSS `::before` to set background image. Note that this is much slower than `inserImg`.
 
 ### Static Methods
 

@@ -1,5 +1,5 @@
 import {ToBackgroundImage, getCSSBackgroundImage} from './BackgroundImage'
-import {CreateBackground, pseudoBefore, coverElement} from './Background'
+import {CreateBackground, insertImg, coverElement} from './Background'
 
 export interface Options {
     velocityScale: number
@@ -10,7 +10,7 @@ export interface Options {
 export const defaultOptions: Options = {
     velocityScale: 0.8,
     backgroundImage: getCSSBackgroundImage,
-    createBackground: coverElement(pseudoBefore)
+    createBackground: coverElement(insertImg)
 }
 
 export function fromPartial (options: Partial<Options>): Options {

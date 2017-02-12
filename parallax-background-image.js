@@ -275,7 +275,7 @@ const styleSheet = appendStyleSheet();
 const defaultOptions = {
     velocityScale: 0.8,
     backgroundImage: getCSSBackgroundImage,
-    createBackground: coverElement(pseudoBefore)
+    createBackground: coverElement(insertImg)
 };
 function fromPartial(options) {
     return Object.assign({}, defaultOptions, options);

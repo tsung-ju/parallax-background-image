@@ -83,15 +83,15 @@ For complete example see `demo.html`
 * `options` Object (optional) 
   * `velocityScale` Number (optional) - `velocity of the background = velocity of the element * velocityScale`. Must be positive. Default `0.8`
   * `backgroundImage` string (optional) - url to the background image
-  * `createBackground` CreateBackground (optional) - Default `Parallax.coverElement(Parallax.pseudoBefore)`
+  * `createBackground` CreateBackground (optional) - Default `Parallax.coverElement(Parallax.insertImg)`
 
 ### Static Properties
 
-#### `Parallax.insertImage`
-An instance of `CreateBackground`, prepend an `<img>` background to the element
+#### `Parallax.insertImg`
+An instance of `CreateBackground`, prepend an `<img>` background to the element.
 
 #### `Parallax.pseudoBefore`
-An instance of `CreateBackground`, use CSS `::before` to set background image 
+An instance of `CreateBackground`, use CSS `::before` to set background image. Note that this is much slower than `inserImg` when using js-based fallback.
 
 ### Static Methods
 

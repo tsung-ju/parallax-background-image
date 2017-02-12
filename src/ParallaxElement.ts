@@ -3,6 +3,7 @@ import {computed} from 'mobx'
 import {ATTR_PARALLAX_ELEMENT} from './Constants'
 import {Viewport} from './Viewport'
 import {ObservableBoundingClientRect} from './ObservableBoundingClientRect'
+import {scheduler} from 'dom-scheduler'
 
 export class ParallaxElement {
     readonly id: string
@@ -17,8 +18,10 @@ export class ParallaxElement {
         this.boundingClientRect = new ObservableBoundingClientRect(element)
         this.viewport = viewport
         this.velocityScale = velocityScale
-    
-        this.element.setAttribute(ATTR_PARALLAX_ELEMENT, this.id)
+        
+        scheduler.write(() => {
+            this.element.setAttribute(ATTR_PARALLAX_ELEMENT, this.id)
+        })
     }
 
     @computed get width (): number {

@@ -174,12 +174,14 @@ class StyleBackground {
         this.style = style;
         this.width = width;
         this.height = height;
-        Object.assign(style, {
-            position: 'absolute',
-            left: '0',
-            top: '0',
-            transformOrigin: '0 0 0',
-            pointerEvents: 'none'
+        scheduler.write(() => {
+            Object.assign(style, {
+                position: 'absolute',
+                left: '0',
+                top: '0',
+                transformOrigin: '0 0 0',
+                pointerEvents: 'none'
+            });
         });
     }
     updateTransform(transform) {
@@ -264,10 +266,12 @@ const pseudoBefore = (el, image) => {
 };
 const insertImg = (el, image) => {
     const img = document.createElement('img');
-    img.height = image.naturalHeight;
-    img.width = image.naturalWidth;
-    img.src = image.src;
-    el.element.insertBefore(img, el.element.firstElementChild);
+    scheduler.write(() => {
+        img.height = image.naturalHeight;
+        img.width = image.naturalWidth;
+        img.src = image.src;
+        el.element.insertBefore(img, el.element.firstElementChild);
+    });
     return new StyleBackground(img.style, image.naturalWidth, image.naturalHeight);
 };
 const styleSheet = appendStyleSheet();
@@ -354,7 +358,9 @@ class ParallaxElement {
         this.boundingClientRect = new ObservableBoundingClientRect(element);
         this.viewport = viewport;
         this.velocityScale = velocityScale;
-        this.element.setAttribute(ATTR_PARALLAX_ELEMENT, this.id);
+        scheduler.write(() => {
+            this.element.setAttribute(ATTR_PARALLAX_ELEMENT, this.id);
+        });
     }
     get width() {
         return this.boundingClientRect.width;

@@ -22,13 +22,15 @@ class StyleBackground implements Background {
         this.style = style
         this.width = width
         this.height = height
-
-        Object.assign(style, {
-            position: 'absolute',
-            left: '0',
-            top: '0',
-            transformOrigin: '0 0 0',
-            pointerEvents: 'none'
+        
+        scheduler.write(() => {
+            Object.assign(style, {
+                position: 'absolute',
+                left: '0',
+                top: '0',
+                transformOrigin: '0 0 0',
+                pointerEvents: 'none'
+            })
         })
     }
 
@@ -122,11 +124,13 @@ export const pseudoBefore: CreateBackground = (el: ParallaxElement, image: HTMLI
 export const insertImg: CreateBackground = (el: ParallaxElement, image: HTMLImageElement) => {
     const img = document.createElement('img')
 
-    img.height = image.naturalHeight
-    img.width = image.naturalWidth
-    img.src = image.src
+    scheduler.write(() => {
+        img.height = image.naturalHeight
+        img.width = image.naturalWidth
+        img.src = image.src
+        el.element.insertBefore(img, el.element.firstElementChild)
+    })
 
-    el.element.insertBefore(img, el.element.firstElementChild)
     return new StyleBackground(img.style, image.naturalWidth, image.naturalHeight)
 }
 

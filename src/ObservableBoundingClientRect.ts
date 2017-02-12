@@ -2,19 +2,19 @@ import {observable, action} from 'mobx'
 import {scheduler} from 'dom-scheduler'
 
 export class ObservableBoundingClientRect implements ClientRect {
-    @observable bottom: number;
-    @observable height: number;
-    @observable left: number;
-    @observable right: number;
-    @observable top: number;
-    @observable width: number;
+    @observable bottom: number
+    @observable height: number
+    @observable left: number
+    @observable right: number
+    @observable top: number
+    @observable width: number
 
     constructor (element: HTMLElement) {
         const watch = () => {
             this.update(element.getBoundingClientRect())
             scheduler.read(watch)
         }
-        watch()
+        scheduler.read(watch)
     }
 
     @action

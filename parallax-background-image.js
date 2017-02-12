@@ -291,7 +291,7 @@ class ObservableBoundingClientRect {
             this.update(element.getBoundingClientRect());
             scheduler.read(watch);
         };
-        watch();
+        scheduler.read(watch);
     }
     update(rect) {
         this.bottom = rect.bottom;

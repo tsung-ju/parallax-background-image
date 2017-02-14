@@ -9,7 +9,7 @@ import {Viewport} from './Viewport'
 import {ParallaxElement} from './ParallaxElement'
 import {Background, coverElement, pseudoBefore, insertImg} from './Background'
 import {Transform, parallaxTransform, fallbackTransform} from './Transform'
-import {scheduler} from 'dom-scheduler'
+import {scheduler} from '@ray851107/dom-scheduler'
 
 initialize()
 

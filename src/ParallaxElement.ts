@@ -3,7 +3,7 @@ import {computed} from 'mobx'
 import {ATTR_PARALLAX_ELEMENT} from './Constants'
 import {Viewport} from './Viewport'
 import {ObservableBoundingClientRect} from './ObservableBoundingClientRect'
-import {scheduler} from 'dom-scheduler'
+import {scheduler} from '@ray851107/dom-scheduler'
 
 export class ParallaxElement {
     readonly id: string

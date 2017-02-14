@@ -1,4 +1,4 @@
-var Parallax = (function (mobx,domScheduler) {
+var Parallax = (function (mobx,_ray851107_domScheduler) {
 'use strict';
 
 /*! *****************************************************************************
@@ -125,7 +125,7 @@ class StyleBackground {
         this.style = style;
         this.width = width;
         this.height = height;
-        domScheduler.scheduler.write(() => {
+        _ray851107_domScheduler.scheduler.write(() => {
             Object.assign(style, {
                 position: 'absolute',
                 left: '0',
@@ -141,7 +141,7 @@ class StyleBackground {
             translateY(${transform.translateY}px)
             translateZ(${transform.translateZ}px)
             scale(${transform.scale}, ${transform.scale})`;
-        domScheduler.scheduler.write(() => { this.style.transform = style; });
+        _ray851107_domScheduler.scheduler.write(() => { this.style.transform = style; });
     }
 }
 class ScaleBackground {
@@ -217,7 +217,7 @@ const pseudoBefore = (el, image) => {
 };
 const insertImg = (el, image) => {
     const img = document.createElement('img');
-    domScheduler.scheduler.write(() => {
+    _ray851107_domScheduler.scheduler.write(() => {
         img.height = image.naturalHeight;
         img.width = image.naturalWidth;
         img.src = image.src;
@@ -246,9 +246,9 @@ class ObservableBoundingClientRect {
         this.width = 0;
         const watch = () => {
             this.update(element.getBoundingClientRect());
-            domScheduler.scheduler.read(watch);
+            _ray851107_domScheduler.scheduler.read(watch);
         };
-        domScheduler.scheduler.read(watch);
+        _ray851107_domScheduler.scheduler.read(watch);
     }
     update(rect) {
         this.bottom = rect.bottom;
@@ -315,7 +315,7 @@ class ParallaxElement {
         this.boundingClientRect = new ObservableBoundingClientRect(element);
         this.viewport = viewport;
         this.velocityScale = velocityScale;
-        domScheduler.scheduler.write(() => {
+        _ray851107_domScheduler.scheduler.write(() => {
             this.element.setAttribute(ATTR_PARALLAX_ELEMENT, this.id);
         });
     }

@@ -2,7 +2,7 @@ import nodeResolve from 'rollup-plugin-node-resolve'
 
 const globals = {
     mobx: 'mobx',
-    ['dom-scheduler']: 'domScheduler'
+    ['@ray851107/dom-scheduler']: 'domScheduler'
 }
 
 export default {

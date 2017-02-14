@@ -1,4 +1,4 @@
-(function (mobx) {
+var Parallax = (function (mobx,domScheduler) {
 'use strict';
 
 /*! *****************************************************************************
@@ -120,61 +120,12 @@ function createStyleElement() {
     return style;
 }
 
-class Runner {
-    constructor() {
-        this.tasks = [];
-    }
-    get done() {
-        return this.tasks.length === 0;
-    }
-    schedule(task) {
-        this.tasks.push(task);
-    }
-    run() {
-        const length = this.tasks.length;
-        for (let i = 0; i < length; ++i) {
-            this.tasks.shift()();
-        }
-    }
-}
-class Scheduler {
-    constructor() {
-        this.readRunner = new Runner();
-        this.writeRunner = new Runner();
-        this.running = false;
-    }
-    read(task) {
-        this.readRunner.schedule(task);
-        if (!this.running)
-            this.run();
-    }
-    write(task) {
-        this.writeRunner.schedule(task);
-        if (!this.running)
-            this.run();
-    }
-    run() {
-        this.running = true;
-        window.requestAnimationFrame(() => {
-            this.readRunner.run();
-            this.writeRunner.run();
-            if (this.readRunner.done && this.writeRunner.done) {
-                this.running = false;
-            }
-            else {
-                this.run();
-            }
-        });
-    }
-}
-const scheduler = new Scheduler();
-
 class StyleBackground {
     constructor(style, width, height) {
         this.style = style;
         this.width = width;
         this.height = height;
-        scheduler.write(() => {
+        domScheduler.scheduler.write(() => {
             Object.assign(style, {
                 position: 'absolute',
                 left: '0',
@@ -190,7 +141,7 @@ class StyleBackground {
             translateY(${transform.translateY}px)
             translateZ(${transform.translateZ}px)
             scale(${transform.scale}, ${transform.scale})`;
-        scheduler.write(() => { this.style.transform = style; });
+        domScheduler.scheduler.write(() => { this.style.transform = style; });
     }
 }
 class ScaleBackground {
@@ -266,7 +217,7 @@ const pseudoBefore = (el, image) => {
 };
 const insertImg = (el, image) => {
     const img = document.createElement('img');
-    scheduler.write(() => {
+    domScheduler.scheduler.write(() => {
         img.height = image.naturalHeight;
         img.width = image.naturalWidth;
         img.src = image.src;
@@ -295,9 +246,9 @@ class ObservableBoundingClientRect {
         this.width = 0;
         const watch = () => {
             this.update(element.getBoundingClientRect());
-            scheduler.read(watch);
+            domScheduler.scheduler.read(watch);
         };
-        scheduler.read(watch);
+        domScheduler.scheduler.read(watch);
     }
     update(rect) {
         this.bottom = rect.bottom;
@@ -364,7 +315,7 @@ class ParallaxElement {
         this.boundingClientRect = new ObservableBoundingClientRect(element);
         this.viewport = viewport;
         this.velocityScale = velocityScale;
-        scheduler.write(() => {
+        domScheduler.scheduler.write(() => {
             this.element.setAttribute(ATTR_PARALLAX_ELEMENT, this.id);
         });
     }
@@ -436,7 +387,7 @@ function initialize() {
         }
     `, 0);
 }
-class Parallax {
+class Parallax$1 {
     constructor(element, useFallback = !isChrome(), perspective = 1000) {
         if (useFallback) {
             perspective = 0;
@@ -466,11 +417,11 @@ class Parallax {
         });
     }
 }
-Parallax.scheduler = scheduler;
-Parallax.getCSSBackgroundImage = getCSSBackgroundImage;
-Parallax.pesudoBefore = pseudoBefore;
-Parallax.insertImg = insertImg;
-Parallax.coverElement = coverElement;
+Parallax$1.scheduler = domScheduler.scheduler;
+Parallax$1.getCSSBackgroundImage = getCSSBackgroundImage;
+Parallax$1.pesudoBefore = pseudoBefore;
+Parallax$1.insertImg = insertImg;
+Parallax$1.coverElement = coverElement;
 function isChrome() {
     const { userAgent } = navigator;
     return userAgent.includes('Chrome/') && !userAgent.includes('Edge/');
@@ -480,6 +431,6 @@ function removeBackground(element) {
     element.style.setProperty('background-image', 'none', 'important');
 }
 
-window['Parallax'] = Parallax;
+return Parallax$1;
 
-}(mobx));
+}(mobx,domScheduler));

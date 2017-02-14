@@ -61,7 +61,7 @@ For complete example see `demo.html`
 * [@ray851107/dom-scheduler](https://github.com/ray851107/dom-scheduler)
 ```html
 <script src="https://unpkg.com/mobx@3.0.2/lib/mobx.umd.min.js"></script>
-<script src="https://unpkg.com/@ray851107/dom-scheduler@1.0.0/dom-scheduler.min.js"></script>
+<script src="https://unpkg.com/@ray851107/dom-scheduler@1.0.1/dom-scheduler.min.js"></script>
 ```
 # API
 

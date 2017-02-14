@@ -58,8 +58,10 @@ For complete example see `demo.html`
 
 # Dependencies
 * [MobX.js](https://mobx.js.org/)
+* [@ray851107/dom-scheduler](https://github.com/ray851107/dom-scheduler)
 ```html
 <script src="https://unpkg.com/mobx@3.0.2/lib/mobx.umd.min.js"></script>
+<script src="https://unpkg.com/@ray851107/dom-scheduler@1.0.0/dom-scheduler.min.js"></script>
 ```
 # API
 
@@ -91,7 +93,7 @@ For complete example see `demo.html`
 An instance of `CreateBackground`, prepend an `<img>` background to the element.
 
 #### `Parallax.pseudoBefore`
-An instance of `CreateBackground`, use CSS `::before` to set background image. Note that this is much slower than `inserImg`.
+An instance of `CreateBackground`, use CSS `::before` to set background image. Note that this is much slower than `insertImg`.
 
 ### Static Methods
 

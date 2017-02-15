@@ -19,14 +19,14 @@
   },
   "homepage": "https://github.com/ray851107/parallax-background-image#readme",
   "devDependencies": {
-    "babili": "0.0.10",
+    "babili": "0.0.11",
     "rollup": "^0.41.4",
     "rollup-plugin-node-resolve": "^2.0.0",
-    "typescript": "^2.1.5"
+    "typescript": "^2.1.6"
   },
   "dependencies": {
     "@ray851107/dom-scheduler": "^1.0.1",
-    "mobx": "^3.0.2",
+    "mobx": "^3.1.0",
     "tslib": "^1.5.0"
   }
 }

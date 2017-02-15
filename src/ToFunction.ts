@@ -76,5 +76,5 @@ export function toAsyncFunction<Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, 
 export function toAsyncFunction<Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Result> (toFunc: ToAsyncFunction9<Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Result>): AsyncFunction9<Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Result>;
 export function toAsyncFunction (toFunc) {
     const func = toFunction(toFunc)
-    return async function () { return await func.apply(this, arguments) }
+    return function () { return Promise.resolve(func.apply(this, arguments)) }
 }

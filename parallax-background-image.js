@@ -76,9 +76,7 @@ function toFunction(toFunc) {
 }
 function toAsyncFunction(toFunc) {
     const func = toFunction(toFunc);
-    return function () {
-        return __awaiter(this, arguments, void 0, function* () { return yield func.apply(this, arguments); });
-    };
+    return function () { return Promise.resolve(func.apply(this, arguments)); };
 }
 
 function loadBackgroundImage(el, getImage) {

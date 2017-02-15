@@ -39,5 +39,5 @@ for (let i = 0; i < 10; i++) {
 
 console.log(`export function toAsyncFunction (toFunc) {
     const func = toFunction(toFunc)
-    return function () { return Promise.resolve(func.apply(this, arguments)) }
+    return function () { return new Promise(resolve => resolve(func.apply(this, arguments))) }
 }`)

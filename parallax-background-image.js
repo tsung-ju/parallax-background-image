@@ -76,7 +76,7 @@ function toFunction(toFunc) {
 }
 function toAsyncFunction(toFunc) {
     const func = toFunction(toFunc);
-    return function () { return Promise.resolve(func.apply(this, arguments)); };
+    return function () { return new Promise(resolve => resolve(func.apply(this, arguments))); };
 }
 
 function loadBackgroundImage(el, getImage) {

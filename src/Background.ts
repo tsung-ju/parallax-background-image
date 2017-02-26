@@ -95,9 +95,8 @@ export type CreateBackground = (el: ParallaxElement, image: HTMLImageElement) =>
 
 export function coverElement(createBackground: CreateBackground, coveredElement: ParallaxElement=null): CreateBackground {
     return (el: ParallaxElement, image: HTMLImageElement) => {
-        coveredElement = coveredElement || el
         const background = createBackground(el, image)
-        return new CoverScaleBackground(background, coveredElement)
+        return new CoverScaleBackground(background, coveredElement || el)
     }
 }
 

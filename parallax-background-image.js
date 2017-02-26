@@ -193,9 +193,8 @@ __decorate([
 ], CoverScaleBackground.prototype, "minimalWidth", null);
 function coverElement(createBackground, coveredElement = null) {
     return (el, image) => {
-        coveredElement = coveredElement || el;
         const background = createBackground(el, image);
-        return new CoverScaleBackground(background, coveredElement);
+        return new CoverScaleBackground(background, coveredElement || el);
     };
 }
 const pseudoBefore = (el, image) => {

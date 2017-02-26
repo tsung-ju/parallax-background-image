@@ -223,6 +223,7 @@ const styleSheet = appendStyleSheet();
 
 const defaultOptions = {
     velocityScale: 0.8,
+    horizontalAlign: 0.5,
     backgroundImage: getCSSBackgroundImage,
     createBackground: coverElement(insertImg)
 };
@@ -348,7 +349,7 @@ function parallaxTransform(element, background) {
     const viewport = element.viewport;
     return {
         scale,
-        translateX: element.left * (scale - 1) - (background.width - element.width) / 2,
+        translateX: element.left * (scale - 1),
         translateY: ((viewport.height - background.height) * scale - (viewport.height - element.height)) / 2,
         translateZ: viewport.perspective * (1 - scale)
     };
@@ -360,10 +361,15 @@ function fallbackTransform(element, background) {
     const backgroundCenter = element.top + background.height / 2;
     return {
         scale: 1,
-        translateX: -(background.width - element.width) / 2,
+        translateX: 0,
         translateY: (elementCenter - viewportCenter) * (element.velocityScale - 1) - (backgroundCenter - elementCenter),
         translateZ: 0
     };
+}
+function horizontalAlign(element, background, value) {
+    return (transform) => Object.assign({}, transform, {
+        translateX: transform.translateX - (background.width - element.width) * value
+    });
 }
 
 initialize();
@@ -404,9 +410,10 @@ class Parallax$1 {
             removeBackground(element);
             const background = options.createBackground(parallaxElement, image);
             const getTransform = this.useFallback ? fallbackTransform : parallaxTransform;
+            const align = horizontalAlign(parallaxElement, background, options.horizontalAlign);
             mobx.autorun(() => {
                 const transform = getTransform(parallaxElement, background);
-                background.updateTransform(transform);
+                background.updateTransform(align(transform));
             });
         });
     }

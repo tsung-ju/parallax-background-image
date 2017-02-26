@@ -8,7 +8,7 @@ import {prependStyleSheet} from './StyleSheet'
 import {Viewport} from './Viewport'
 import {ParallaxElement} from './ParallaxElement'
 import {Background, coverElement, pseudoBefore, insertImg} from './Background'
-import {Transform, parallaxTransform, fallbackTransform} from './Transform'
+import {Transform, parallaxTransform, fallbackTransform, horizontalAlign} from './Transform'
 import {scheduler} from '@ray851107/dom-scheduler'
 
 initialize()
@@ -65,9 +65,10 @@ export class Parallax {
 
         const background = options.createBackground(parallaxElement, image)
         const getTransform = this.useFallback ? fallbackTransform : parallaxTransform
+        const align = horizontalAlign(parallaxElement, background, options.horizontalAlign)
         autorun(() => {
             const transform = getTransform(parallaxElement, background)
-            background.updateTransform(transform)
+            background.updateTransform(align(transform))
         })
     }
 }

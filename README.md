@@ -84,6 +84,7 @@ For complete example see `demo.html`
   * An Array of HTMLElements
 * `options` Object (optional) 
   * `velocityScale` Number (optional) - `velocity of the background = velocity of the element * velocityScale`. Must be positive. Default `0.8`
+  * `horizontalAlign` Number (optional) - Default `0.5`
   * `backgroundImage` string (optional) - url to the background image
   * `createBackground` CreateBackground (optional) - Default `Parallax.coverElement(Parallax.insertImg)`
 

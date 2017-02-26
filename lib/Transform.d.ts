@@ -8,3 +8,6 @@ export interface Transform {
 }
 export declare function parallaxTransform(element: ParallaxElement, background: Background): Transform;
 export declare function fallbackTransform(element: ParallaxElement, background: Background): Transform;
+export declare function horizontalAlign(element: ParallaxElement, background: Background, value: number): (transform: Transform) => {} & Transform & {
+    translateX: number;
+};

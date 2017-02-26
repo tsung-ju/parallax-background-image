@@ -15,7 +15,7 @@ export function parallaxTransform (element: ParallaxElement, background: Backgro
     const viewport = element.viewport
     return {
         scale,
-        translateX: element.left * (scale - 1),
+        translateX: element.left * (scale - 1) - (background.width - element.width) / 2,
         translateY: ((viewport.height - background.height) * scale - (viewport.height - element.height)) / 2,
         translateZ: viewport.perspective * (1 - scale)
     }
@@ -28,7 +28,7 @@ export function fallbackTransform (element: ParallaxElement, background: Backgro
     const backgroundCenter = element.top + background.height / 2
     return {
         scale: 1,
-        translateX: 0,
+        translateX: - (background.width - element.width) / 2,
         translateY: (elementCenter - viewportCenter) * (element.velocityScale - 1) - (backgroundCenter - elementCenter),
         translateZ: 0
     }

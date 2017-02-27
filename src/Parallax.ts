@@ -40,7 +40,7 @@ export class Parallax {
 
     constructor (element: ToElement<HTMLElement>, useFallback = !isChrome(), perspective: number = 1000) {
         if (useFallback) {
-            perspective = 0
+            perspective = Infinity
         }
         this.useFallback = useFallback
         this.viewport = new Viewport(toElement(element), perspective)

@@ -11,9 +11,14 @@ export class Viewport {
             overflowY: 'scroll',
             webkitOverflowScrolling: 'touch',
             transformStyle: 'flat',
-            perspective: perspective + 'px',
-            perspectiveOrigin: '0 0'
         })
+
+        if (perspective !== Infinity) {
+            Object.assign(element.style, {
+                perspective: perspective + 'px',
+                perspectiveOrigin: '0 0'
+            })
+        }
 
         this.element = element
         this.perspective = perspective

@@ -282,9 +282,13 @@ class Viewport {
             overflowY: 'scroll',
             webkitOverflowScrolling: 'touch',
             transformStyle: 'flat',
-            perspective: perspective + 'px',
-            perspectiveOrigin: '0 0'
         });
+        if (perspective !== Infinity) {
+            Object.assign(element.style, {
+                perspective: perspective + 'px',
+                perspectiveOrigin: '0 0'
+            });
+        }
         this.element = element;
         this.perspective = perspective;
         this.boundingClientRect = new ObservableBoundingClientRect(element);
@@ -390,7 +394,7 @@ function initialize() {
 class Parallax$1 {
     constructor(element, useFallback = !isChrome(), perspective = 1000) {
         if (useFallback) {
-            perspective = 0;
+            perspective = Infinity;
         }
         this.useFallback = useFallback;
         this.viewport = new Viewport(toElement(element), perspective);

@@ -35,7 +35,8 @@ export function fallbackTransform (element: ParallaxElement, background: Backgro
 }
 
 export function horizontalAlign (element: ParallaxElement, background: Background, value: number) {
-    return (transform: Transform) => Object.assign({}, transform, {
+    return (transform: Transform) => ({
+        ...transform,
         translateX: transform.translateX - (background.width - element.width) * transform.scale * value
     })
 }

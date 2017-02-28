@@ -1,12 +1,17 @@
 {
     "compilerOptions": {
-        "target": "es6",
+        "target": "es5",
         "module": "es6",
         "moduleResolution": "node",
         "outDir": "lib",
         "experimentalDecorators": true,
         "declaration": true,
-        "importHelpers": true
+        "importHelpers": true,
+        "lib": [
+            "es5",
+            "dom",
+            "es2015.promise"
+        ]
     },
     "include": [
         "src/**/*.ts"

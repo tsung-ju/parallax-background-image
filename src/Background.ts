@@ -24,13 +24,11 @@ class StyleBackground implements Background {
         this.height = height
         
         scheduler.write(() => {
-            Object.assign(style, {
-                position: 'absolute',
-                left: '0',
-                top: '0',
-                transformOrigin: '0 0 0',
-                pointerEvents: 'none'
-            })
+            style.position = 'absolute'
+            style.left = '0'
+            style.top = '0'
+            style.transformOrigin = '0 0 0'
+            style.pointerEvents = 'none'
         })
     }
 
@@ -53,9 +51,10 @@ export abstract class ScaleBackground implements Background {
         this.background = background
     }
     updateTransform (transform: Transform) {
-        this.background.updateTransform(Object.assign({}, transform, {
+        this.background.updateTransform({
+            ...transform,
             scale: transform.scale * this.scale
-        }))
+        })
     }
     @computed get height (): number {
         return this.background.height * this.scale

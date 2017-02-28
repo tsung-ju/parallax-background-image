@@ -16,5 +16,5 @@ export const defaultOptions: Options = {
 }
 
 export function fromPartial (options: Partial<Options>): Options {
-    return Object.assign({}, defaultOptions, options)
+    return { ...defaultOptions, ...options }
 }

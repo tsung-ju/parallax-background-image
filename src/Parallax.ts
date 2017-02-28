@@ -75,7 +75,7 @@ export class Parallax {
 
 function isChrome () {
     const {userAgent} = navigator
-    return userAgent.includes('Chrome/') && ! userAgent.includes('Edge/')
+    return userAgent.indexOf('Chrome/') !== -1 && userAgent.indexOf('Edge/') === -1
 }
 
 function removeBackground (element: HTMLElement) {

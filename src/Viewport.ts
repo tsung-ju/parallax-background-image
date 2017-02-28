@@ -7,17 +7,13 @@ export class Viewport {
     readonly boundingClientRect: ClientRect
 
     constructor (element: HTMLElement, perspective: number) {
-        Object.assign(element.style, {
-            overflowY: 'scroll',
-            webkitOverflowScrolling: 'touch',
-            transformStyle: 'flat',
-        })
+        element.style.overflowY = 'scroll'
+        element.style['webkitOverflowScrolling'] = 'touch'
+        element.style.transformStyle = 'flat'
 
         if (perspective !== Infinity) {
-            Object.assign(element.style, {
-                perspective: perspective + 'px',
-                perspectiveOrigin: '0 0'
-            })
+            element.style.perspective = perspective + 'px'
+            element.style.perspectiveOrigin = '0 0'
         }
 
         this.element = element

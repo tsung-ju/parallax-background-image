@@ -1,4 +1,4 @@
-import {action, computed, observable, autorun} from 'mobx'
+import {computed, observable} from 'mobx'
 
 import {ATTR_PARALLAX_ELEMENT} from './Constants'
 import {appendStyleSheet} from './StyleSheet'

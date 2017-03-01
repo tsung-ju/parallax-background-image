@@ -1,8 +1,7 @@
+import { Rect } from './Rect';
 export declare class Viewport {
     readonly element: HTMLElement;
     readonly perspective: number;
-    readonly boundingClientRect: ClientRect;
+    readonly rect: Rect;
     constructor(element: HTMLElement, perspective: number);
-    readonly height: number;
-    readonly top: number;
 }

@@ -77,8 +77,9 @@ export class CoverScaleBackground extends ScaleBackground {
     }
 
     @computed get minimalHeight (): number {
-        const { height: viewportHeight } = this.element.viewport
-        const { height: elementHeight, velocityScale } = this.element
+        const viewportHeight = this.element.viewport.rect.height
+        const elementHeight = this.element.rect.height
+        const { velocityScale } = this.element
 
         const coverWindowTop = viewportHeight + velocityScale * (viewportHeight - elementHeight)
 
@@ -86,7 +87,7 @@ export class CoverScaleBackground extends ScaleBackground {
     }
 
     @computed get minimalWidth (): number {
-        return this.element.width
+        return this.element.rect.width
     }
 }
 

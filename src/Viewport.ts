@@ -1,10 +1,10 @@
 import {computed} from 'mobx'
-import {ObservableBoundingClientRect} from './ObservableBoundingClientRect'
+import {ObservableRect, Rect} from './Rect'
 
 export class Viewport {
     readonly element: HTMLElement
     readonly perspective: number
-    readonly boundingClientRect: ClientRect
+    readonly rect: Rect
 
     constructor (element: HTMLElement, perspective: number) {
         element.style.overflowY = 'scroll'
@@ -18,12 +18,6 @@ export class Viewport {
 
         this.element = element
         this.perspective = perspective
-        this.boundingClientRect = new ObservableBoundingClientRect(element)
-    }
-    @computed get height (): number {
-        return this.boundingClientRect.height
-    }
-    @computed get top (): number {
-        return this.boundingClientRect.top
+        this.rect = new ObservableRect(element)
     }
 }

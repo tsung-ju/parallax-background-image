@@ -234,8 +234,9 @@ var CoverScaleBackground = (function (_super) {
     });
     Object.defineProperty(CoverScaleBackground.prototype, "minimalHeight", {
         get: function () {
-            var viewportHeight = this.element.viewport.height;
-            var _a = this.element, elementHeight = _a.height, velocityScale = _a.velocityScale;
+            var viewportHeight = this.element.viewport.rect.height;
+            var elementHeight = this.element.rect.height;
+            var velocityScale = this.element.velocityScale;
             var coverWindowTop = viewportHeight + velocityScale * (viewportHeight - elementHeight);
             return coverWindowTop;
         },
@@ -244,7 +245,7 @@ var CoverScaleBackground = (function (_super) {
     });
     Object.defineProperty(CoverScaleBackground.prototype, "minimalWidth", {
         get: function () {
-            return this.element.width;
+            return this.element.rect.width;
         },
         enumerable: true,
         configurable: true
@@ -295,52 +296,42 @@ function fromPartial(options) {
     return __assign({}, defaultOptions, options);
 }
 
-var ObservableBoundingClientRect = (function () {
-    function ObservableBoundingClientRect(element) {
+var ObservableRect = (function () {
+    function ObservableRect(element) {
         var _this = this;
-        this.bottom = 0;
-        this.height = 0;
         this.left = 0;
-        this.right = 0;
         this.top = 0;
         this.width = 0;
+        this.height = 0;
         var watch = function () {
             _this.update(element.getBoundingClientRect());
             _ray851107_domScheduler.scheduler.read(watch);
         };
         _ray851107_domScheduler.scheduler.read(watch);
     }
-    ObservableBoundingClientRect.prototype.update = function (rect) {
-        this.bottom = rect.bottom;
-        this.height = rect.height;
+    ObservableRect.prototype.update = function (rect) {
         this.left = rect.left;
-        this.right = rect.right;
         this.top = rect.top;
         this.width = rect.width;
+        this.height = rect.height;
     };
-    return ObservableBoundingClientRect;
+    return ObservableRect;
 }());
 __decorate([
     mobx.observable
-], ObservableBoundingClientRect.prototype, "bottom", void 0);
+], ObservableRect.prototype, "left", void 0);
 __decorate([
     mobx.observable
-], ObservableBoundingClientRect.prototype, "height", void 0);
+], ObservableRect.prototype, "top", void 0);
 __decorate([
     mobx.observable
-], ObservableBoundingClientRect.prototype, "left", void 0);
+], ObservableRect.prototype, "width", void 0);
 __decorate([
     mobx.observable
-], ObservableBoundingClientRect.prototype, "right", void 0);
-__decorate([
-    mobx.observable
-], ObservableBoundingClientRect.prototype, "top", void 0);
-__decorate([
-    mobx.observable
-], ObservableBoundingClientRect.prototype, "width", void 0);
+], ObservableRect.prototype, "height", void 0);
 __decorate([
     mobx.action
-], ObservableBoundingClientRect.prototype, "update", null);
+], ObservableRect.prototype, "update", null);
 
 var Viewport = (function () {
     function Viewport(element, perspective) {
@@ -353,105 +344,45 @@ var Viewport = (function () {
         }
         this.element = element;
         this.perspective = perspective;
-        this.boundingClientRect = new ObservableBoundingClientRect(element);
+        this.rect = new ObservableRect(element);
     }
-    Object.defineProperty(Viewport.prototype, "height", {
-        get: function () {
-            return this.boundingClientRect.height;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Viewport.prototype, "top", {
-        get: function () {
-            return this.boundingClientRect.top;
-        },
-        enumerable: true,
-        configurable: true
-    });
     return Viewport;
 }());
-__decorate([
-    mobx.computed
-], Viewport.prototype, "height", null);
-__decorate([
-    mobx.computed
-], Viewport.prototype, "top", null);
 
 var ParallaxElement = (function () {
     function ParallaxElement(element, viewport, velocityScale) {
         var _this = this;
         this.id = ParallaxElement.getNextId();
         this.element = element;
-        this.boundingClientRect = new ObservableBoundingClientRect(element);
+        this.rect = new ObservableRect(element);
         this.viewport = viewport;
         this.velocityScale = velocityScale;
         _ray851107_domScheduler.scheduler.write(function () {
             _this.element.setAttribute(ATTR_PARALLAX_ELEMENT, _this.id);
         });
     }
-    Object.defineProperty(ParallaxElement.prototype, "width", {
-        get: function () {
-            return this.boundingClientRect.width;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ParallaxElement.prototype, "height", {
-        get: function () {
-            return this.boundingClientRect.height;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ParallaxElement.prototype, "left", {
-        get: function () {
-            return this.boundingClientRect.left;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ParallaxElement.prototype, "top", {
-        get: function () {
-            return this.boundingClientRect.top;
-        },
-        enumerable: true,
-        configurable: true
-    });
     ParallaxElement.getNextId = function () {
         return "" + ParallaxElement.nextId++;
     };
     return ParallaxElement;
 }());
 ParallaxElement.nextId = 0;
-__decorate([
-    mobx.computed
-], ParallaxElement.prototype, "width", null);
-__decorate([
-    mobx.computed
-], ParallaxElement.prototype, "height", null);
-__decorate([
-    mobx.computed
-], ParallaxElement.prototype, "left", null);
-__decorate([
-    mobx.computed
-], ParallaxElement.prototype, "top", null);
 
 function parallaxTransform(element, background) {
     var scale = 1 / element.velocityScale;
     var viewport = element.viewport;
     return {
         scale: scale,
-        translateX: element.left * (scale - 1),
-        translateY: ((viewport.height - background.height) * scale - (viewport.height - element.height)) / 2,
+        translateX: element.rect.left * (scale - 1),
+        translateY: ((viewport.rect.height - background.height) * scale - (viewport.rect.height - element.rect.height)) / 2,
         translateZ: viewport.perspective * (1 - scale)
     };
 }
 function fallbackTransform(element, background) {
     var viewport = element.viewport;
-    var viewportCenter = viewport.top + viewport.height / 2;
-    var elementCenter = element.top + element.height / 2;
-    var backgroundCenter = element.top + background.height / 2;
+    var viewportCenter = viewport.rect.top + viewport.rect.height / 2;
+    var elementCenter = element.rect.top + element.rect.height / 2;
+    var backgroundCenter = element.rect.top + background.height / 2;
     return {
         scale: 1,
         translateX: 0,
@@ -460,7 +391,7 @@ function fallbackTransform(element, background) {
     };
 }
 function horizontalAlign(element, background, value) {
-    return function (transform) { return (__assign({}, transform, { translateX: transform.translateX - (background.width - element.width) * transform.scale * value })); };
+    return function (transform) { return (__assign({}, transform, { translateX: transform.translateX - (background.width - element.rect.width) * transform.scale * value })); };
 }
 
 initialize();

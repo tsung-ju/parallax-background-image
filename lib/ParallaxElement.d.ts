@@ -8,5 +8,5 @@ export declare class ParallaxElement {
     readonly velocityScale: number;
     constructor(element: HTMLElement, viewport: Viewport, velocityScale: number);
     private static nextId;
-    private static getNextId();
+    private static getNextId;
 }

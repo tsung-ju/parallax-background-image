@@ -7,7 +7,7 @@ export interface Background {
 }
 export declare abstract class ScaleBackground implements Background {
     background: Background;
-    readonly abstract scale: number;
+    abstract readonly scale: number;
     constructor(background: Background);
     updateTransform(transform: Transform): void;
     readonly height: number;

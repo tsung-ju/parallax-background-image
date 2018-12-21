@@ -46,7 +46,7 @@ export class Parallax {
         this.viewport = new Viewport(toElement(element), perspective)
     }
 
-    add (elements: ToElementArray<HTMLElement>, partial: Partial<Options> = {}): Promise<null>[] {
+    add (elements: ToElementArray<HTMLElement>, partial: Partial<Options> = {}): Promise<void>[] {
         const options = fromPartial(partial)
 
         if (options.velocityScale < 0) throw new RangeError('velocityScale must be positive')

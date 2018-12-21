@@ -5,7 +5,7 @@
   "main": "parallax-background-image.js",
   "module": "lib/main.js",
   "scripts": {
-    "build": "tsc && rollup -c && babili parallax-background-image.js --out-file parallax-background-image.min.js",
+    "build": "tsc && rollup -c && babel-minify parallax-background-image.js --out-file parallax-background-image.min.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,14 +19,14 @@
   },
   "homepage": "https://github.com/ray851107/parallax-background-image#readme",
   "devDependencies": {
-    "babili": "0.0.11",
-    "rollup": "^0.41.4",
-    "rollup-plugin-node-resolve": "^2.0.0",
-    "typescript": "^2.1.6"
+    "babel-minify": "^0.5.0",
+    "rollup": "^0.68.1",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "typescript": "^3.2.2"
   },
   "dependencies": {
-    "@ray851107/dom-scheduler": "^1.0.1",
-    "mobx": "^3.1.0",
-    "tslib": "^1.5.0"
+    "@ray851107/dom-scheduler": "github:ray851107/dom-scheduler#v1.0.2",
+    "mobx": "^5.8.0",
+    "tslib": "^1.9.3"
   }
 }

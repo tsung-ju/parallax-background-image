@@ -10,7 +10,7 @@ export declare function parallaxTransform(element: ParallaxElement, background: 
 export declare function fallbackTransform(element: ParallaxElement, background: Background): Transform;
 export declare function horizontalAlign(element: ParallaxElement, background: Background, value: number): (transform: Transform) => {
     translateX: number;
-    readonly scale: number;
-    readonly translateY: number;
-    readonly translateZ: number;
+    scale: number;
+    translateY: number;
+    translateZ: number;
 };

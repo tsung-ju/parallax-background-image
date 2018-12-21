@@ -60,8 +60,8 @@ For complete example see `demo.html`
 * [MobX.js](https://mobx.js.org/)
 * [@ray851107/dom-scheduler](https://github.com/ray851107/dom-scheduler)
 ```html
-<script src="https://unpkg.com/mobx@3.0.2/lib/mobx.umd.min.js"></script>
-<script src="https://unpkg.com/@ray851107/dom-scheduler@1.0.1/dom-scheduler.min.js"></script>
+<script src="https://unpkg.com/mobx@5.8.0/lib/mobx.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ray851107/dom-scheduler@v1.0.2/dom-scheduler.min.js"></script>
 ```
 # API
 

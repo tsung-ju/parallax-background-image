@@ -1,6 +1,6 @@
-import {ToAsyncFunction1, toAsyncFunction} from './ToFunction'
+import {ToAsyncFunction, toAsyncFunction} from './ToFunction'
 
-export type ToBackgroundImage = ToAsyncFunction1<Element, string>
+export type ToBackgroundImage = ToAsyncFunction<[Element], string>
 
 export function loadBackgroundImage (el: Element, getImage: ToBackgroundImage): Promise<HTMLImageElement> {
     return toAsyncFunction(getImage)(el).then(loadImage)
@@ -10,9 +10,9 @@ function loadImage (src: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
         const image = document.createElement('img')
         image.onload = (event) => {
-            resolve(event.target)
+            resolve(event.target as HTMLImageElement)
         }
-        image.onerror = (event) => {
+        image.onerror = (event: ErrorEvent) => {
             reject(event.error)
         }
         image.src = src

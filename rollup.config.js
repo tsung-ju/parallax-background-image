@@ -9,7 +9,7 @@ export default {
   input: 'lib/main.js',
   external: Object.keys(globals),
   plugins: [
-      nodeResolve()
+    nodeResolve()
   ],
   output: {
     format: 'iife',

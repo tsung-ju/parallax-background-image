@@ -232,10 +232,10 @@ var parallax = (function (exports, domScheduler) {
         var y = ref.y;
         var z = ref.z;
         var s = ref.s;
-        res.x = x + res.x * s;
-        res.y = y + res.y * s;
-        res.z = z + res.z * s;
-        res.s *= s;
+        res.x = s * res.x + x;
+        res.y = s * res.y + y;
+        res.z = s * res.z + z;
+        res.s = s * res.s;
       }
       return res
     }

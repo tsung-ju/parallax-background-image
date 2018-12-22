@@ -41,10 +41,10 @@ export function pipeTransform(...ts) {
     const res = { x: 0, y: 0, z: 0, s: 1 }
     for (let i = 0; i < ts.length; ++i) {
       const { x, y, z, s } = ts[i](element, viewport)
-      res.x = x + res.x * s
-      res.y = y + res.y * s
-      res.z = z + res.z * s
-      res.s *= s
+      res.x = s * res.x + x
+      res.y = s * res.y + y
+      res.z = s * res.z + z
+      res.s = s * res.s
     }
     return res
   }

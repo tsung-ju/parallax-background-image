@@ -80,7 +80,11 @@ For complete example see `demo.html`
 ### Instance Methods
 
 ### `viewport.add(elements[, options])`
-* `elements` - Parent element of background image. Must be a descendant node of the viewport. Can be:
+
+Add parallax effect to the element(s).
+
+#### Parameters
+* `elements` - Can be:
   * A CSS selector
   * A HTMLElement
   * A NodeList
@@ -95,3 +99,13 @@ For complete example see `demo.html`
     * `parallax.PseudoElementRenderer` - use CSS `::before`.
       * NOTE: It is not recommended to use this renderer, as it is much slower than `ImageElementRenderer`.
 
+### `viewport.remove(elements)`
+
+Remove parallax effect from the element(s).
+
+#### Parameters
+* `elements` - Can be:
+  * A CSS selector
+  * A HTMLElement
+  * A NodeList
+  * An array of HTMLElements

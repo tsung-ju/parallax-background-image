@@ -6,7 +6,7 @@
   "module": "lib/main.js",
   "scripts": {
     "build": "rollup -c && uglifyjs parallax-background-image.js -mc -o parallax-background-image.min.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prettier": "prettier --no-semi --single-quote --write rollup.config.js 'src/**/*.js'"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/ray851107/parallax-background-image#readme",
   "devDependencies": {
+    "prettier": "^1.15.3",
     "rollup": "^0.68.1",
     "rollup-plugin-buble": "^0.19.6",
     "rollup-plugin-node-resolve": "^4.0.0",

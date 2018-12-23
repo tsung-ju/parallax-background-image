@@ -83,7 +83,7 @@ For complete example see `demo.html`
   * An Array of HTMLElements
 * `options` Object (optional) - all fields are optional
   * `velocity` Number - `velocity of the background / velocity of the element`. Must be positive. Default `0.8`
-  * `alignX` Percentage (e.g. `'87%'`) - Default `center`
+  * `alignX` Percentage (e.g. `'87%'`) - Default `'center'`
     * shorthand: `'left'` = `'0%'`, `'right'` = `'100%'`, `'center'` = `'50%'`
   * `backgroundImage` string - url to the background image - Default read `background-image` from element style
   * `renderer` RendererClass - how to render the image - Default `parallax.ImageElementRenderer`

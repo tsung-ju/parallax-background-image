@@ -1,51 +1,56 @@
-export function coverElement(image, velocity) {
-  return function(element, viewport) {
-    const minWidth = element.width
-    const minHeight =
-      viewport.height + velocity * (viewport.height - element.height)
-    const widthScale = minWidth / image.naturalWidth
-    const heightScale = minHeight / image.naturalHeight
-    return {
-      x: 0,
-      y: 0,
-      z: 0,
-      s: Math.max(widthScale, heightScale)
-    }
+export function scale(bg, s) {
+  bg.x *= s
+  bg.y *= s
+  bg.z *= s
+  bg.w *= s
+  bg.h *= s
+}
+
+export function coverElement(velocity) {
+  return function(bg, element, viewport) {
+    const minWidth = element.w
+    const minHeight = viewport.h + velocity * (viewport.h - element.h)
+    const widthScale = minWidth / bg.w
+    const heightScale = minHeight / bg.h
+
+    scale(bg, Math.max(widthScale, heightScale))
   }
 }
 
+export function alignX(percentage) {
+  percentage = parsePercentage(percentage)
+  return function(bg, element, viewport) {
+    bg.x = (0.5 - percentage) * (bg.w - element.w)
+  }
+}
+
+function parsePercentage(str) {
+  if (str === 'left') return 0
+  if (str === 'center') return 0.5
+  if (str === 'right') return 1
+  const num = parseFloat(str)
+  if (!isNaN(num)) return num / 100
+  return 0.5
+}
+
 export function parallax3d(velocity) {
-  return function(element, viewport) {
-    return {
-      x: (element.x - viewport.x) * (1 / velocity - 1),
-      y: 0,
-      z: 1 - 1 / velocity,
-      s: 1 / velocity
-    }
+  return function(bg, element, viewport) {
+    scale(bg, 1 / velocity)
+    bg.z += 1 - 1 / velocity
+    bg.x -= element.x * (1 - 1 / velocity)
   }
 }
 
 export function parallax2d(velocity) {
-  return function(element, viewport) {
-    return {
-      x: 0,
-      y: (element.y - viewport.y) * (velocity - 1),
-      z: 0,
-      s: 1
-    }
+  return function(bg, element, viewport) {
+    bg.y += element.y * (velocity - 1)
   }
 }
 
-export function pipeTransform(...ts) {
-  return function(element, viewport) {
-    const res = { x: 0, y: 0, z: 0, s: 1 }
-    for (let i = 0; i < ts.length; ++i) {
-      const { x, y, z, s } = ts[i](element, viewport)
-      res.x = s * res.x + x
-      res.y = s * res.y + y
-      res.z = s * res.z + z
-      res.s = s * res.s
+export function chainTransforms(transforms) {
+  return function(bg, element, viewport) {
+    for (let i = 0; i < transforms.length; ++i) {
+      transforms[i](bg, element, viewport)
     }
-    return res
   }
 }

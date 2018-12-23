@@ -100,14 +100,21 @@ var parallax = (function (exports, domScheduler) {
     );
   }
 
-  function getRect(element) {
+  function getRect(element, ref) {
+    if ( ref === void 0 ) ref = null;
+
     var rect = element.getBoundingClientRect();
-    return {
+    var result = {
       x: (rect.left + rect.right) / 2,
       y: (rect.top + rect.bottom) / 2,
-      width: rect.right - rect.left,
-      height: rect.bottom - rect.top
+      w: rect.right - rect.left,
+      h: rect.bottom - rect.top
+    };
+    if (ref != null) {
+      result.x -= ref.x;
+      result.y -= ref.y;
     }
+    return result
   }
 
   var ParallaxViewport = function ParallaxViewport(viewport, options) {
@@ -131,9 +138,11 @@ var parallax = (function (exports, domScheduler) {
           var element = ref.element;
           var transform = ref.transform;
           var renderer = ref.renderer;
-        var elementRect = getRect(element);
-        var t = transform(elementRect, viewportRect);
-        renderer.render(t);
+          var initialBg = ref.initialBg;
+        var elementRect = getRect(element, viewportRect);
+        var bg = Object.assign({}, initialBg);
+        transform(bg, elementRect, viewportRect);
+        renderer.render(bg);
       }
       domScheduler.scheduler.read(loop);
     };
@@ -163,8 +172,15 @@ var parallax = (function (exports, domScheduler) {
     element.classList.add(CLASS_PARALLAX_ELEMENT);
     var transform = options.transform(element, image, options);
     var renderer = new options.renderer(element, image, options);
+    var initialBg = {
+      x: 0,
+      y: 0,
+      z: 0,
+      w: image.naturalWidth,
+      h: image.naturalHeight
+    };
 
-    this.entries.push({ element: element, transform: transform, renderer: renderer });
+    this.entries.push({ element: element, transform: transform, renderer: renderer, initialBg: initialBg });
   };
 
   ParallaxViewport.prototype.remove = function remove (elements) {
@@ -182,66 +198,64 @@ var parallax = (function (exports, domScheduler) {
     entry.renderer.dispose();
   };
 
-  function coverElement(image, velocity) {
-    return function(element, viewport) {
-      var minWidth = element.width;
-      var minHeight =
-        viewport.height + velocity * (viewport.height - element.height);
-      var widthScale = minWidth / image.naturalWidth;
-      var heightScale = minHeight / image.naturalHeight;
-      return {
-        x: 0,
-        y: 0,
-        z: 0,
-        s: Math.max(widthScale, heightScale)
-      }
+  function scale(bg, s) {
+    bg.x *= s;
+    bg.y *= s;
+    bg.z *= s;
+    bg.w *= s;
+    bg.h *= s;
+  }
+
+  function coverElement(velocity) {
+    return function(bg, element, viewport) {
+      var minWidth = element.w;
+      var minHeight = viewport.h + velocity * (viewport.h - element.h);
+      var widthScale = minWidth / bg.w;
+      var heightScale = minHeight / bg.h;
+
+      scale(bg, Math.max(widthScale, heightScale));
     }
   }
 
+  function alignX(percentage) {
+    percentage = parsePercentage(percentage);
+    return function(bg, element, viewport) {
+      bg.x = (0.5 - percentage) * (bg.w - element.w);
+    }
+  }
+
+  function parsePercentage(str) {
+    if (str === 'left') { return 0 }
+    if (str === 'center') { return 0.5 }
+    if (str === 'right') { return 1 }
+    var num = parseFloat(str);
+    if (!isNaN(num)) { return num / 100 }
+    return 0.5
+  }
+
   function parallax3d(velocity) {
-    return function(element, viewport) {
-      return {
-        x: (element.x - viewport.x) * (1 / velocity - 1),
-        y: 0,
-        z: 1 - 1 / velocity,
-        s: 1 / velocity
-      }
+    return function(bg, element, viewport) {
+      scale(bg, 1 / velocity);
+      bg.z += 1 - 1 / velocity;
+      bg.x -= element.x * (1 - 1 / velocity);
     }
   }
 
   function parallax2d(velocity) {
-    return function(element, viewport) {
-      return {
-        x: 0,
-        y: (element.y - viewport.y) * (velocity - 1),
-        z: 0,
-        s: 1
+    return function(bg, element, viewport) {
+      bg.y += element.y * (velocity - 1);
+    }
+  }
+
+  function chainTransforms(transforms) {
+    return function(bg, element, viewport) {
+      for (var i = 0; i < transforms.length; ++i) {
+        transforms[i](bg, element, viewport);
       }
     }
   }
 
-  function pipeTransform() {
-    var ts = [], len = arguments.length;
-    while ( len-- ) ts[ len ] = arguments[ len ];
-
-    return function(element, viewport) {
-      var res = { x: 0, y: 0, z: 0, s: 1 };
-      for (var i = 0; i < ts.length; ++i) {
-        var ref = ts[i](element, viewport);
-        var x = ref.x;
-        var y = ref.y;
-        var z = ref.z;
-        var s = ref.s;
-        res.x = s * res.x + x;
-        res.y = s * res.y + y;
-        res.z = s * res.z + z;
-        res.s = s * res.s;
-      }
-      return res
-    }
-  }
-
-  function renderToStyle(style) {
+  function renderToStyle(style, width, height) {
     domScheduler.scheduler.write(function() {
       style.position = 'absolute';
       style.left = '50%';
@@ -254,9 +268,13 @@ var parallax = (function (exports, domScheduler) {
       var x = ref.x;
       var y = ref.y;
       var z = ref.z;
-      var s = ref.s;
+      var w = ref.w;
+      var h = ref.h;
 
-      var css = "\n      translate(-50%, -50%)\n      translate3d(" + x + "px, " + y + "px, " + z + "px)\n      scale(" + s + ", " + s + ")";
+      var css =
+        "translate(-50%, -50%)" +
+        "translate3d(" + x + "px, " + y + "px, " + z + "px)" +
+        "scale(" + (w / width) + ", " + (h / height) + ")";
 
       domScheduler.scheduler.write(function() {
         style.transform = css;
@@ -267,18 +285,19 @@ var parallax = (function (exports, domScheduler) {
   function dropRepeat(render) {
     var started = false;
     var prev = null;
-    return function(t) {
+    return function(bg) {
       if (
         started &&
-        t.x === prev.x &&
-        t.y === prev.y &&
-        t.z === prev.z &&
-        t.s === prev.s
+        bg.x === prev.x &&
+        bg.y === prev.y &&
+        bg.z === prev.z &&
+        bg.w === prev.w &&
+        bg.h === prev.h
       )
         { return }
       started = true;
-      prev = t;
-      render(t);
+      prev = bg;
+      render(bg);
     }
   }
 
@@ -289,13 +308,15 @@ var parallax = (function (exports, domScheduler) {
     this.img = document.createElement('img');
 
     domScheduler.scheduler.write(function () {
-      this$1.img.height = image.naturalHeight;
       this$1.img.width = image.naturalWidth;
+      this$1.img.height = image.naturalHeight;
       this$1.img.src = image.src;
       this$1.element.prepend(this$1.img);
     });
 
-    this.render = dropRepeat(renderToStyle(this.img.style));
+    this.render = dropRepeat(
+      renderToStyle(this.img.style, image.naturalWidth, image.naturalHeight)
+    );
   };
 
   ImageElementRenderer.prototype.dispose = function dispose () {
@@ -315,7 +336,9 @@ var parallax = (function (exports, domScheduler) {
 
     var index = styleSheet.insertRule(rule, 0);
     var style = styleSheet.cssRules[index].style;
-    this.render = dropRepeat(renderToStyle(style));
+    this.render = dropRepeat(
+      renderToStyle(style, image.naturalWidth, image.naturalHeight)
+    );
   };
   PseudoElementRenderer.prototype.dispose = function dispose () {
     this.element.classList.remove(this.className);
@@ -330,15 +353,17 @@ var parallax = (function (exports, domScheduler) {
 
   function defaultTransform(element, image, options) {
     var parallax = options.use3d ? parallax3d : parallax2d;
-    return pipeTransform(
-      coverElement(image, options.velocity),
+    return chainTransforms([
+      coverElement(options.velocity),
+      alignX(options.alignX),
       parallax(options.velocity)
-    )
+    ])
   }
 
   var defaultOptions = {
     use3d: isChrome(),
     velocity: 0.8,
+    alignX: 'center',
     renderer: ImageElementRenderer,
     transform: defaultTransform,
     backgroundImage: cssBackgroundImage
@@ -353,9 +378,10 @@ var parallax = (function (exports, domScheduler) {
 
   exports.createViewport = createViewport;
   exports.coverElement = coverElement;
+  exports.alignX = alignX;
   exports.parallax2d = parallax2d;
   exports.parallax3d = parallax3d;
-  exports.pipeTransform = pipeTransform;
+  exports.chainTransforms = chainTransforms;
   exports.ImageElementRenderer = ImageElementRenderer;
   exports.PseudoElementRenderer = PseudoElementRenderer;
 

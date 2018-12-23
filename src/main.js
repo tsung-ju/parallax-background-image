@@ -1,9 +1,10 @@
 import { ParallaxViewport } from './parallax-viewport'
 import {
   coverElement,
+  alignX,
   parallax2d,
   parallax3d,
-  pipeTransform
+  chainTransforms
 } from './transform.js'
 import { cssBackgroundImage } from './background-image.js'
 import { ImageElementRenderer, PseudoElementRenderer } from './renderer.js'
@@ -17,15 +18,17 @@ function isChrome() {
 
 function defaultTransform(element, image, options) {
   const parallax = options.use3d ? parallax3d : parallax2d
-  return pipeTransform(
-    coverElement(image, options.velocity),
+  return chainTransforms([
+    coverElement(options.velocity),
+    alignX(options.alignX),
     parallax(options.velocity)
-  )
+  ])
 }
 
 const defaultOptions = {
   use3d: isChrome(),
   velocity: 0.8,
+  alignX: 'center',
   renderer: ImageElementRenderer,
   transform: defaultTransform,
   backgroundImage: cssBackgroundImage
@@ -38,9 +41,10 @@ export function createViewport(viewport, options = {}) {
 
 export {
   coverElement,
+  alignX,
   parallax2d,
   parallax3d,
-  pipeTransform,
+  chainTransforms,
   ImageElementRenderer,
   PseudoElementRenderer
 }

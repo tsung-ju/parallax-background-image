@@ -58,10 +58,10 @@
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/gh/ray851107/dom-scheduler@v1.0.2/dom-scheduler.min.js"></script>
-<script src="./parallax-background-image.min.js"></script>
+<script src="./parallax-background-image.js"></script>
 <script>
   var viewport = parallax.createViewport('#wrapper')
-  viewport.add('.slow', { velocity: 0.8 })
+  viewport.add('.slow', { velocity: 0.8, alignX: 'left' })
   viewport.add('#fast', {
     velocity: 1.5,
     backgroundImage:

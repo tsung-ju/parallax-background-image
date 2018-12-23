@@ -52,14 +52,19 @@ function initialize() {
   )
 }
 
-function getRect(element) {
+function getRect(element, ref = null) {
   const rect = element.getBoundingClientRect()
-  return {
+  const result = {
     x: (rect.left + rect.right) / 2,
     y: (rect.top + rect.bottom) / 2,
-    width: rect.right - rect.left,
-    height: rect.bottom - rect.top
+    w: rect.right - rect.left,
+    h: rect.bottom - rect.top
   }
+  if (ref != null) {
+    result.x -= ref.x
+    result.y -= ref.y
+  }
+  return result
 }
 
 export class ParallaxViewport {
@@ -78,10 +83,11 @@ export class ParallaxViewport {
     const loop = () => {
       const viewportRect = getRect(this.viewport)
       for (let i = 0; i < this.entries.length; ++i) {
-        const { element, transform, renderer } = this.entries[i]
-        const elementRect = getRect(element)
-        const t = transform(elementRect, viewportRect)
-        renderer.render(t)
+        const { element, transform, renderer, initialBg } = this.entries[i]
+        const elementRect = getRect(element, viewportRect)
+        const bg = { ...initialBg }
+        transform(bg, elementRect, viewportRect)
+        renderer.render(bg)
       }
       scheduler.read(loop)
     }
@@ -108,8 +114,15 @@ export class ParallaxViewport {
     element.classList.add(CLASS_PARALLAX_ELEMENT)
     const transform = options.transform(element, image, options)
     const renderer = new options.renderer(element, image, options)
+    const initialBg = {
+      x: 0,
+      y: 0,
+      z: 0,
+      w: image.naturalWidth,
+      h: image.naturalHeight
+    }
 
-    this.entries.push({ element, transform, renderer })
+    this.entries.push({ element, transform, renderer, initialBg })
   }
 
   remove(elements) {

@@ -1,7 +1,7 @@
 import { scheduler } from '@ray851107/dom-scheduler'
 import { appendStyleSheet } from './style-sheet'
 
-function renderToStyle(style) {
+function renderToStyle(style, width, height) {
   scheduler.write(function() {
     style.position = 'absolute'
     style.left = '50%'
@@ -10,11 +10,11 @@ function renderToStyle(style) {
     style.pointerEvents = 'none'
   })
 
-  return function render({ x, y, z, s }) {
-    const css = `
-      translate(-50%, -50%)
-      translate3d(${x}px, ${y}px, ${z}px)
-      scale(${s}, ${s})`
+  return function render({ x, y, z, w, h }) {
+    const css =
+      `translate(-50%, -50%)` +
+      `translate3d(${x}px, ${y}px, ${z}px)` +
+      `scale(${w / width}, ${h / height})`
 
     scheduler.write(function() {
       style.transform = css
@@ -25,18 +25,19 @@ function renderToStyle(style) {
 function dropRepeat(render) {
   let started = false
   let prev = null
-  return function(t) {
+  return function(bg) {
     if (
       started &&
-      t.x === prev.x &&
-      t.y === prev.y &&
-      t.z === prev.z &&
-      t.s === prev.s
+      bg.x === prev.x &&
+      bg.y === prev.y &&
+      bg.z === prev.z &&
+      bg.w === prev.w &&
+      bg.h === prev.h
     )
       return
     started = true
-    prev = t
-    render(t)
+    prev = bg
+    render(bg)
   }
 }
 
@@ -46,13 +47,15 @@ export class ImageElementRenderer {
     this.img = document.createElement('img')
 
     scheduler.write(() => {
-      this.img.height = image.naturalHeight
       this.img.width = image.naturalWidth
+      this.img.height = image.naturalHeight
       this.img.src = image.src
       this.element.prepend(this.img)
     })
 
-    this.render = dropRepeat(renderToStyle(this.img.style))
+    this.render = dropRepeat(
+      renderToStyle(this.img.style, image.naturalWidth, image.naturalHeight)
+    )
   }
 
   dispose() {
@@ -80,7 +83,9 @@ export class PseudoElementRenderer {
 
     const index = styleSheet.insertRule(rule, 0)
     const style = styleSheet.cssRules[index].style
-    this.render = dropRepeat(renderToStyle(style))
+    this.render = dropRepeat(
+      renderToStyle(style, image.naturalWidth, image.naturalHeight)
+    )
   }
   dispose() {
     this.element.classList.remove(this.className)

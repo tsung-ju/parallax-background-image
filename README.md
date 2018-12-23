@@ -40,69 +40,53 @@ For example,
 
 Then in your script,
 ```javascript
-var parallax = new Parallax('#wrapper')
+var viewport = parallax.createViewport('#wrapper')
 ```
 
 ### Apply parallax effect
 ```javascript
 /* Slows down their background image (to 90% of the scroll speed). */
-parallax.add('.your-selector', { velocityScale: 0.9 })
+viewport.add('.your-selector', { velocity: 0.9 })
 
 /* Speeds up their background image (to 120% of the scroll speed). */
-parallax.add('.another-selector', { velocityScale: 1.2 })
+viewport.add('.another-selector', { velocity: 1.2 })
+
+/* align the background image to the left (Default: 'center') */
+viewport.add('.hello-selector', { alignX: 'left' })
 
 /* use custom background image */
-parallax.add('.custom-background-image', { backgroundImage: 'http://domain/xxx.jpg' })
+viewport.add('.custom-background-image', { backgroundImage: 'http://domain/xxx.jpg' })
 ```
 For complete example see `demo.html`
 
 # Dependencies
-* [MobX.js](https://mobx.js.org/)
 * [@ray851107/dom-scheduler](https://github.com/ray851107/dom-scheduler)
 ```html
-<script src="https://unpkg.com/mobx@5.8.0/lib/mobx.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/ray851107/dom-scheduler@v1.0.2/dom-scheduler.min.js"></script>
 ```
 # API
 
-## Class: Parallax
+### `parallax.createViewport(viewport[, options])`
 
-### `new Parallax(viewport[, useFallback, perspective])`
-
-* `viewport` HTMLElement - The 3D viewport
-* `useFallback` boolean - Whether to use the js-based fallback or not. Default `true` on non-chromium browsers.
-* `perspective` Number - Default `1000`
-  * In most cases, you won't need to change it. But if you need to make backgrounds move much faster than the scrolling speed, a bigger value will (probably) improve accuracy.
+* `viewport` HTMLElement or CSS selector - The 3D viewport
+* `options` Object (optional) - all fields are optional
+  * `use3d` boolean - Whether to use perspective transform or not. Default `false` on non-chromium browsers.
+  * ...default options for `parallax.add`
 
 ### Instance Methods
 
-#### `parallax.add(elements[, options])`
+#### `viewport.add(elements[, options])`
 * `elements` - Parent element of background image; can be:
   * A CSS selector
   * A HTMLElement
   * A NodeList
   * An Array of HTMLElements
-* `options` Object (optional) 
-  * `velocityScale` Number (optional) - `velocity of the background = velocity of the element * velocityScale`. Must be positive. Default `0.8`
-  * `horizontalAlign` Number (optional) - Default `0.5`
-  * `backgroundImage` string (optional) - url to the background image
-  * `createBackground` CreateBackground (optional) - Default `Parallax.coverElement(Parallax.insertImg)`
+* `options` Object (optional) - all fields are optional
+  * `velocity` Number - `velocity of the background / velocity of the element`. Must be positive. Default `0.8`
+  * `alignX` Percentage (e.g. `'87%'`) - Default `center`
+    * shorthand: `'left'` = `'0%'`, `'right'` = `'100%'`, `'center'` = `'50%'`
+  * `backgroundImage` string - url to the background image - Default read `background-image` from element style
+  * `renderer` RendererClass - how to render the image - Default `parallax.ImageElementRenderer`
+    * `parallax.ImageElementRenderer`  - prepend an `<img>` to the element.
+    * `parallax.PseudoElementRenderer` - use CSS `::before`. Note that this is much slower than `ImageElementRenderer`.
 
-### Static Properties
-
-#### `Parallax.insertImg`
-An instance of `CreateBackground`, prepend an `<img>` background to the element.
-
-#### `Parallax.pseudoBefore`
-An instance of `CreateBackground`, use CSS `::before` to set background image. Note that this is much slower than `insertImg`.
-
-### Static Methods
-
-#### `Parallax.coverElement(createBackground)`
-* `createBackground` CreateBackground
-
-Returns `CreateBackground`
-
-Scales the background to the minimum required size for it to always cover the element
-
-## Type: CreateBackground

@@ -71,26 +71,26 @@ For complete example see `demo.html`
 ### `parallax.createViewport(viewport[, options])`
 
 #### Parameters
-* `viewport` **HTMLElement** or **string** (CSS selector) - The 3D viewport
+* `viewport` **HTMLElement** or **string** (CSS selector) - A scrollable container element.
   * NOTE: Don't use `<body>` as the viewport.
-* `options` **Object** - all fields are optional
-  * `use3d` **boolean** - if `true`, use perspective transform, otherwise use the js-based fallback. Default `false` on non-chromium browsers.
+* `options` **Object** - All fields are optional
+  * `use3d` **boolean** - If `true`, use perspective transform, otherwise use the js-based fallback. Default `false` on non-chromium browsers.
   * ...default options for `parallax.add`
 
 ### Instance Methods
 
 ### `viewport.add(elements[, options])`
-* `elements` - Parent element of background image; can be:
+* `elements` - Parent element of background image. Must be a descendant node of the viewport. Can be:
   * A CSS selector
   * A HTMLElement
   * A NodeList
   * An array of HTMLElements
-* `options` **Object** - all fields are optional
-  * `velocity` **Number** - ratio between velocity of the background image and the element. Must be positive. - Default `0.8`
-  * `alignX` **string** - horizontal alignment for the background imange. accepts a percentage string (e.g. `'87%'`). Default `'center'`
+* `options` **Object** - All fields are optional
+  * `velocity` **Number** - Ratio between velocity of the background image and the element. Must be positive. - Default `0.8`
+  * `alignX` **string** - Horizontal alignment for the background imange. Accepts a percentage string (e.g. `'87%'`). Default `'center'`
     * shorthands: `'left'` = `'0%'`, `'right'` = `'100%'`, `'center'` = `'50%'`
-  * `backgroundImage` **string** - url to the background image - Default read `background-image` from element style
-  * `renderer` **RendererClass** - how to render the image - Default `parallax.ImageElementRenderer`
+  * `backgroundImage` **string** - URL to the background image - Default read `background-image` from element style
+  * `renderer` **RendererClass** - How to render the image - Default `parallax.ImageElementRenderer`
     * `parallax.ImageElementRenderer`  - prepend an `<img>` to the element.
     * `parallax.PseudoElementRenderer` - use CSS `::before`.
       * NOTE: It is not recommended to use this renderer, as it is much slower than `ImageElementRenderer`.

@@ -8,65 +8,19 @@ const CLASS_PARALLAX_VIEWPORT = 'parallax-background-image-viewport'
 const CLASS_PARALLAX_VIEWPORT_3D = 'parallax-background-image-viewport-3d'
 const CLASS_PARALLAX_ELEMENT = 'parallax-background-image-element'
 
-initialize()
-
-function initialize() {
-  const styleSheet = prependStyleSheet()
-  styleSheet.insertRule(
-    `
-    .${CLASS_PARALLAX_ELEMENT} {
-      position: relative;
-      overflow: hidden;
-      background: none !important;
-      background-image: none !important;
-    }
-  `,
-    0
-  )
-
-  styleSheet.insertRule(
-    `
-    .${CLASS_PARALLAX_ELEMENT} > * {
-      position: relative;
-    }
-  `,
-    0
-  )
-
-  styleSheet.insertRule(
-    `
-    .${CLASS_PARALLAX_VIEWPORT} {
-      overflow-y: scroll;
-      -webkit-overflow-scrolling: touch;
-    }
-  `,
-    0
-  )
-  styleSheet.insertRule(
-    `
-    .${CLASS_PARALLAX_VIEWPORT_3D} {
-      perspective: 1px;
-      perspective-origin: center center;
-      transform-style: flat;
-    }
-  `,
-    0
-  )
-}
-
-function getRect(element, ref = null) {
+function getRect(element) {
   const rect = element.getBoundingClientRect()
-  const result = {
+  return {
     x: (rect.left + rect.right) / 2,
     y: (rect.top + rect.bottom) / 2,
     w: rect.right - rect.left,
     h: rect.bottom - rect.top
   }
-  if (ref != null) {
-    result.x -= ref.x
-    result.y -= ref.y
-  }
-  return result
+}
+
+function subtract_(a, b) {
+  a.x -= b.x
+  a.y -= b.y
 }
 
 export class ParallaxViewport {
@@ -86,7 +40,10 @@ export class ParallaxViewport {
       const viewportRect = getRect(this.viewport)
       for (let i = 0; i < this.entries.length; ++i) {
         const { element, transform, renderer, initialBg } = this.entries[i]
-        const elementRect = getRect(element, viewportRect)
+
+        const elementRect = getRect(element)
+        subtract_(elementRect, viewportRect)
+
         const bg = { ...initialBg }
         transform(bg, elementRect, viewportRect)
         renderer.render(bg)
@@ -140,3 +97,26 @@ export class ParallaxViewport {
     entry.renderer.dispose()
   }
 }
+
+prependStyleSheet(`
+.${CLASS_PARALLAX_ELEMENT} {
+  position: relative;
+  overflow: hidden;
+  background: none !important;
+  background-image: none !important;
+}
+
+.${CLASS_PARALLAX_ELEMENT} > * {
+  position: relative;
+}
+
+.${CLASS_PARALLAX_VIEWPORT} {
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.${CLASS_PARALLAX_VIEWPORT_3D} {
+  perspective: 1px;
+  perspective-origin: center center;
+  transform-style: flat;
+}`)

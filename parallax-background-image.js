@@ -54,21 +54,27 @@ var parallax = (function (exports, domScheduler) {
     })
   }
 
-  function appendStyleSheet() {
-    var style = createStyleElement();
+  function appendStyleSheet(content) {
+    if ( content === void 0 ) content = '';
+
+    var style = createStyleElement(content);
     document.head.appendChild(style);
     return style.sheet
   }
 
-  function prependStyleSheet() {
-    var style = createStyleElement();
+  function prependStyleSheet(content) {
+    if ( content === void 0 ) content = '';
+
+    var style = createStyleElement(content);
     document.head.insertBefore(style, document.head.firstElementChild);
     return style.sheet
   }
 
-  function createStyleElement() {
+  function createStyleElement(content) {
+    if ( content === void 0 ) content = '';
+
     var style = document.createElement('style');
-    style.appendChild(document.createTextNode(''));
+    style.appendChild(document.createTextNode(content));
     return style
   }
 
@@ -76,45 +82,19 @@ var parallax = (function (exports, domScheduler) {
   var CLASS_PARALLAX_VIEWPORT_3D = 'parallax-background-image-viewport-3d';
   var CLASS_PARALLAX_ELEMENT = 'parallax-background-image-element';
 
-  initialize();
-
-  function initialize() {
-    var styleSheet = prependStyleSheet();
-    styleSheet.insertRule(
-      ("\n    ." + CLASS_PARALLAX_ELEMENT + " {\n      position: relative;\n      overflow: hidden;\n      background: none !important;\n      background-image: none !important;\n    }\n  "),
-      0
-    );
-
-    styleSheet.insertRule(
-      ("\n    ." + CLASS_PARALLAX_ELEMENT + " > * {\n      position: relative;\n    }\n  "),
-      0
-    );
-
-    styleSheet.insertRule(
-      ("\n    ." + CLASS_PARALLAX_VIEWPORT + " {\n      overflow-y: scroll;\n      -webkit-overflow-scrolling: touch;\n    }\n  "),
-      0
-    );
-    styleSheet.insertRule(
-      ("\n    ." + CLASS_PARALLAX_VIEWPORT_3D + " {\n      perspective: 1px;\n      perspective-origin: center center;\n      transform-style: flat;\n    }\n  "),
-      0
-    );
-  }
-
-  function getRect(element, ref) {
-    if ( ref === void 0 ) ref = null;
-
+  function getRect(element) {
     var rect = element.getBoundingClientRect();
-    var result = {
+    return {
       x: (rect.left + rect.right) / 2,
       y: (rect.top + rect.bottom) / 2,
       w: rect.right - rect.left,
       h: rect.bottom - rect.top
-    };
-    if (ref != null) {
-      result.x -= ref.x;
-      result.y -= ref.y;
     }
-    return result
+  }
+
+  function subtract_(a, b) {
+    a.x -= b.x;
+    a.y -= b.y;
   }
 
   var ParallaxViewport = function ParallaxViewport(viewport, options) {
@@ -139,7 +119,10 @@ var parallax = (function (exports, domScheduler) {
           var transform = ref.transform;
           var renderer = ref.renderer;
           var initialBg = ref.initialBg;
-        var elementRect = getRect(element, viewportRect);
+
+        var elementRect = getRect(element);
+        subtract_(elementRect, viewportRect);
+
         var bg = Object.assign({}, initialBg);
         transform(bg, elementRect, viewportRect);
         renderer.render(bg);
@@ -198,7 +181,9 @@ var parallax = (function (exports, domScheduler) {
     entry.renderer.dispose();
   };
 
-  function scale(bg, s) {
+  prependStyleSheet(("\n." + CLASS_PARALLAX_ELEMENT + " {\n  position: relative;\n  overflow: hidden;\n  background: none !important;\n  background-image: none !important;\n}\n\n." + CLASS_PARALLAX_ELEMENT + " > * {\n  position: relative;\n}\n\n." + CLASS_PARALLAX_VIEWPORT + " {\n  overflow-y: scroll;\n  -webkit-overflow-scrolling: touch;\n}\n\n." + CLASS_PARALLAX_VIEWPORT_3D + " {\n  perspective: 1px;\n  perspective-origin: center center;\n  transform-style: flat;\n}"));
+
+  function scale_(bg, s) {
     bg.x *= s;
     bg.y *= s;
     bg.z *= s;
@@ -213,7 +198,7 @@ var parallax = (function (exports, domScheduler) {
       var widthScale = minWidth / bg.w;
       var heightScale = minHeight / bg.h;
 
-      scale(bg, Math.max(widthScale, heightScale));
+      scale_(bg, Math.max(widthScale, heightScale));
     }
   }
 
@@ -235,7 +220,7 @@ var parallax = (function (exports, domScheduler) {
 
   function parallax3d(velocity) {
     return function(bg, element, viewport) {
-      scale(bg, 1 / velocity);
+      scale_(bg, 1 / velocity);
       bg.z += 1 - 1 / velocity;
       bg.x -= element.x * (1 - 1 / velocity);
     }

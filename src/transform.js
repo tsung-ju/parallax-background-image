@@ -1,4 +1,4 @@
-export function scale(bg, s) {
+export function scale_(bg, s) {
   bg.x *= s
   bg.y *= s
   bg.z *= s
@@ -13,7 +13,7 @@ export function coverElement(velocity) {
     const widthScale = minWidth / bg.w
     const heightScale = minHeight / bg.h
 
-    scale(bg, Math.max(widthScale, heightScale))
+    scale_(bg, Math.max(widthScale, heightScale))
   }
 }
 
@@ -35,7 +35,7 @@ function parsePercentage(str) {
 
 export function parallax3d(velocity) {
   return function(bg, element, viewport) {
-    scale(bg, 1 / velocity)
+    scale_(bg, 1 / velocity)
     bg.z += 1 - 1 / velocity
     bg.x -= element.x * (1 - 1 / velocity)
   }

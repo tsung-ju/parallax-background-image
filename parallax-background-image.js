@@ -81,7 +81,7 @@ var parallax = (function (exports, domScheduler) {
   function initialize() {
     var styleSheet = prependStyleSheet();
     styleSheet.insertRule(
-      ("\n    ." + CLASS_PARALLAX_ELEMENT + " {\n      position: relative;\n      overflow: hidden;\n    }\n  "),
+      ("\n    ." + CLASS_PARALLAX_ELEMENT + " {\n      position: relative;\n      overflow: hidden;\n      background: none !important;\n      background-image: none !important;\n    }\n  "),
       0
     );
 

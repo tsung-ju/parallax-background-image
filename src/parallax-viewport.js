@@ -17,6 +17,8 @@ function initialize() {
     .${CLASS_PARALLAX_ELEMENT} {
       position: relative;
       overflow: hidden;
+      background: none !important;
+      background-image: none !important;
     }
   `,
     0

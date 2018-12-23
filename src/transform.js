@@ -1,4 +1,4 @@
-export function scale_(bg, s) {
+function scale_(bg, s) {
   bg.x *= s
   bg.y *= s
   bg.z *= s

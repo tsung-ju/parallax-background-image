@@ -1,4 +1,4 @@
-# parallax-background-image
+## parallax-background-image
 A helper for creating pure CSS parallax background image effects.
 
 It calculates and sets the css transform property automatically.
@@ -9,14 +9,15 @@ Inspired by <http://keithclark.co.uk/articles/pure-css-parallax-websites/>
 ## Work in progress!
 Currently CSS transform can only works on chromium-based browsers. A javascript-based fallback is used on other browsers.
 
-# [Example](https://ray851107.github.io/parallax-background-image/demo.html)
+# Demo
+<https://ray851107.github.io/parallax-background-image/demo.html>
 
-# Basic usage
+## Basic usage
 
 ### Setup
 Wrap all your site content inside a wrapper element with fixed position and 100% width/height.
 
-Please note that NOT to directly use `<body>` as the wrapper because of its special behavior.
+NOTE: Don't use `<body>` as the wrapper.
 
 For example,
 ```html
@@ -59,34 +60,38 @@ viewport.add('.custom-background-image', { backgroundImage: 'http://domain/xxx.j
 ```
 For complete example see `demo.html`
 
-# Dependencies
+## Dependencies
 * [@ray851107/dom-scheduler](https://github.com/ray851107/dom-scheduler)
 ```html
 <script src="https://cdn.jsdelivr.net/gh/ray851107/dom-scheduler@v1.0.2/dom-scheduler.min.js"></script>
 ```
-# API
+
+## API
 
 ### `parallax.createViewport(viewport[, options])`
 
-* `viewport` HTMLElement or CSS selector - The 3D viewport
-* `options` Object (optional) - all fields are optional
-  * `use3d` boolean - Whether to use perspective transform or not. Default `false` on non-chromium browsers.
+#### Parameters
+* `viewport` **HTMLElement** or **string** (CSS selector) - The 3D viewport
+  * NOTE: Don't use `<body>` as the viewport.
+* `options` Object - all fields are optional
+  * `use3d` boolean - If `true`, use perspective transform, otherwise use the js-based fallback. Default `false` on non-chromium browsers.
   * ...default options for `parallax.add`
 
 ### Instance Methods
 
-#### `viewport.add(elements[, options])`
+### `viewport.add(elements[, options])`
 * `elements` - Parent element of background image; can be:
   * A CSS selector
   * A HTMLElement
   * A NodeList
   * An Array of HTMLElements
-* `options` Object (optional) - all fields are optional
-  * `velocity` Number - `velocity of the background / velocity of the element`. Must be positive. Default `0.8`
-  * `alignX` Percentage (e.g. `'87%'`) - Default `'center'`
-    * shorthand: `'left'` = `'0%'`, `'right'` = `'100%'`, `'center'` = `'50%'`
-  * `backgroundImage` string - url to the background image - Default read `background-image` from element style
+* `options` **Object** - all fields are optional
+  * `velocity` **Number** - `velocity of the background / velocity of the element`. Must be positive. Default `0.8`
+  * `alignX` **string** - horizontal alignment for the background imange. accepts a percentage string (e.g. `'87%'`). Default `'center'`
+    * shorthands: `'left'`: `'0%'`, `'right'`: `'100%'`, `'center'`: `'50%'`
+  * `backgroundImage` **string** - url to the background image - Default read `background-image` from element style
   * `renderer` RendererClass - how to render the image - Default `parallax.ImageElementRenderer`
     * `parallax.ImageElementRenderer`  - prepend an `<img>` to the element.
-    * `parallax.PseudoElementRenderer` - use CSS `::before`. Note that this is much slower than `ImageElementRenderer`.
+    * `parallax.PseudoElementRenderer` - use CSS `::before`.
+      * NOTE: It is not recommended to use this renderer, as it is much slower than `ImageElementRenderer`.
 

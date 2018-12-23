@@ -81,7 +81,7 @@ For complete example see `demo.html`
 
 ### `viewport.add(elements[, options])`
 
-Add parallax effect to the element(s).
+Add parallax effect to element(s).
 
 #### Parameters
 * `elements` - Can be:
@@ -101,7 +101,7 @@ Add parallax effect to the element(s).
 
 ### `viewport.remove(elements)`
 
-Remove parallax effect from the element(s).
+Remove parallax effect from element(s).
 
 #### Parameters
 * `elements` - Can be:

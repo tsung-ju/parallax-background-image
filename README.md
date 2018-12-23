@@ -9,8 +9,20 @@ Inspired by <http://keithclark.co.uk/articles/pure-css-parallax-websites/>
 ## Work in progress!
 Currently CSS transform can only works on chromium-based browsers. A javascript-based fallback is used on other browsers.
 
-# Demo
+## Demo
 <https://ray851107.github.io/parallax-background-image/demo.html>
+
+
+## CDN
+```html
+<script src="https://cdn.jsdelivr.net/gh/ray851107/parallax-background-image@v2.0.0/parallax-background-image.min.js"></script>
+```
+
+## Dependencies
+* [@ray851107/dom-scheduler](https://github.com/ray851107/dom-scheduler)
+```html
+<script src="https://cdn.jsdelivr.net/gh/ray851107/dom-scheduler@v1.0.2/dom-scheduler.min.js"></script>
+```
 
 ## Basic usage
 
@@ -60,11 +72,6 @@ viewport.add('.custom-background-image', { backgroundImage: 'http://domain/xxx.j
 ```
 For complete example see `demo.html`
 
-## Dependencies
-* [@ray851107/dom-scheduler](https://github.com/ray851107/dom-scheduler)
-```html
-<script src="https://cdn.jsdelivr.net/gh/ray851107/dom-scheduler@v1.0.2/dom-scheduler.min.js"></script>
-```
 
 ## API
 

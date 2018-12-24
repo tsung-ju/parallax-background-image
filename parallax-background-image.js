@@ -1,5 +1,46 @@
-var parallax = (function (exports, domScheduler) {
+var parallax = (function (exports) {
   'use strict';
+
+  function consume_(tasks) {
+    var len = tasks.length;
+    for (var i = 0; i < len; ++i) {
+      tasks.shift()();
+    }
+  }
+
+  var Scheduler = function Scheduler() {
+    this.reads = [];
+    this.writes = [];
+    this.running = false;
+  };
+
+  Scheduler.prototype.read = function read (task) {
+    this.reads.push(task);
+    if (!this.running) { this.run(); }
+  };
+
+  Scheduler.prototype.write = function write (task) {
+    this.writes.push(task);
+    if (!this.running) { this.run(); }
+  };
+
+  Scheduler.prototype.run = function run () {
+      var this$1 = this;
+
+    this.running = true;
+    window.requestAnimationFrame(function () {
+      consume_(this$1.reads);
+      consume_(this$1.writes);
+
+      if (this$1.reads.length === 0 && this$1.writes.length === 0) {
+        this$1.running = false;
+      } else {
+        this$1.run();
+      }
+    });
+  };
+
+  var scheduler = new Scheduler();
 
   function toElement(element, parent) {
     if ( parent === void 0 ) parent = document;
@@ -98,23 +139,26 @@ var parallax = (function (exports, domScheduler) {
   }
 
   var ParallaxViewport = function ParallaxViewport(viewport, options) {
-    this.viewport = toElement(viewport);
+    var use3d = options.use3d;
+    var scheduler = options.scheduler;
+    viewport = toElement(viewport);
+    this.viewport = viewport;
     this.options = options;
     this.entries = [];
 
-    this.viewport.classList.add(CLASS_PARALLAX_VIEWPORT);
-    if (options.use3d) { this.viewport.classList.add(CLASS_PARALLAX_VIEWPORT_3D); }
+    viewport.classList.add(CLASS_PARALLAX_VIEWPORT);
+    if (use3d) {
+      viewport.classList.add(CLASS_PARALLAX_VIEWPORT_3D);
+    }
 
-    this._observe();
+    this._observe(viewport, this.entries, scheduler);
   };
 
-  ParallaxViewport.prototype._observe = function _observe () {
-      var this$1 = this;
-
+  ParallaxViewport.prototype._observe = function _observe (viewport, entries, scheduler) {
     var loop = function () {
-      var viewportRect = getRect(this$1.viewport);
-      for (var i = 0; i < this$1.entries.length; ++i) {
-        var ref = this$1.entries[i];
+      var viewportRect = getRect(viewport);
+      for (var i = 0; i < entries.length; ++i) {
+        var ref = entries[i];
           var element = ref.element;
           var transform = ref.transform;
           var renderer = ref.renderer;
@@ -127,9 +171,9 @@ var parallax = (function (exports, domScheduler) {
         transform(bg, elementRect, viewportRect);
         renderer.render(bg);
       }
-      domScheduler.scheduler.read(loop);
+      scheduler.read(loop);
     };
-    domScheduler.scheduler.read(loop);
+    scheduler.read(loop);
   };
 
   ParallaxViewport.prototype.add = function add (elements, options) {
@@ -240,8 +284,11 @@ var parallax = (function (exports, domScheduler) {
     }
   }
 
-  function renderToStyle(style, width, height) {
-    domScheduler.scheduler.write(function() {
+  function renderToStyle(style, image, scheduler) {
+    var naturalWidth = image.naturalWidth;
+    var naturalHeight = image.naturalHeight;
+
+    scheduler.write(function() {
       style.position = 'absolute';
       style.left = '50%';
       style.top = '50%';
@@ -259,9 +306,9 @@ var parallax = (function (exports, domScheduler) {
       var css =
         "translate(-50%, -50%)" +
         "translate3d(" + x + "px, " + y + "px, " + z + "px)" +
-        "scale(" + (w / width) + ", " + (h / height) + ")";
+        "scale(" + (w / naturalWidth) + ", " + (h / naturalHeight) + ")";
 
-      domScheduler.scheduler.write(function() {
+      scheduler.write(function() {
         style.transform = css;
       });
     }
@@ -289,19 +336,18 @@ var parallax = (function (exports, domScheduler) {
   var ImageElementRenderer = function ImageElementRenderer(element, image, options) {
     var this$1 = this;
 
+    var scheduler = options.scheduler;
     this.element = element;
     this.img = document.createElement('img');
 
-    domScheduler.scheduler.write(function () {
+    scheduler.write(function () {
       this$1.img.width = image.naturalWidth;
       this$1.img.height = image.naturalHeight;
       this$1.img.src = image.src;
       this$1.element.prepend(this$1.img);
     });
 
-    this.render = dropRepeat(
-      renderToStyle(this.img.style, image.naturalWidth, image.naturalHeight)
-    );
+    this.render = dropRepeat(renderToStyle(this.img.style, image, scheduler));
   };
 
   ImageElementRenderer.prototype.dispose = function dispose () {
@@ -311,6 +357,7 @@ var parallax = (function (exports, domScheduler) {
   var styleSheet = appendStyleSheet();
   var nextId = 0;
   var PseudoElementRenderer = function PseudoElementRenderer(element, image, options) {
+    var scheduler = options.scheduler;
     this.element = element;
     var id = nextId++;
     this.className = "parallax-background-image-pseudo-" + id;
@@ -321,9 +368,7 @@ var parallax = (function (exports, domScheduler) {
 
     var index = styleSheet.insertRule(rule, 0);
     var style = styleSheet.cssRules[index].style;
-    this.render = dropRepeat(
-      renderToStyle(style, image.naturalWidth, image.naturalHeight)
-    );
+    this.render = dropRepeat(renderToStyle(style, image, scheduler));
   };
   PseudoElementRenderer.prototype.dispose = function dispose () {
     this.element.classList.remove(this.className);
@@ -349,6 +394,7 @@ var parallax = (function (exports, domScheduler) {
     use3d: isChrome(),
     velocity: 0.8,
     alignX: 'center',
+    scheduler: scheduler,
     renderer: ImageElementRenderer,
     transform: defaultTransform,
     backgroundImage: cssBackgroundImage
@@ -372,4 +418,4 @@ var parallax = (function (exports, domScheduler) {
 
   return exports;
 
-}({}, domScheduler));
+}({}));

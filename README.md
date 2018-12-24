@@ -6,8 +6,10 @@ It calculates and sets the css transform property automatically.
 
 Inspired by <http://keithclark.co.uk/articles/pure-css-parallax-websites/>
 
+
 ## Work in progress!
 Currently CSS transform can only works on chromium-based browsers. A javascript-based fallback is used on other browsers.
+
 
 ## Demo
 <https://ray851107.github.io/parallax-background-image/demo.html>
@@ -18,11 +20,6 @@ Currently CSS transform can only works on chromium-based browsers. A javascript-
 <script src="https://cdn.jsdelivr.net/gh/ray851107/parallax-background-image@v2.0.1/parallax-background-image.min.js"></script>
 ```
 
-## Dependencies
-* [@ray851107/dom-scheduler](https://github.com/ray851107/dom-scheduler)
-```html
-<script src="https://cdn.jsdelivr.net/gh/ray851107/dom-scheduler@v1.0.2/dom-scheduler.min.js"></script>
-```
 
 ## Basic usage
 

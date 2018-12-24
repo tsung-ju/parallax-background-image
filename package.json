@@ -1,6 +1,6 @@
 {
   "name": "parallax-background-image",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "js parallax background-image",
   "main": "parallax-background-image.js",
   "module": "lib/main.js",

@@ -225,7 +225,7 @@ var parallax = (function (exports) {
     entry.renderer.dispose();
   };
 
-  prependStyleSheet(("\n." + CLASS_PARALLAX_ELEMENT + " {\n  position: relative;\n  overflow: hidden;\n  background: none !important;\n  background-image: none !important;\n}\n\n." + CLASS_PARALLAX_ELEMENT + " > * {\n  position: relative;\n}\n\n." + CLASS_PARALLAX_VIEWPORT + " {\n  overflow-y: scroll;\n  -webkit-overflow-scrolling: touch;\n}\n\n." + CLASS_PARALLAX_VIEWPORT_3D + " {\n  perspective: 1px;\n  perspective-origin: center center;\n  transform-style: flat;\n}"));
+  prependStyleSheet(("\n." + CLASS_PARALLAX_ELEMENT + " {\n  position: relative;\n  overflow: hidden !important;\n  background: none !important;\n  background-image: none !important;\n}\n\n." + CLASS_PARALLAX_ELEMENT + " > * {\n  position: relative;\n}\n\n." + CLASS_PARALLAX_VIEWPORT + " {\n  overflow-x: hidden !important;\n  overflow-y: scroll !important;\n  -webkit-overflow-scrolling: touch;\n}\n\n." + CLASS_PARALLAX_VIEWPORT_3D + " {\n  perspective: 1px !important;\n  perspective-origin: center center !important;\n}"));
 
   function scale_(bg, s) {
     bg.x *= s;

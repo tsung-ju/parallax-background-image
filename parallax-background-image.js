@@ -139,16 +139,16 @@ var parallax = (function (exports) {
     }
   }
 
-  function cssBackgroundImage(element, options) {
+  function cssBackgroundImage(element) {
     var style = window.getComputedStyle(element);
     var src = /url\(['"]?(.*?)['"]?\)/.exec(style.backgroundImage)[1];
     return src
   }
 
-  function loadImage(element, src, options) {
+  function loadImage(src, element) {
     return new Promise(function(resolve, reject) {
       if (typeof src === 'function') {
-        src = src(element, options);
+        src = src(element);
       }
 
       var image = document.createElement('img');
@@ -226,7 +226,7 @@ var parallax = (function (exports) {
     options = Object.assign({}, this.options, options);
 
     return elements.map(function (element) {
-      return loadImage(element, options.backgroundImage).then(function (image) {
+      return loadImage(options.backgroundImage, element).then(function (image) {
         this$1.elements.push(new ParallaxElement(element, image, options));
       })
     })

@@ -26,6 +26,6 @@
     "uglify-js": "^3.4.9"
   },
   "dependencies": {
-    "@ray851107/dom-scheduler": "github:ray851107/dom-scheduler#v1.0.4"
+    "@ray851107/dom-scheduler": "github:ray851107/dom-scheduler#v1.0.6"
   }
 }

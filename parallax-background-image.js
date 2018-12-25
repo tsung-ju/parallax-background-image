@@ -9,35 +9,33 @@ var parallax = (function (exports) {
   }
 
   var Scheduler = function Scheduler() {
+    var this$1 = this;
+
     this.reads = [];
     this.writes = [];
-    this.running = false;
+    this.scheduled = false;
+
+    this.run = function () {
+      this$1.scheduled = false;
+      consume_(this$1.reads);
+      consume_(this$1.writes);
+    };
   };
 
   Scheduler.prototype.read = function read (task) {
     this.reads.push(task);
-    if (!this.running) { this.run(); }
+    this.scheduleRun();
   };
 
   Scheduler.prototype.write = function write (task) {
     this.writes.push(task);
-    if (!this.running) { this.run(); }
+    this.scheduleRun();
   };
 
-  Scheduler.prototype.run = function run () {
-      var this$1 = this;
-
-    this.running = true;
-    window.requestAnimationFrame(function () {
-      consume_(this$1.reads);
-      consume_(this$1.writes);
-
-      if (this$1.reads.length === 0 && this$1.writes.length === 0) {
-        this$1.running = false;
-      } else {
-        this$1.run();
-      }
-    });
+  Scheduler.prototype.scheduleRun = function scheduleRun () {
+    if (this.scheduled) { return }
+    this.scheduled = true;
+    window.requestAnimationFrame(this.run);
   };
 
   var scheduler = new Scheduler();

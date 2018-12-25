@@ -94,10 +94,10 @@ Add parallax effect to element(s).
   * A NodeList
   * An array of HTMLElements
 * `options` **Object** - All fields are optional
-  * `velocity` **Number** - Ratio between velocity of the background image and the element. Must be positive. - Default `0.8`
-  * `alignX` **string** - Horizontal alignment for the background imange. Accepts a percentage string (e.g. `'87%'`). Default `'center'`
+  * `velocity` **Number** - Ratio between velocity of the image and the element. Must be positive. - Default `0.8`
+  * `alignX` **string** - Horizontal alignment for the image. Accepts a percentage string (e.g. `'87%'`). Default `'center'`
     * shorthands: `'left'` = `'0%'`, `'right'` = `'100%'`, `'center'` = `'50%'`
-  * `backgroundImage` **string** - URL to the background image - Default read `background-image` from element style
+  * `image` **string** or **Function** - url to the image, or a function which accepts an `Element` and returns a url. - Default `parallax.cssBackgroundImage` (read `background-image` from element style)
   * `renderer` **RendererClass** - How to render the image - Default `parallax.ImageElementRenderer`
     * `parallax.ImageElementRenderer`  - prepend an `<img>` to the element.
     * `parallax.PseudoElementRenderer` - use CSS `::before`.

@@ -226,7 +226,7 @@ var parallax = (function (exports) {
     options = Object.assign({}, this.options, options);
 
     return elements.map(function (element) {
-      return loadImage(options.backgroundImage, element).then(function (image) {
+      return loadImage(options.image, element).then(function (image) {
         this$1.elements.push(new ParallaxElement(element, image, options));
       })
     })
@@ -414,7 +414,7 @@ var parallax = (function (exports) {
     scheduler: scheduler,
     renderer: ImageElementRenderer,
     transform: defaultTransform,
-    backgroundImage: cssBackgroundImage
+    image: cssBackgroundImage
   };
 
   function createViewport(viewport, options) {

@@ -139,32 +139,18 @@ var parallax = (function (exports) {
     }
   }
 
-  function toFunction(toFunc) {
-    if (typeof toFunc === 'function') { return toFunc }
-    return function() {
-      return toFunc
-    }
-  }
-
-  function toAsyncFunction(toFunc) {
-    var func = toFunction(toFunc);
-    return function() {
-      return Promise.resolve(func.apply(this, arguments))
-    }
-  }
-
   function cssBackgroundImage(element, options) {
     var style = window.getComputedStyle(element);
     var src = /url\(['"]?(.*?)['"]?\)/.exec(style.backgroundImage)[1];
     return src
   }
 
-  function loadBackgroundImage(element, src, options) {
-    return toAsyncFunction(src)(element, options).then(loadImage)
-  }
-
-  function loadImage(src) {
+  function loadImage(element, src, options) {
     return new Promise(function(resolve, reject) {
+      if (typeof src === 'function') {
+        src = src(element, options);
+      }
+
       var image = document.createElement('img');
       image.onload = function(event) {
         resolve(event.target);
@@ -240,11 +226,9 @@ var parallax = (function (exports) {
     options = Object.assign({}, this.options, options);
 
     return elements.map(function (element) {
-      return loadBackgroundImage(element, options.backgroundImage).then(
-        function (image) {
-          this$1.elements.push(new ParallaxElement(element, image, options));
-        }
-      )
+      return loadImage(element, options.backgroundImage).then(function (image) {
+        this$1.elements.push(new ParallaxElement(element, image, options));
+      })
     })
   };
 

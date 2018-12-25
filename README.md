@@ -17,7 +17,7 @@ Currently CSS transform can only works on chromium-based browsers. A javascript-
 
 ## CDN
 ```html
-<script src="https://cdn.jsdelivr.net/gh/ray851107/parallax-background-image@v2.0.4/parallax-background-image.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ray851107/parallax-background-image@v2.1.0/parallax-background-image.min.js"></script>
 ```
 
 

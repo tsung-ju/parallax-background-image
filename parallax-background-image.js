@@ -42,59 +42,6 @@ var parallax = (function (exports) {
 
   var scheduler = new Scheduler();
 
-  function toElement(element, parent) {
-    if ( parent === void 0 ) parent = document;
-
-    if (typeof element === 'string') { return parent.querySelector(element) }
-    else { return element }
-  }
-
-  function toElementArray(elements, parent) {
-    if ( parent === void 0 ) parent = document;
-
-    if (elements instanceof Element) { return [elements] }
-    if (typeof elements === 'string') { elements = parent.querySelectorAll(elements); }
-    return Array.prototype.slice.call(elements)
-  }
-
-  function toFunction(toFunc) {
-    if (typeof toFunc === 'function') { return toFunc }
-    return function() {
-      return toFunc
-    }
-  }
-
-  function toAsyncFunction(toFunc) {
-    var func = toFunction(toFunc);
-    return function() {
-      return Promise.resolve(func.apply(this, arguments))
-    }
-  }
-
-  function cssBackgroundImage(element, options) {
-    var style = window.getComputedStyle(element);
-    var src = /url\(['"]?(.*?)['"]?\)/.exec(style.backgroundImage)[1];
-    return src
-  }
-
-  function loadBackgroundImage(element, backgroundImage, options) {
-    backgroundImage = toAsyncFunction(backgroundImage);
-    return backgroundImage(element, options).then(loadImage)
-  }
-
-  function loadImage(src) {
-    return new Promise(function(resolve, reject) {
-      var image = document.createElement('img');
-      image.onload = function(event) {
-        resolve(event.target);
-      };
-      image.onerror = function(event) {
-        reject(event.error);
-      };
-      image.src = src;
-    })
-  }
-
   function appendStyleSheet(content) {
     if ( content === void 0 ) content = '';
 
@@ -120,8 +67,116 @@ var parallax = (function (exports) {
   }
 
   var CLASS_PARALLAX_VIEWPORT = 'parallax-background-image-viewport';
-  var CLASS_PARALLAX_VIEWPORT_3D = 'parallax-background-image-viewport-3d';
+  var CLASS_PARALLAX_VIEWPORT_3D =
+    'parallax-background-image-viewport-3d';
   var CLASS_PARALLAX_ELEMENT = 'parallax-background-image-element';
+
+  function injectStyle() {
+    prependStyleSheet(STYLE);
+  }
+
+  var STYLE = "\n." + CLASS_PARALLAX_ELEMENT + " {\n  position: relative;\n  overflow: hidden !important;\n  background: none !important;\n  background-image: none !important;\n}\n\n." + CLASS_PARALLAX_ELEMENT + " > * {\n  position: relative;\n}\n\n." + CLASS_PARALLAX_VIEWPORT + " {\n  overflow-x: hidden !important;\n  overflow-y: scroll !important;\n  -webkit-overflow-scrolling: touch;\n}\n\n." + CLASS_PARALLAX_VIEWPORT_3D + " {\n  perspective: 1px !important;\n  perspective-origin: center center !important;\n}";
+
+  function notEqual(a, b) {
+    return a.x !== b.x || a.y !== b.y || a.z !== b.z || a.w !== b.w || a.h !== b.h
+  }
+
+  function copy_(a, b) {
+    a.x = b.x;
+    a.y = b.y;
+    a.z = b.z;
+    a.w = b.w;
+    a.h = b.h;
+  }
+
+  var ParallaxElement = function ParallaxElement(element, image, options) {
+    this.element = element;
+    this.transform = options.transform(element, image, options);
+    this.renderer = new options.renderer(element, image, options);
+    this.imageWidth = image.naturalWidth;
+    this.imageHeight = image.naturalHeight;
+
+    this.bgRect = { x: NaN, y: NaN, z: NaN, w: NaN, h: NaN };
+    this.dirty = false;
+
+    element.classList.add(CLASS_PARALLAX_ELEMENT);
+  };
+
+  ParallaxElement.prototype.layout = function layout (elementRect, viewportRect) {
+    var bgRect = { x: 0, y: 0, z: 0, w: this.imageWidth, h: this.imageHeight };
+    this.transform(bgRect, elementRect, viewportRect);
+    if (this.bgRect == null || notEqual(this.bgRect, bgRect)) {
+      this.dirty = true;
+      copy_(this.bgRect, bgRect);
+    }
+  };
+
+  ParallaxElement.prototype.render = function render () {
+    if (!this.dirty) { return }
+    this.dirty = false;
+    this.renderer.render(this.bgRect);
+  };
+
+  ParallaxElement.prototype.dispose = function dispose () {
+    this.element.classList.remove(CLASS_PARALLAX_ELEMENT);
+    this.renderer.dispose();
+  };
+
+  function toElement(element, parent) {
+    if (typeof element === 'string') {
+      return parent.querySelector(element)
+    } else {
+      return element
+    }
+  }
+
+  function toElementArray(elements, parent) {
+    if (elements instanceof Element) {
+      return [elements]
+    } else {
+      if (typeof elements === 'string') {
+        elements = parent.querySelectorAll(elements);
+      }
+      return Array.prototype.slice.call(elements)
+    }
+  }
+
+  function toFunction(toFunc) {
+    if (typeof toFunc === 'function') { return toFunc }
+    return function() {
+      return toFunc
+    }
+  }
+
+  function toAsyncFunction(toFunc) {
+    var func = toFunction(toFunc);
+    return function() {
+      return Promise.resolve(func.apply(this, arguments))
+    }
+  }
+
+  function cssBackgroundImage(element, options) {
+    var style = window.getComputedStyle(element);
+    var src = /url\(['"]?(.*?)['"]?\)/.exec(style.backgroundImage)[1];
+    return src
+  }
+
+  function loadBackgroundImage(element, src, options) {
+    return toAsyncFunction(src)(element, options).then(loadImage)
+  }
+
+  function loadImage(src) {
+    return new Promise(function(resolve, reject) {
+      var image = document.createElement('img');
+      image.onload = function(event) {
+        resolve(event.target);
+      };
+      image.onerror = function(event) {
+        reject(event.error);
+      };
+      image.src = src;
+    })
+  }
 
   function getRect(element) {
     var rect = element.getBoundingClientRect();
@@ -141,39 +196,41 @@ var parallax = (function (exports) {
   var ParallaxViewport = function ParallaxViewport(viewport, options) {
     var use3d = options.use3d;
     var scheduler = options.scheduler;
-    viewport = toElement(viewport);
+    viewport = toElement(viewport, document);
     this.viewport = viewport;
     this.options = options;
-    this.entries = [];
+    this.elements = [];
 
     viewport.classList.add(CLASS_PARALLAX_VIEWPORT);
     if (use3d) {
       viewport.classList.add(CLASS_PARALLAX_VIEWPORT_3D);
     }
 
-    this._observe(viewport, this.entries, scheduler);
+    this._startReadLoop(viewport, this.elements, scheduler);
+    this._startWriteLoop(this.elements, scheduler);
   };
 
-  ParallaxViewport.prototype._observe = function _observe (viewport, entries, scheduler) {
-    var loop = function () {
+  ParallaxViewport.prototype._startReadLoop = function _startReadLoop (viewport, elements, scheduler) {
+    function readLoop() {
       var viewportRect = getRect(viewport);
-      for (var i = 0; i < entries.length; ++i) {
-        var ref = entries[i];
-          var element = ref.element;
-          var transform = ref.transform;
-          var renderer = ref.renderer;
-          var initialBg = ref.initialBg;
-
-        var elementRect = getRect(element);
+      for (var i = 0; i < elements.length; ++i) {
+        var elementRect = getRect(elements[i].element);
         subtract_(elementRect, viewportRect);
-
-        var bg = Object.assign({}, initialBg);
-        transform(bg, elementRect, viewportRect);
-        renderer.render(bg);
+        elements[i].layout(elementRect, viewportRect);
       }
-      scheduler.read(loop);
-    };
-    scheduler.read(loop);
+      scheduler.read(readLoop);
+    }
+    scheduler.read(readLoop);
+  };
+
+  ParallaxViewport.prototype._startWriteLoop = function _startWriteLoop (elements, scheduler) {
+    function writeLoop() {
+      for (var i = 0; i < elements.length; ++i) {
+        elements[i].render();
+      }
+      scheduler.write(writeLoop);
+    }
+    scheduler.write(writeLoop);
   };
 
   ParallaxViewport.prototype.add = function add (elements, options) {
@@ -187,45 +244,28 @@ var parallax = (function (exports) {
     return elements.map(function (element) {
       return loadBackgroundImage(element, options.backgroundImage).then(
         function (image) {
-          this$1._addElement(element, image, options);
+          this$1.elements.push(new ParallaxElement(element, image, options));
         }
       )
     })
   };
 
-  ParallaxViewport.prototype._addElement = function _addElement (element, image, options) {
-    this._removeElement(element);
-
-    element.classList.add(CLASS_PARALLAX_ELEMENT);
-    var transform = options.transform(element, image, options);
-    var renderer = new options.renderer(element, image, options);
-    var initialBg = {
-      x: 0,
-      y: 0,
-      z: 0,
-      w: image.naturalWidth,
-      h: image.naturalHeight
-    };
-
-    this.entries.push({ element: element, transform: transform, renderer: renderer, initialBg: initialBg });
-  };
-
   ParallaxViewport.prototype.remove = function remove (elements) {
-      var this$1 = this;
-
-    toElementArray(elements).forEach(function (element) { return this$1._removeElement(element); });
+    elements = toElementArray(elements, document);
+    for (var i = 0; i < elements.length; ++i) {
+      this._removeElement(element);
+    }
   };
 
   ParallaxViewport.prototype._removeElement = function _removeElement (element) {
-    var i = 0;
-    while (i < this.entries.length && this.entries[i].element !== element) { ++i; }
-    if (i === this.entries.length) { return }
-    var entry = this.entries.splice(i, 1)[0];
-    entry.element.classList.remove(CLASS_PARALLAX_ELEMENT);
-    entry.renderer.dispose();
+    for (var i = 0; i < this.elements.length; ++i) {
+      if (this.elements[i].element === element) {
+        this.elements[i].dispose();
+        this.elements.splice(i, 1);
+        return
+      }
+    }
   };
-
-  prependStyleSheet(("\n." + CLASS_PARALLAX_ELEMENT + " {\n  position: relative;\n  overflow: hidden !important;\n  background: none !important;\n  background-image: none !important;\n}\n\n." + CLASS_PARALLAX_ELEMENT + " > * {\n  position: relative;\n}\n\n." + CLASS_PARALLAX_VIEWPORT + " {\n  overflow-x: hidden !important;\n  overflow-y: scroll !important;\n  -webkit-overflow-scrolling: touch;\n}\n\n." + CLASS_PARALLAX_VIEWPORT_3D + " {\n  perspective: 1px !important;\n  perspective-origin: center center !important;\n}"));
 
   function scale_(bg, s) {
     bg.x *= s;
@@ -284,18 +324,17 @@ var parallax = (function (exports) {
     }
   }
 
-  function renderToStyle(style, image, scheduler) {
-    var naturalWidth = image.naturalWidth;
-    var naturalHeight = image.naturalHeight;
+  function setupStyle(style, width, height) {
+    style.position = 'absolute';
+    style.left = '50%';
+    style.top = '50%';
+    style.width = width + "px";
+    style.height = height + "px";
+    style.transformOrigin = 'center center 0';
+    style.pointerEvents = 'none';
+  }
 
-    scheduler.write(function() {
-      style.position = 'absolute';
-      style.left = '50%';
-      style.top = '50%';
-      style.transformOrigin = 'center center 0';
-      style.pointerEvents = 'none';
-    });
-
+  function renderToStyle(style, width, height) {
     return function render(ref) {
       var x = ref.x;
       var y = ref.y;
@@ -303,51 +342,31 @@ var parallax = (function (exports) {
       var w = ref.w;
       var h = ref.h;
 
-      var css =
+      style.transform =
         "translate(-50%, -50%)" +
         "translate3d(" + x + "px, " + y + "px, " + z + "px)" +
-        "scale(" + (w / naturalWidth) + ", " + (h / naturalHeight) + ")";
-
-      scheduler.write(function() {
-        style.transform = css;
-      });
-    }
-  }
-
-  function dropRepeat(render) {
-    var started = false;
-    var prev = null;
-    return function(bg) {
-      if (
-        started &&
-        bg.x === prev.x &&
-        bg.y === prev.y &&
-        bg.z === prev.z &&
-        bg.w === prev.w &&
-        bg.h === prev.h
-      )
-        { return }
-      started = true;
-      prev = bg;
-      render(bg);
+        "scale(" + (w / width) + ", " + (h / height) + ")";
     }
   }
 
   var ImageElementRenderer = function ImageElementRenderer(element, image, options) {
-    var this$1 = this;
-
     var scheduler = options.scheduler;
-    this.element = element;
-    this.img = document.createElement('img');
+    var img = document.createElement('img');
+    var style = img.style;
 
-    scheduler.write(function () {
-      this$1.img.width = image.naturalWidth;
-      this$1.img.height = image.naturalHeight;
-      this$1.img.src = image.src;
-      this$1.element.prepend(this$1.img);
+    var src = image.src;
+    var width = image.naturalWidth;
+    var height = image.naturalHeight;
+
+    scheduler.write(function() {
+      img.src = src;
+      element.prepend(img);
+      setupStyle(style, width, height);
     });
 
-    this.render = dropRepeat(renderToStyle(this.img.style, image, scheduler));
+    this.element = element;
+    this.img = img;
+    this.render = renderToStyle(style, width, height);
   };
 
   ImageElementRenderer.prototype.dispose = function dispose () {
@@ -364,15 +383,27 @@ var parallax = (function (exports) {
 
     this.element.classList.add(this.className);
 
-    var rule = "." + (this.className) + "::before {\n      content: '';\n      width: " + (image.naturalWidth) + "px;\n      height: " + (image.naturalHeight) + "px;\n      background-image: url(" + (image.src) + ");\n      background-size: 100% 100%;\n    }";
-
+    var rule = "." + (this.className) + "::before {}";
     var index = styleSheet.insertRule(rule, 0);
     var style = styleSheet.cssRules[index].style;
-    this.render = dropRepeat(renderToStyle(style, image, scheduler));
+
+    var src = image.src;
+    var width = image.naturalWidth;
+    var height = image.naturalHeight;
+    scheduler.write(function() {
+      style.content = '';
+      style.backgroundImage = "url(" + src + ")";
+      style.backgroundSize = '100% 100%';
+      setupStyle(style, width, height);
+    });
+
+    this.render = renderToStyle(style, width, height);
   };
   PseudoElementRenderer.prototype.dispose = function dispose () {
     this.element.classList.remove(this.className);
   };
+
+  injectStyle();
 
   function isChrome() {
     var userAgent = navigator.userAgent;
@@ -383,11 +414,15 @@ var parallax = (function (exports) {
 
   function defaultTransform(element, image, options) {
     var parallax = options.use3d ? parallax3d : parallax2d;
-    return chainTransforms([
-      coverElement(options.velocity),
-      alignX(options.alignX),
-      parallax(options.velocity)
-    ])
+    var t1 = coverElement(options.velocity);
+    var t2 = alignX(options.alignX);
+    var t3 = parallax(options.velocity);
+
+    return function(bg, element, viewport) {
+      t1(bg, element, viewport);
+      t2(bg, element, viewport);
+      t3(bg, element, viewport);
+    }
   }
 
   var defaultOptions = {

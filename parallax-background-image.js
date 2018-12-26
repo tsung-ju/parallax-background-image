@@ -270,14 +270,6 @@ var parallax = (function (exports) {
     }
   }
 
-  function chainTransforms(transforms) {
-    return function(bg, element, viewport) {
-      for (var i = 0; i < transforms.length; ++i) {
-        transforms[i](bg, element, viewport);
-      }
-    }
-  }
-
   function setupStyle(style, width, height) {
     style.position = 'absolute';
     style.left = '50%';
@@ -399,11 +391,6 @@ var parallax = (function (exports) {
   }
 
   exports.createViewport = createViewport;
-  exports.coverElement = coverElement;
-  exports.alignX = alignX;
-  exports.parallax2d = parallax2d;
-  exports.parallax3d = parallax3d;
-  exports.chainTransforms = chainTransforms;
   exports.ImageElementRenderer = ImageElementRenderer;
   exports.PseudoElementRenderer = PseudoElementRenderer;
 

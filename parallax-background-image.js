@@ -1,45 +1,6 @@
 var parallax = (function (exports) {
   'use strict';
 
-  function consume_(tasks) {
-    var len = tasks.length;
-    for (var i = 0; i < len; ++i) {
-      tasks.shift()();
-    }
-  }
-
-  var Scheduler = function Scheduler() {
-    var this$1 = this;
-
-    this.reads = [];
-    this.writes = [];
-    this.scheduled = false;
-
-    this.run = function () {
-      this$1.scheduled = false;
-      consume_(this$1.reads);
-      consume_(this$1.writes);
-    };
-  };
-
-  Scheduler.prototype.read = function read (task) {
-    this.reads.push(task);
-    this.scheduleRun();
-  };
-
-  Scheduler.prototype.write = function write (task) {
-    this.writes.push(task);
-    this.scheduleRun();
-  };
-
-  Scheduler.prototype.scheduleRun = function scheduleRun () {
-    if (this.scheduled) { return }
-    this.scheduled = true;
-    window.requestAnimationFrame(this.run);
-  };
-
-  var scheduler = new Scheduler();
-
   function appendStyleSheet(content) {
     if ( content === void 0 ) content = '';
 
@@ -100,7 +61,7 @@ var parallax = (function (exports) {
     element.classList.add(CLASS_PARALLAX_ELEMENT);
   };
 
-  ParallaxElement.prototype.layout = function layout (elementRect, viewportRect) {
+  ParallaxElement.prototype.updateRect = function updateRect (elementRect, viewportRect) {
     var bgRect = { x: 0, y: 0, z: 0, w: this.imageWidth, h: this.imageHeight };
     this.transform(bgRect, elementRect, viewportRect);
     if (this.bgRect == null || notEqual(this.bgRect, bgRect)) {
@@ -178,43 +139,44 @@ var parallax = (function (exports) {
   }
 
   var ParallaxViewport = function ParallaxViewport(viewport, options) {
-    var use3d = options.use3d;
-    var scheduler = options.scheduler;
     viewport = toElement(viewport, document);
     this.viewport = viewport;
     this.options = options;
     this.elements = [];
 
     viewport.classList.add(CLASS_PARALLAX_VIEWPORT);
-    if (use3d) {
+    if (options.use3d) {
       viewport.classList.add(CLASS_PARALLAX_VIEWPORT_3D);
     }
 
-    this._startReadLoop(viewport, this.elements, scheduler);
-    this._startWriteLoop(this.elements, scheduler);
+    this._monitorRects(viewport, this.elements);
+    this._startRenderLoop(this.elements);
   };
 
-  ParallaxViewport.prototype._startReadLoop = function _startReadLoop (viewport, elements, scheduler) {
-    function readLoop() {
-      var viewportRect = getRect(viewport);
-      for (var i = 0; i < elements.length; ++i) {
-        var elementRect = getRect(elements[i].element);
-        subtract_(elementRect, viewportRect);
-        elements[i].layout(elementRect, viewportRect);
-      }
-      scheduler.read(readLoop);
+  ParallaxViewport.prototype._monitorRects = function _monitorRects () {
+    var _updateRects = this._updateRects.bind(this);
+    this.viewport.addEventListener('scroll', _updateRects);
+    window.addEventListener('resize', _updateRects);
+  };
+
+  ParallaxViewport.prototype._updateRects = function _updateRects () {
+    var viewportRect = getRect(this.viewport);
+    for (var i = 0; i < this.elements.length; ++i) {
+      var parallaxElement = this.elements[i];
+      var elementRect = getRect(parallaxElement.element);
+      subtract_(elementRect, viewportRect);
+      parallaxElement.updateRect(elementRect, viewportRect);
     }
-    scheduler.read(readLoop);
   };
 
-  ParallaxViewport.prototype._startWriteLoop = function _startWriteLoop (elements, scheduler) {
-    function writeLoop() {
+  ParallaxViewport.prototype._startRenderLoop = function _startRenderLoop (elements) {
+    function renderLoop() {
       for (var i = 0; i < elements.length; ++i) {
         elements[i].render();
       }
-      scheduler.write(writeLoop);
+      window.requestAnimationFrame(renderLoop);
     }
-    scheduler.write(writeLoop);
+    window.requestAnimationFrame(renderLoop);
   };
 
   ParallaxViewport.prototype.add = function add (elements, options) {
@@ -228,6 +190,7 @@ var parallax = (function (exports) {
     return elements.map(function (element) {
       return loadImage(options.image, element).then(function (image) {
         this$1.elements.push(new ParallaxElement(element, image, options));
+        this$1._updateRects();
       })
     })
   };
@@ -332,7 +295,6 @@ var parallax = (function (exports) {
   }
 
   var ImageElementRenderer = function ImageElementRenderer(element, image, options) {
-    var scheduler = options.scheduler;
     var img = document.createElement('img');
     var style = img.style;
 
@@ -340,7 +302,7 @@ var parallax = (function (exports) {
     var width = image.naturalWidth;
     var height = image.naturalHeight;
 
-    scheduler.write(function() {
+    window.requestAnimationFrame(function() {
       img.src = src;
       element.prepend(img);
       setupStyle(style, width, height);
@@ -358,7 +320,6 @@ var parallax = (function (exports) {
   var styleSheet = appendStyleSheet();
   var nextId = 0;
   var PseudoElementRenderer = function PseudoElementRenderer(element, image, options) {
-    var scheduler = options.scheduler;
     this.element = element;
     var id = nextId++;
     this.className = "parallax-background-image-pseudo-" + id;
@@ -372,7 +333,8 @@ var parallax = (function (exports) {
     var src = image.src;
     var width = image.naturalWidth;
     var height = image.naturalHeight;
-    scheduler.write(function() {
+
+    window.requestAnimationFrame(function() {
       style.content = '';
       style.backgroundImage = "url(" + src + ")";
       style.backgroundSize = '100% 100%';
@@ -411,7 +373,6 @@ var parallax = (function (exports) {
     use3d: isChrome(),
     velocity: 0.8,
     alignX: 'center',
-    scheduler: scheduler,
     renderer: ImageElementRenderer,
     transform: defaultTransform,
     image: cssBackgroundImage

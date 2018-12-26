@@ -149,8 +149,8 @@ var parallax = (function (exports) {
       viewport.classList.add(CLASS_PARALLAX_VIEWPORT_3D);
     }
 
-    this._monitorRects(viewport, this.elements);
-    this._startRenderLoop(this.elements);
+    this._monitorRects();
+    this._startRenderLoop();
   };
 
   ParallaxViewport.prototype._monitorRects = function _monitorRects () {

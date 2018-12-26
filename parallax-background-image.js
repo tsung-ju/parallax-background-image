@@ -50,21 +50,25 @@ var parallax = (function (exports) {
 
   var ParallaxElement = function ParallaxElement(element, image, options) {
     this.element = element;
-    this.transform = options.transform(element, image, options);
-    this.renderer = new options.renderer(element, image, options);
     this.imageWidth = image.naturalWidth;
     this.imageHeight = image.naturalHeight;
+    this.transform = options.transform(element, image, options);
+    this.renderer = new options.renderer(element, image, options);
 
     this.bgRect = { x: NaN, y: NaN, z: NaN, w: NaN, h: NaN };
     this.dirty = false;
 
-    element.classList.add(CLASS_PARALLAX_ELEMENT);
+    this._setupStyle();
+  };
+
+  ParallaxElement.prototype._setupStyle = function _setupStyle () {
+    this.element.classList.add(CLASS_PARALLAX_ELEMENT);
   };
 
   ParallaxElement.prototype.updateRect = function updateRect (elementRect, viewportRect) {
     var bgRect = { x: 0, y: 0, z: 0, w: this.imageWidth, h: this.imageHeight };
     this.transform(bgRect, elementRect, viewportRect);
-    if (this.bgRect == null || notEqual(this.bgRect, bgRect)) {
+    if (notEqual(this.bgRect, bgRect)) {
       this.dirty = true;
       copy_(this.bgRect, bgRect);
     }
@@ -139,24 +143,28 @@ var parallax = (function (exports) {
   }
 
   var ParallaxViewport = function ParallaxViewport(viewport, options) {
-    viewport = toElement(viewport, document);
-    this.viewport = viewport;
+    this.viewport = toElement(viewport, document);
     this.options = options;
     this.elements = [];
 
-    viewport.classList.add(CLASS_PARALLAX_VIEWPORT);
-    if (options.use3d) {
-      viewport.classList.add(CLASS_PARALLAX_VIEWPORT_3D);
-    }
-
+    this._setupStyle();
     this._monitorRects();
     this._startRenderLoop();
   };
 
+  ParallaxViewport.prototype._setupStyle = function _setupStyle () {
+    this.viewport.classList.add(CLASS_PARALLAX_VIEWPORT);
+    if (this.options.use3d) {
+      this.viewport.classList.add(CLASS_PARALLAX_VIEWPORT_3D);
+    }
+  };
+
   ParallaxViewport.prototype._monitorRects = function _monitorRects () {
     var _updateRects = this._updateRects.bind(this);
-    this.viewport.addEventListener('scroll', _updateRects);
     window.addEventListener('resize', _updateRects);
+    if (!this.options.use3d) {
+      this.viewport.addEventListener('scroll', _updateRects);
+    }
   };
 
   ParallaxViewport.prototype._updateRects = function _updateRects () {
@@ -169,7 +177,8 @@ var parallax = (function (exports) {
     }
   };
 
-  ParallaxViewport.prototype._startRenderLoop = function _startRenderLoop (elements) {
+  ParallaxViewport.prototype._startRenderLoop = function _startRenderLoop () {
+    var elements = this.elements;
     function renderLoop() {
       for (var i = 0; i < elements.length; ++i) {
         elements[i].render();
@@ -295,21 +304,21 @@ var parallax = (function (exports) {
   }
 
   var ImageElementRenderer = function ImageElementRenderer(element, image, options) {
-    var img = document.createElement('img');
-    var style = img.style;
+    var this$1 = this;
 
-    var src = image.src;
+    this.element = element;
+    this.img = document.createElement('img');
+
+    var style = this.img.style;
     var width = image.naturalWidth;
     var height = image.naturalHeight;
 
-    window.requestAnimationFrame(function() {
-      img.src = src;
-      element.prepend(img);
+    window.requestAnimationFrame(function () {
+      this$1.img.src = image.src;
       setupStyle(style, width, height);
+      this$1.element.prepend(this$1.img);
     });
 
-    this.element = element;
-    this.img = img;
     this.render = renderToStyle(style, width, height);
   };
 
@@ -317,32 +326,36 @@ var parallax = (function (exports) {
     this.element.removeChild(this.img);
   };
 
+  function createStyle(selector, styleSheet) {
+    var rule = selector + " {}";
+    var index = styleSheet.insertRule(rule, 0);
+    return styleSheet.cssRules[index].style
+  }
+
   var styleSheet = appendStyleSheet();
   var nextId = 0;
   var PseudoElementRenderer = function PseudoElementRenderer(element, image, options) {
+    var this$1 = this;
+
     this.element = element;
     var id = nextId++;
     this.className = "parallax-background-image-pseudo-" + id;
 
-    this.element.classList.add(this.className);
-
-    var rule = "." + (this.className) + "::before {}";
-    var index = styleSheet.insertRule(rule, 0);
-    var style = styleSheet.cssRules[index].style;
-
-    var src = image.src;
+    var style = createStyle(("." + (this.className) + "::before"), styleSheet);
     var width = image.naturalWidth;
     var height = image.naturalHeight;
 
-    window.requestAnimationFrame(function() {
-      style.content = '';
-      style.backgroundImage = "url(" + src + ")";
+    window.requestAnimationFrame(function () {
+      style.content = '""';
+      style.backgroundImage = "url(" + (image.src) + ")";
       style.backgroundSize = '100% 100%';
       setupStyle(style, width, height);
+      this$1.element.classList.add(this$1.className);
     });
 
     this.render = renderToStyle(style, width, height);
   };
+
   PseudoElementRenderer.prototype.dispose = function dispose () {
     this.element.classList.remove(this.className);
   };

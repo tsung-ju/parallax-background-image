@@ -93,7 +93,7 @@ var parallax = (function (exports) {
 
   function cssBackgroundImage(element) {
     var style = window.getComputedStyle(element);
-    var src = /url\(['"]?(.*?)['"]?\)/.exec(style.backgroundImage)[1];
+    var src = /^url\((['"]?)(.*)\1\)$/.exec(style.backgroundImage)[2];
     return src
   }
 

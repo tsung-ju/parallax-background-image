@@ -114,14 +114,14 @@ var parallax = (function (exports) {
     })
   }
 
-  var ParallaxViewport = function ParallaxViewport(viewport, options) {
-    if (typeof viewport === 'string') {
-      viewport = document.querySelector(viewport);
+  var ParallaxViewport = function ParallaxViewport(rootElement, options) {
+    if (typeof rootElement === 'string') {
+      rootElement = document.querySelector(rootElement);
     }
 
-    this.viewport = viewport;
+    this.rootElement = rootElement;
     this.options = options;
-    this.elements = [];
+    this.parallaxElements = [];
 
     this._setupStyle();
     this._monitorRects();
@@ -132,12 +132,13 @@ var parallax = (function (exports) {
       var this$1 = this;
       if ( options === void 0 ) options = {};
 
-    elements = toElementArray(elements, this.viewport);
     options = Object.assign({}, this.options, options);
+    elements = toElementArray(elements, this.rootElement);
+    elements = elements.filter(function (element) { return this$1._isViewportFor(element); });
 
     return elements.map(function (element) {
       return loadImage(options.image, element).then(function (image) {
-        this$1.elements.push(new ParallaxElement(element, image, options));
+        this$1.parallaxElements.push(new ParallaxElement(element, image, options));
         this$1._updateRects();
       })
     })
@@ -151,9 +152,9 @@ var parallax = (function (exports) {
   };
 
   ParallaxViewport.prototype._setupStyle = function _setupStyle () {
-    this.viewport.classList.add(CLASS_PARALLAX_VIEWPORT);
+    this.rootElement.classList.add(CLASS_PARALLAX_VIEWPORT);
     if (this.options.use3d) {
-      this.viewport.classList.add(CLASS_PARALLAX_VIEWPORT_3D);
+      this.rootElement.classList.add(CLASS_PARALLAX_VIEWPORT_3D);
     }
   };
 
@@ -161,36 +162,44 @@ var parallax = (function (exports) {
     var _updateRects = this._updateRects.bind(this);
     window.addEventListener('resize', _updateRects);
     if (!this.options.use3d) {
-      this.viewport.addEventListener('scroll', _updateRects);
+      this.rootElement.addEventListener('scroll', _updateRects);
     }
   };
 
   ParallaxViewport.prototype._updateRects = function _updateRects () {
-    var viewportRect = getRect(this.viewport);
-    for (var i = 0; i < this.elements.length; ++i) {
-      var parallaxElement = this.elements[i];
-      var elementRect = getRect(parallaxElement.element);
+    var viewportRect = getRect(this.rootElement);
+    var parallaxElements = this.parallaxElements;
+    for (var i = 0; i < parallaxElements.length; ++i) {
+      var elementRect = getRect(parallaxElements[i].element);
       subtract_(elementRect, viewportRect);
-      parallaxElement.updateRect(elementRect, viewportRect);
+      parallaxElements[i].updateRect(elementRect, viewportRect);
     }
   };
 
   ParallaxViewport.prototype._startRenderLoop = function _startRenderLoop () {
-    var elements = this.elements;
+    var parallaxElements = this.parallaxElements;
     function renderLoop() {
-      for (var i = 0; i < elements.length; ++i) {
-        elements[i].render();
+      for (var i = 0; i < parallaxElements.length; ++i) {
+        parallaxElements[i].render();
       }
       window.requestAnimationFrame(renderLoop);
     }
     window.requestAnimationFrame(renderLoop);
   };
 
+  ParallaxViewport.prototype._isViewportFor = function _isViewportFor (element) {
+    return (
+      element !== this.rootElement &&
+      element.closest(("." + CLASS_PARALLAX_VIEWPORT)) === this.rootElement
+    )
+  };
+
   ParallaxViewport.prototype._removeElement = function _removeElement (element) {
-    for (var i = 0; i < this.elements.length; ++i) {
-      if (this.elements[i].element === element) {
-        this.elements[i].dispose();
-        this.elements.splice(i, 1);
+    var parallaxElements = this.parallaxElements;
+    for (var i = 0; i < parallaxElements.length; ++i) {
+      if (this.parallaxElements[i].element === element) {
+        parallaxElements[i].dispose();
+        parallaxElements.splice(i, 1);
         return
       }
     }

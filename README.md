@@ -72,10 +72,10 @@ For complete example see `demo.html`
 
 ## API
 
-### `parallax.createViewport(viewport[, options])`
+### `parallax.createViewport(rootElement[, options])`
 
 #### Parameters
-* `viewport` **HTMLElement** or **string** (CSS selector) - A scrollable container element.
+* `rootElement` **HTMLElement** or **string** (CSS selector) - A scrollable container element.
   * NOTE: Don't use `<body>` as the viewport.
 * `options` **Object** - All fields are optional
   * `use3d` **boolean** - If `true`, use perspective transform, otherwise use the js-based fallback. Default `false` on non-chromium browsers.

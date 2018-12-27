@@ -41,7 +41,10 @@ For example,
   <body>
     <div id="#wrapper">
       <!-- site content here -->
+
     </div>
+
+
     <script>
       /* create a viewport */
       var viewport = parallax.createViewport('#wrapper')

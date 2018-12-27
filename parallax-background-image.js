@@ -18,8 +18,6 @@ var parallax = (function (exports) {
   }
 
   function createStyleElement(content) {
-    if ( content === void 0 ) content = '';
-
     var style = document.createElement('style');
     style.appendChild(document.createTextNode(content));
     return style
@@ -167,8 +165,8 @@ var parallax = (function (exports) {
   };
 
   ParallaxViewport.prototype._updateRects = function _updateRects () {
-    var viewportRect = getRect(this.rootElement);
     var parallaxElements = this.parallaxElements;
+    var viewportRect = getRect(this.rootElement);
     for (var i = 0; i < parallaxElements.length; ++i) {
       var elementRect = getRect(parallaxElements[i].element);
       subtract_(elementRect, viewportRect);

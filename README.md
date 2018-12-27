@@ -55,8 +55,10 @@ var viewport = parallax.createViewport('#wrapper')
 /* apply parallax effect to selected elements */
 viewport.add('.select-some-elements')
 
-/* slow down or speed up the background image.
-   `veloicty` specifies the ratio between velocity of the image and the element.
+/* specify the velocity of the background image.
+   more precisely, it's the ratio between velocity of the image and the element.
+   values greater than 1 make the image move faster than the element.
+   values less than 1 make the image move slower than the element.
    (Default: 0.8) */
 viewport.add('.another-selector', { velocity: 1.2 })
 

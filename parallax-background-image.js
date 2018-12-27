@@ -36,18 +36,6 @@ var parallax = (function (exports) {
 
   var STYLE = "\n." + CLASS_PARALLAX_ELEMENT + " {\n  position: relative;\n  overflow: hidden !important;\n  background: none !important;\n  background-image: none !important;\n}\n\n." + CLASS_PARALLAX_ELEMENT + " > * {\n  position: relative;\n}\n\n." + CLASS_PARALLAX_VIEWPORT + " {\n  overflow-x: hidden !important;\n  overflow-y: scroll !important;\n  -webkit-overflow-scrolling: touch;\n}\n\n." + CLASS_PARALLAX_VIEWPORT_3D + " {\n  perspective: 1px !important;\n  perspective-origin: center center !important;\n}";
 
-  function notEqual(a, b) {
-    return a.x !== b.x || a.y !== b.y || a.z !== b.z || a.w !== b.w || a.h !== b.h
-  }
-
-  function copy_(a, b) {
-    a.x = b.x;
-    a.y = b.y;
-    a.z = b.z;
-    a.w = b.w;
-    a.h = b.h;
-  }
-
   var ParallaxElement = function ParallaxElement(element, image, options) {
     this.element = element;
     this.imageWidth = image.naturalWidth;
@@ -61,10 +49,6 @@ var parallax = (function (exports) {
     this.disposed = false;
 
     this._setupStyle();
-  };
-
-  ParallaxElement.prototype._setupStyle = function _setupStyle () {
-    this.element.classList.add(CLASS_PARALLAX_ELEMENT);
   };
 
   ParallaxElement.prototype.updateRect = function updateRect (elementRect, viewportRect) {
@@ -91,23 +75,20 @@ var parallax = (function (exports) {
     this.renderer.dispose();
   };
 
-  function toElement(element, parent) {
-    if (typeof element === 'string') {
-      return parent.querySelector(element)
-    } else {
-      return element
-    }
+  ParallaxElement.prototype._setupStyle = function _setupStyle () {
+    this.element.classList.add(CLASS_PARALLAX_ELEMENT);
+  };
+
+  function notEqual(a, b) {
+    return a.x !== b.x || a.y !== b.y || a.z !== b.z || a.w !== b.w || a.h !== b.h
   }
 
-  function toElementArray(elements, parent) {
-    if (elements instanceof Element) {
-      return [elements]
-    } else {
-      if (typeof elements === 'string') {
-        elements = parent.querySelectorAll(elements);
-      }
-      return Array.prototype.slice.call(elements)
-    }
+  function copy_(a, b) {
+    a.x = b.x;
+    a.y = b.y;
+    a.z = b.z;
+    a.w = b.w;
+    a.h = b.h;
   }
 
   function cssBackgroundImage(element) {
@@ -133,29 +114,40 @@ var parallax = (function (exports) {
     })
   }
 
-  function getRect(element) {
-    var rect = element.getBoundingClientRect();
-    return {
-      x: (rect.left + rect.right) / 2,
-      y: (rect.top + rect.bottom) / 2,
-      w: rect.right - rect.left,
-      h: rect.bottom - rect.top
-    }
-  }
-
-  function subtract_(a, b) {
-    a.x -= b.x;
-    a.y -= b.y;
-  }
-
   var ParallaxViewport = function ParallaxViewport(viewport, options) {
-    this.viewport = toElement(viewport, document);
+    if (typeof viewport === 'string') {
+      viewport = document.querySelector(viewport);
+    }
+
+    this.viewport = viewport;
     this.options = options;
     this.elements = [];
 
     this._setupStyle();
     this._monitorRects();
     this._startRenderLoop();
+  };
+
+  ParallaxViewport.prototype.add = function add (elements, options) {
+      var this$1 = this;
+      if ( options === void 0 ) options = {};
+
+    elements = toElementArray(elements, this.viewport);
+    options = Object.assign({}, this.options, options);
+
+    return elements.map(function (element) {
+      return loadImage(options.image, element).then(function (image) {
+        this$1.elements.push(new ParallaxElement(element, image, options));
+        this$1._updateRects();
+      })
+    })
+  };
+
+  ParallaxViewport.prototype.remove = function remove (elements) {
+    elements = toElementArray(elements, document);
+    for (var i = 0; i < elements.length; ++i) {
+      this._removeElement(element);
+    }
   };
 
   ParallaxViewport.prototype._setupStyle = function _setupStyle () {
@@ -194,29 +186,6 @@ var parallax = (function (exports) {
     window.requestAnimationFrame(renderLoop);
   };
 
-  ParallaxViewport.prototype.add = function add (elements, options) {
-      var this$1 = this;
-      if ( options === void 0 ) options = {};
-
-    elements = toElementArray(elements, this.viewport);
-
-    options = Object.assign({}, this.options, options);
-
-    return elements.map(function (element) {
-      return loadImage(options.image, element).then(function (image) {
-        this$1.elements.push(new ParallaxElement(element, image, options));
-        this$1._updateRects();
-      })
-    })
-  };
-
-  ParallaxViewport.prototype.remove = function remove (elements) {
-    elements = toElementArray(elements, document);
-    for (var i = 0; i < elements.length; ++i) {
-      this._removeElement(element);
-    }
-  };
-
   ParallaxViewport.prototype._removeElement = function _removeElement (element) {
     for (var i = 0; i < this.elements.length; ++i) {
       if (this.elements[i].element === element) {
@@ -226,6 +195,32 @@ var parallax = (function (exports) {
       }
     }
   };
+
+  function getRect(element) {
+    var rect = element.getBoundingClientRect();
+    return {
+      x: (rect.left + rect.right) / 2,
+      y: (rect.top + rect.bottom) / 2,
+      w: rect.right - rect.left,
+      h: rect.bottom - rect.top
+    }
+  }
+
+  function subtract_(a, b) {
+    a.x -= b.x;
+    a.y -= b.y;
+  }
+
+  function toElementArray(elements, parent) {
+    if (elements instanceof Element) {
+      return [elements]
+    } else {
+      if (typeof elements === 'string') {
+        elements = parent.querySelectorAll(elements);
+      }
+      return Array.prototype.slice.call(elements)
+    }
+  }
 
   function scale_(bg, s) {
     bg.x *= s;

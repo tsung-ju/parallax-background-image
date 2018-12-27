@@ -58,6 +58,8 @@ var parallax = (function (exports) {
     this.bgRect = { x: NaN, y: NaN, z: NaN, w: NaN, h: NaN };
     this.dirty = false;
 
+    this.disposed = false;
+
     this._setupStyle();
   };
 
@@ -66,6 +68,7 @@ var parallax = (function (exports) {
   };
 
   ParallaxElement.prototype.updateRect = function updateRect (elementRect, viewportRect) {
+    if (this.disposed) { return }
     var bgRect = { x: 0, y: 0, z: 0, w: this.imageWidth, h: this.imageHeight };
     this.transform(bgRect, elementRect, viewportRect);
     if (notEqual(this.bgRect, bgRect)) {
@@ -75,12 +78,15 @@ var parallax = (function (exports) {
   };
 
   ParallaxElement.prototype.render = function render () {
+    if (this.disposed) { return }
     if (!this.dirty) { return }
     this.dirty = false;
     this.renderer.render(this.bgRect);
   };
 
   ParallaxElement.prototype.dispose = function dispose () {
+    if (this.disposed) { return }
+    this.disposed = true;
     this.element.classList.remove(CLASS_PARALLAX_ELEMENT);
     this.renderer.dispose();
   };
@@ -280,41 +286,42 @@ var parallax = (function (exports) {
     style.pointerEvents = 'none';
   }
 
-  function renderToStyle(style, width, height) {
-    return function render(ref) {
-      var x = ref.x;
-      var y = ref.y;
-      var z = ref.z;
-      var w = ref.w;
-      var h = ref.h;
-
-      style.transform =
-        "translate(-50%, -50%)" +
-        "translate3d(" + x + "px, " + y + "px, " + z + "px)" +
-        "scale(" + (w / width) + ", " + (h / height) + ")";
-    }
+  function renderToStyle(style, bg, imageWidth, imageHeight) {
+    style.transform =
+      "translateX(" + (bg.x - imageWidth / 2) + "px)" +
+      "translateY(" + (bg.y - imageHeight / 2) + "px)" +
+      "translateZ(" + (bg.z) + "px)" +
+      "scale(" + (bg.w / imageWidth) + ", " + (bg.h / imageHeight) + ")";
   }
 
   var ImageElementRenderer = function ImageElementRenderer(element, image, options) {
     var this$1 = this;
 
     this.element = element;
-    this.img = document.createElement('img');
+    this.imageWidth = image.naturalWidth;
+    this.imageHeight = image.naturalHeight;
 
-    var style = this.img.style;
-    var width = image.naturalWidth;
-    var height = image.naturalHeight;
+    this.img = document.createElement('img');
+    this.style = this.img.style;
+
+    this.disposed = false;
 
     window.requestAnimationFrame(function () {
+      if (this$1.disposed) { return }
       this$1.img.src = image.src;
-      setupStyle(style, width, height);
+      setupStyle(this$1.style, this$1.imageWidth, this$1.imageHeight);
       this$1.element.prepend(this$1.img);
     });
+  };
 
-    this.render = renderToStyle(style, width, height);
+  ImageElementRenderer.prototype.render = function render (bg) {
+    if (this.disposed) { return }
+    renderToStyle(this.style, bg, this.imageWidth, this.imageHeight);
   };
 
   ImageElementRenderer.prototype.dispose = function dispose () {
+    if (this.disposed) { return }
+    this.disposed = true;
     this.element.removeChild(this.img);
   };
 
@@ -330,25 +337,34 @@ var parallax = (function (exports) {
     var this$1 = this;
 
     this.element = element;
+    this.imageWidth = image.naturalWidth;
+    this.imageHeight = image.naturalHeight;
+
     var id = nextId++;
     this.className = "parallax-background-image-pseudo-" + id;
 
-    var style = createStyle(("." + (this.className) + "::before"), styleSheet);
-    var width = image.naturalWidth;
-    var height = image.naturalHeight;
+    this.style = createStyle(("." + (this.className) + "::before"), styleSheet);
+
+    this.disposed = false;
 
     window.requestAnimationFrame(function () {
-      style.content = '""';
-      style.backgroundImage = "url(" + (image.src) + ")";
-      style.backgroundSize = '100% 100%';
-      setupStyle(style, width, height);
+      if (this$1.disposed) { return }
+      this$1.style.content = '""';
+      this$1.style.backgroundImage = "url(" + (image.src) + ")";
+      this$1.style.backgroundSize = '100% 100%';
+      setupStyle(this$1.style, this$1.imageWidth, this$1.imageHeight);
       this$1.element.classList.add(this$1.className);
     });
+  };
 
-    this.render = renderToStyle(style, width, height);
+  PseudoElementRenderer.prototype.render = function render (bg) {
+    if (this.disposed) { return }
+    renderToStyle(this.style, bg, this.imageWidth, this.imageHeight);
   };
 
   PseudoElementRenderer.prototype.dispose = function dispose () {
+    if (this.disposed) { return }
+    this.disposed = true;
     this.element.classList.remove(this.className);
   };
 

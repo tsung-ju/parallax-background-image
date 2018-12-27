@@ -60,8 +60,6 @@ For example,
 <html>
 ```
 
-```javascript
-```
 
 ### Apply parallax effect
 ```javascript

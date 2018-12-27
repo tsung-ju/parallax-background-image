@@ -2,7 +2,7 @@
 simple, responsive parallax scrolling effect.
 
 ## Features
-* fast
+* **fast**
 * automatically switch to [pure CSS parallax effect](https://keithclark.co.uk/articles/pure-css-parallax-websites/) if supported by the browser
 * zero dependencies
 * simple(?) api

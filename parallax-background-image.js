@@ -52,7 +52,7 @@ var parallax = (function (exports) {
     this.element = element;
     this.imageWidth = image.naturalWidth;
     this.imageHeight = image.naturalHeight;
-    this.transform = options.transform(element, image, options);
+    this.transform_ = options.transform(element, image, options);
     this.renderer = new options.renderer(element, image, options);
 
     this.bgRect = { x: NaN, y: NaN, z: NaN, w: NaN, h: NaN };
@@ -70,7 +70,7 @@ var parallax = (function (exports) {
   ParallaxElement.prototype.updateRect = function updateRect (elementRect, viewportRect) {
     if (this.disposed) { return }
     var bgRect = { x: 0, y: 0, z: 0, w: this.imageWidth, h: this.imageHeight };
-    this.transform(bgRect, elementRect, viewportRect);
+    this.transform_(bgRect, elementRect, viewportRect);
     if (notEqual(this.bgRect, bgRect)) {
       this.dirty = true;
       copy_(this.bgRect, bgRect);

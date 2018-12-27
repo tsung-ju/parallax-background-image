@@ -42,13 +42,22 @@ For example,
     <div id="#wrapper">
       <!-- site content here -->
     </div>
+    <script>
+      /* create a viewport */
+      var viewport = parallax.createViewport('#wrapper')
+
+      /* apply parallax effect to elements inside the viewport (see below) */
+      viewport.add('.some-css-selector')
+      viewport.add('.another-selector')
+
+      /* ... */
+
+    </script>
   </body>
 <html>
 ```
 
-Then in your script,
 ```javascript
-var viewport = parallax.createViewport('#wrapper')
 ```
 
 ### Apply parallax effect

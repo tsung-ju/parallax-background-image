@@ -379,14 +379,14 @@ var parallax = (function (exports) {
 
   function defaultTransform(element, image, options) {
     var parallax = options.use3d ? parallax3d : parallax2d;
-    var t1 = coverElement(options.velocity);
-    var t2 = alignX(options.alignX);
-    var t3 = parallax(options.velocity);
+    var coverElement_ = coverElement(options.velocity);
+    var alignX_ = alignX(options.alignX);
+    var parallax_ = parallax(options.velocity);
 
     return function(bg, element, viewport) {
-      t1(bg, element, viewport);
-      t2(bg, element, viewport);
-      t3(bg, element, viewport);
+      coverElement_(bg, element, viewport);
+      alignX_(bg, element, viewport);
+      parallax_(bg, element, viewport);
     }
   }
 

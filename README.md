@@ -1,14 +1,11 @@
-## parallax-background-image
-A helper for creating pure CSS parallax background image effects.
+# parallax-background-image
+simple, responsive parallax scrolling effect.
 
-It calculates and sets the css transform property automatically.
-
-
-Inspired by <http://keithclark.co.uk/articles/pure-css-parallax-websites/>
-
-
-## Work in progress!
-Currently CSS transform can only works on chromium-based browsers. A javascript-based fallback is used on other browsers.
+## Features
+* fast
+* automatically switch to [pure CSS parallax effect](https://keithclark.co.uk/articles/pure-css-parallax-websites/) if supported by the browser
+* zero dependencies
+* simple(?) api
 
 
 ## Demo
@@ -42,7 +39,7 @@ For example,
   </head>
   <body>
     <div id="#wrapper">
-      <!-- your content here -->
+      <!-- site content here -->
     </div>
   </body>
 <html>
@@ -55,16 +52,18 @@ var viewport = parallax.createViewport('#wrapper')
 
 ### Apply parallax effect
 ```javascript
-/* Slows down their background image (to 90% of the scroll speed). */
-viewport.add('.your-selector', { velocity: 0.9 })
+/* apply parallax effect to selected elements */
+viewport.add('.select-some-elements')
 
-/* Speeds up their background image (to 120% of the scroll speed). */
+/* slow down or speed up the background image.
+   `veloicty` specifies the ratio between velocity of the image and the element.
+   (Default: 0.8) */
 viewport.add('.another-selector', { velocity: 1.2 })
 
 /* align the background image to the left (Default: 'center') */
 viewport.add('.hello-selector', { alignX: 'left' })
 
-/* use custom background image */
+/* use custom background image (Default: read `background-image` from element style) */
 viewport.add('.custom-background-image', { backgroundImage: 'http://domain/xxx.jpg' })
 ```
 For complete example see `demo.html`
@@ -85,7 +84,7 @@ For complete example see `demo.html`
 
 ### `viewport.add(elements[, options])`
 
-Add parallax effect to element(s).
+Apply parallax effect to element(s).
 
 #### Parameters
 * `elements` - Can be:

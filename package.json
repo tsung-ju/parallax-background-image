@@ -6,7 +6,7 @@
   "module": "lib/main.js",
   "scripts": {
     "build": "rollup -c && uglifyjs parallax-background-image.js -mc -o parallax-background-image.min.js",
-    "prettier": "prettier --no-semi --single-quote --write rollup.config.js demo.html 'lib/**/*.js'"
+    "prettier": "prettier --no-semi --single-quote --write README.md rollup.config.js demo.html 'lib/**/*.js'"
   },
   "repository": {
     "type": "git",

@@ -34,11 +34,74 @@ var parallax = (function (exports) {
 
   var STYLE = "\n." + CLASS_PARALLAX_ELEMENT + " {\n  position: relative;\n  overflow: hidden !important;\n  background: none !important;\n  background-image: none !important;\n}\n\n." + CLASS_PARALLAX_ELEMENT + " > * {\n  position: relative;\n}\n\n." + CLASS_PARALLAX_VIEWPORT + " {\n  overflow-x: hidden !important;\n  overflow-y: scroll !important;\n  -webkit-overflow-scrolling: touch;\n}\n\n." + CLASS_PARALLAX_VIEWPORT_3D + " {\n  perspective: 1px !important;\n  perspective-origin: center center !important;\n}";
 
+  function createTransform(options) {
+    var parallax = options.use3d ? parallax3d : parallax2d;
+
+    var coverElement_ = coverElement(options.velocity);
+    var alignX_ = alignX(options.alignX);
+    var parallax_ = parallax(options.velocity);
+
+    return function transform_(bg, element, viewport) {
+      coverElement_(bg, element, viewport);
+      alignX_(bg, element, viewport);
+      parallax_(bg, element, viewport);
+    }
+  }
+
+  function scale_(bg, s) {
+    bg.x *= s;
+    bg.y *= s;
+    bg.z *= s;
+    bg.w *= s;
+    bg.h *= s;
+  }
+
+  function coverElement(velocity) {
+    return function coverElement_(bg, element, viewport) {
+      var minWidth = element.w;
+      var minHeight = viewport.h + velocity * (viewport.h - element.h);
+      var widthScale = minWidth / bg.w;
+      var heightScale = minHeight / bg.h;
+
+      scale_(bg, Math.max(widthScale, heightScale));
+    }
+  }
+
+  function alignX(percentage) {
+    percentage = parsePercentage(percentage);
+    return function alignX_(bg, element, viewport) {
+      bg.x = (0.5 - percentage) * (bg.w - element.w);
+    }
+  }
+
+  function parsePercentage(str) {
+    if (str === 'left') { return 0 }
+    if (str === 'center') { return 0.5 }
+    if (str === 'right') { return 1 }
+    var num = parseFloat(str);
+    if (!isNaN(num)) { return num / 100 }
+    return 0.5
+  }
+
+  function parallax3d(velocity) {
+    return function parallax3d_(bg, element, viewport) {
+      scale_(bg, 1 / velocity);
+      bg.z += 1 - 1 / velocity;
+      bg.x -= element.x * (1 - 1 / velocity);
+    }
+  }
+
+  function parallax2d(velocity) {
+    return function parallax2d_(bg, element, viewport) {
+      bg.y += element.y * (velocity - 1);
+    }
+  }
+
   var ParallaxElement = function ParallaxElement(element, image, options) {
     this.element = element;
     this.imageWidth = image.naturalWidth;
     this.imageHeight = image.naturalHeight;
-    this.transform_ = options.transform(options);
+    this.transform_ = createTransform(options);
     this.renderer = new options.renderer(element, image, options);
 
     this.bgRect = { x: NaN, y: NaN, z: NaN, w: NaN, h: NaN };
@@ -229,55 +292,6 @@ var parallax = (function (exports) {
     }
   }
 
-  function scale_(bg, s) {
-    bg.x *= s;
-    bg.y *= s;
-    bg.z *= s;
-    bg.w *= s;
-    bg.h *= s;
-  }
-
-  function coverElement(velocity) {
-    return function(bg, element, viewport) {
-      var minWidth = element.w;
-      var minHeight = viewport.h + velocity * (viewport.h - element.h);
-      var widthScale = minWidth / bg.w;
-      var heightScale = minHeight / bg.h;
-
-      scale_(bg, Math.max(widthScale, heightScale));
-    }
-  }
-
-  function alignX(percentage) {
-    percentage = parsePercentage(percentage);
-    return function(bg, element, viewport) {
-      bg.x = (0.5 - percentage) * (bg.w - element.w);
-    }
-  }
-
-  function parsePercentage(str) {
-    if (str === 'left') { return 0 }
-    if (str === 'center') { return 0.5 }
-    if (str === 'right') { return 1 }
-    var num = parseFloat(str);
-    if (!isNaN(num)) { return num / 100 }
-    return 0.5
-  }
-
-  function parallax3d(velocity) {
-    return function(bg, element, viewport) {
-      scale_(bg, 1 / velocity);
-      bg.z += 1 - 1 / velocity;
-      bg.x -= element.x * (1 - 1 / velocity);
-    }
-  }
-
-  function parallax2d(velocity) {
-    return function(bg, element, viewport) {
-      bg.y += element.y * (velocity - 1);
-    }
-  }
-
   function setupStyle(style, width, height) {
     style.position = 'absolute';
     style.left = '50%';
@@ -379,25 +393,11 @@ var parallax = (function (exports) {
     )
   }
 
-  function defaultTransform(options) {
-    var parallax = options.use3d ? parallax3d : parallax2d;
-    var coverElement_ = coverElement(options.velocity);
-    var alignX_ = alignX(options.alignX);
-    var parallax_ = parallax(options.velocity);
-
-    return function(bg, element, viewport) {
-      coverElement_(bg, element, viewport);
-      alignX_(bg, element, viewport);
-      parallax_(bg, element, viewport);
-    }
-  }
-
   var defaultOptions = {
     use3d: isChrome(),
     velocity: 0.8,
     alignX: 'center',
     renderer: ImageElementRenderer,
-    transform: defaultTransform,
     image: cssBackgroundImage
   };
 

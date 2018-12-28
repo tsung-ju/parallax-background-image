@@ -76,8 +76,15 @@ viewport.add('.another-selector', { velocity: 1.2 })
 viewport.add('.hello-selector', { alignX: 'left' })
 
 /* use custom background image (Default: read `background-image` from element style) */
-viewport.add('.custom-background-image', { backgroundImage: 'http://domain/xxx.jpg' })
+viewport.add('.custom-background-image', { image: 'http://domain/xxx.jpg' })
+
+/* use different options for each element */
+viewport.add('.declarative-style', element => ({
+  velocity: Math.random() * 2,
+  image: element.dataset.backgroundImage,
+}))
 ```
+
 For complete example see `demo.html`
 
 
@@ -90,7 +97,6 @@ For complete example see `demo.html`
   * NOTE: Don't use `<body>` as the viewport.
 * `options` **Object** - All fields are optional
   * `use3d` **boolean** - If `true`, use perspective transform, otherwise use the js-based fallback. Default `false` on non-chromium browsers.
-  * ...default options for `parallax.add`
 
 ### Instance Methods
 
@@ -104,15 +110,15 @@ Apply parallax effect to element(s).
   * A HTMLElement
   * A NodeList
   * An array of HTMLElements
-* `options` **Object** - All fields are optional
+* `options` **Object** or **Function** - All fields are optional. Can be a plain object, or a function which accepts an **HTMLElement** and returns an object.
   * `velocity` **Number** - Ratio between velocity of the image and the element. Must be positive. - Default `0.8`
   * `alignX` **string** - Horizontal alignment for the image. Accepts a percentage string (e.g. `'87%'`). Default `'center'`
     * shorthands: `'left'` = `'0%'`, `'right'` = `'100%'`, `'center'` = `'50%'`
-  * `image` **string** or **Function** - url to the image, or a function which accepts an `Element` and returns a url. - Default `parallax.cssBackgroundImage` (read `background-image` from element style)
+  * `image` **string** - Url to the image. - Default `parallax.cssBackgroundImage` (read `background-image` from element style)
   * `renderer` **RendererClass** - How to render the image - Default `parallax.ImageElementRenderer`
     * `parallax.ImageElementRenderer`  - prepend an `<img>` to the element.
     * `parallax.PseudoElementRenderer` - use CSS `::before`.
-      * NOTE: It is not recommended to use this renderer, as it is much slower than `ImageElementRenderer`.
+      * NOTE: It is much slower than `ImageElementRenderer`.
 
 ### `viewport.remove(elements)`
 

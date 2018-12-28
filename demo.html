@@ -14,7 +14,7 @@
   #slow1 {
     background-image: url(https://images.unsplash.com/photo-1446305341947-847fd13db6c4?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max);
   }
-  #dual > div {
+  .declarative {
     width: 50%;
     height: 100%;
     float: left;
@@ -45,13 +45,17 @@
   <div id="dual">
     <div
       id="left"
-      style="background-image: url(https://images.unsplash.com/photo-1465566829994-b8da8cae5909?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max)"
+      class="declarative"
+      data-background-velocity="0.3"
+      data-background-image="https://images.unsplash.com/photo-1465566829994-b8da8cae5909?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max"
     >
       <div class="text">div div</div>
     </div>
     <div
       id="right"
-      style="background-image: url(https://images.unsplash.com/photo-1465576482687-69f0e0d47126?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max)"
+      class="declarative"
+      data-background-velocity="0.3"
+      data-background-image="https://images.unsplash.com/photo-1465576482687-69f0e0d47126?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max"
     >
       <div class="text">much div wow</div>
     </div>
@@ -66,5 +70,10 @@
     image:
       'https://images.unsplash.com/photo-1444460381791-02e0621c12f4?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max'
   })
-  viewport.add('#dual > div', { velocity: 0.3 })
+  viewport.add('.declarative', function(element) {
+    return {
+      velocity: element.dataset.backgroundVelocity,
+      image: element.dataset.backgroundImage
+    }
+  })
 </script>

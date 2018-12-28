@@ -38,7 +38,7 @@ var parallax = (function (exports) {
     this.element = element;
     this.imageWidth = image.naturalWidth;
     this.imageHeight = image.naturalHeight;
-    this.transform_ = options.transform(element, image, options);
+    this.transform_ = options.transform(options);
     this.renderer = new options.renderer(element, image, options);
 
     this.bgRect = { x: NaN, y: NaN, z: NaN, w: NaN, h: NaN };
@@ -379,7 +379,7 @@ var parallax = (function (exports) {
     )
   }
 
-  function defaultTransform(element, image, options) {
+  function defaultTransform(options) {
     var parallax = options.use3d ? parallax3d : parallax2d;
     var coverElement_ = coverElement(options.velocity);
     var alignX_ = alignX(options.alignX);

@@ -401,11 +401,11 @@ var parallax = (function (exports) {
     image: cssBackgroundImage
   };
 
-  function createViewport(viewport, options) {
+  function createViewport(rootElement, options) {
     if ( options === void 0 ) options = {};
 
     options = Object.assign({}, defaultOptions, options);
-    return new ParallaxViewport(viewport, options)
+    return new ParallaxViewport(rootElement, options)
   }
 
   exports.createViewport = createViewport;

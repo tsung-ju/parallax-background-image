@@ -80,8 +80,11 @@ viewport.add('.hello-selector', { alignX: 'left' })
 viewport.add('.custom-background-image', { image: 'http://domain/xxx.jpg' })
 
 /* use different options for each element */
+viewport.add('.random-velocity', element => ({
+  velocity: Math.random() * 2
+})
 viewport.add('.declarative-style', element => ({
-  velocity: Math.random() * 2,
+  velocity: parseFloat(element.dataset.backgroundImage),
   image: element.dataset.backgroundImage
 }))
 ```

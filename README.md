@@ -67,7 +67,7 @@ For example,
 viewport.add('.select-some-elements')
 
 /* specify the velocity of the background image.
-   more precisely, it's the ratio between velocity of the image and the element.
+   more precisely, it's the ratio between velocities of the image and the element.
    values greater than 1 make the image move faster than the element.
    values less than 1 make the image move slower than the element.
    (Default: 0.8) */
@@ -100,7 +100,7 @@ For complete example see `demo.html`
 - `rootElement` **HTMLElement** or **string** (CSS selector) - A scrollable container element.
   - NOTE: Don't use `<body>` as the viewport.
 - `options` **Object** - All fields are optional
-  - `use3d` **boolean** - If `true`, use perspective transform, otherwise use the js-based fallback. Default `false` on non-chromium browsers.
+  - `use3d` **boolean** - If `true`, use perspective transform (pure CSS parallax), otherwise use js-based animation. Default `false` on non-chromium browsers.
 
 ### Instance Methods
 
@@ -115,8 +115,8 @@ Apply parallax effect to element(s).
   - A HTMLElement
   - A NodeList
   - An array of HTMLElements
-- `options` **Object** or **Function** - All fields are optional. Can be a plain object, or a function which accepts an **HTMLElement** and returns an object.
-  - `velocity` **Number** - Ratio between velocity of the image and the element. Must be positive. - Default `0.8`
+- `options` - Can be a plain object, or a function which accepts an **HTMLElement** and returns an object. All fields are optional.
+  - `velocity` **Number** - Ratio between velocities of the image and the element. Must be positive. - Default `0.8`
   - `alignX` **string** - Horizontal alignment for the image. Accepts a percentage string (e.g. `'87%'`). Default `'center'`
     - shorthands: `'left'` = `'0%'`, `'right'` = `'100%'`, `'center'` = `'50%'`
   - `image` **string** - Url to the image. - Default `parallax.cssBackgroundImage` (read `background-image` from element style)

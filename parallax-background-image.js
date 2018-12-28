@@ -350,7 +350,7 @@ var parallax = (function (exports) {
     if (options.image == null) {
       options.image = cssBackgroundImage(element);
     }
-      
+
     options.use3d = this.use3d;
 
     return options

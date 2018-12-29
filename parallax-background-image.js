@@ -101,6 +101,7 @@ var parallax = (function (exports) {
     this.element = element;
     this.imageWidth = image.naturalWidth;
     this.imageHeight = image.naturalHeight;
+
     this.transform_ = createTransform(options);
     this.renderer = new options.renderer(element, image, options);
 
@@ -109,7 +110,7 @@ var parallax = (function (exports) {
 
     this.disposed = false;
 
-    this._setupStyle();
+    this.element.classList.add(CLASS_PARALLAX_ELEMENT);
   };
 
   ParallaxElement.prototype.updateRect = function updateRect (elementRect, viewportRect) {
@@ -134,10 +135,6 @@ var parallax = (function (exports) {
     this.disposed = true;
     this.element.classList.remove(CLASS_PARALLAX_ELEMENT);
     this.renderer.dispose();
-  };
-
-  ParallaxElement.prototype._setupStyle = function _setupStyle () {
-    this.element.classList.add(CLASS_PARALLAX_ELEMENT);
   };
 
   function notEqual(a, b) {

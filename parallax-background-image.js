@@ -348,7 +348,7 @@ var parallax = (function (exports) {
       options.image = cssBackgroundImage(element);
     }
 
-    options.use3d = this.use3d;
+    options.use3d = this.options.use3d;
 
     return options
   };

@@ -16,7 +16,7 @@ simple, responsive parallax scrolling effect.
 ## CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/ray851107/parallax-background-image@v2.3.0/parallax-background-image.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ray851107/parallax-background-image@v2.3.1/parallax-background-image.min.js"></script>
 ```
 
 ## Basic usage

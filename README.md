@@ -83,8 +83,11 @@ viewport.add('.custom-background-image', { image: 'http://domain/xxx.jpg' })
 viewport.add('.random-velocity', element => ({
   velocity: Math.random() * 2
 })
+
+/* declarative style
+  <div class="declarative-style" data-background-image="..." data-velocity="..."></div> */
 viewport.add('.declarative-style', element => ({
-  velocity: parseFloat(element.dataset.backgroundImage),
+  velocity: parseFloat(element.dataset.velocity),
   image: element.dataset.backgroundImage
 }))
 ```

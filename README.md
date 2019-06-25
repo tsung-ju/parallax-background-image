@@ -17,8 +17,8 @@ simple, responsive parallax scrolling effect.
 
 ```html
 <script
-  src="https://cdn.jsdelivr.net/gh/ray851107/parallax-background-image@v2.3.1/parallax-background-image.min.js"
-  integrity="sha384-Xg1qQ7SY6fMRT1/GLLHDt934c0hTeLW74QboZKRd1H8YZOAN6ZVHvIwGHGffy/8C"
+  src="https://cdn.jsdelivr.net/gh/ray851107/parallax-background-image@v2.3.2/parallax-background-image.min.js"
+  integrity="sha384-fe2EmBvruVQm0U2hUfYcVPtPtX4ynnUxceNPnfxboDT9o4oOSCGIPpxCNVcFHESV"
   crossorigin="anonymous"></script>
 ```
 

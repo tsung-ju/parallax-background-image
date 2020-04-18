@@ -1,6 +1,6 @@
 {
   "name": "parallax-background-image",
-  "version": "2.3.1",
+  "version": "2.3.3",
   "description": "js parallax background-image",
   "main": "parallax-background-image.js",
   "module": "lib/main.js",
@@ -19,9 +19,9 @@
   },
   "homepage": "https://github.com/ray851107/parallax-background-image#readme",
   "devDependencies": {
-    "prettier": "^1.15.3",
+    "prettier": "^1.19.1",
     "rollup": "^0.68.1",
-    "rollup-plugin-buble": "^0.19.6",
-    "uglify-js": "^3.4.9"
+    "rollup-plugin-buble": "^0.19.8",
+    "uglify-js": "^3.9.1"
   }
 }

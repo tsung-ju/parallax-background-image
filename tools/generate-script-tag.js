@@ -10,7 +10,6 @@ const integrity = ssri.fromData(content, {
   algorithms: ["sha384"]
 });
 
-
 const markdown = `
 
 \`\`\`html

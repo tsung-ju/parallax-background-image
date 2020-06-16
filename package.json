@@ -8,8 +8,9 @@
   "unpkg": "dist/parallax-background-image.umd.js",
   "source": "src/main.js",
   "scripts": {
+    "prettier": "prettier --write README.md rollup.config.js demo.html 'src/**/*.js'",
     "build": "microbundle --name parallax",
-    "prettier": "prettier --write README.md rollup.config.js demo.html 'src/**/*.js'"
+    "version": "node tools/generate-script-tag.js && git add README.md"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   "homepage": "https://github.com/ray851107/parallax-background-image#readme",
   "devDependencies": {
     "microbundle": "^0.12.1",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "ssri": "^8.0.0"
   }
 }

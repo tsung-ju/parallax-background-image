@@ -15,13 +15,15 @@ simple, responsive parallax scrolling effect.
 
 ## CDN
 
+<!-- begin-script-tag -->
 ```html
 <script
   src="https://cdn.jsdelivr.net/gh/ray851107/parallax-background-image@v2.3.5/dist/parallax-background-image.umd.js"
-  integrity="zTJ4uk557v9aFAXmQ0LsBORE1LXpQL4TSh0OCmrO3TTaba+hmTv+iImsOnu6i+yA"
+  integrity="sha384-zTJ4uk557v9aFAXmQ0LsBORE1LXpQL4TSh0OCmrO3TTaba+hmTv+iImsOnu6i+yA"
   crossorigin="anonymous"
 ></script>
 ```
+<!-- end-script-tag -->
 
 ## Basic usage
 

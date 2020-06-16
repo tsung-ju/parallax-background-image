@@ -33,7 +33,6 @@ NOTE: Don't use `<body>` as the wrapper.
 
 For example,
 
-<!-- prettier-ignore -->
 ```html
 <html>
   <head>
@@ -47,16 +46,16 @@ For example,
   </head>
   <body>
     <div id="#wrapper">
-      <!-- site content here -->  
+      <!-- site content here -->
     </div>
 
     <script>
       /* create a viewport */
-      var viewport = parallax.createViewport('#wrapper')
+      var viewport = parallax.createViewport("#wrapper");
 
       /* apply parallax effect to elements inside the viewport (see below) */
-      viewport.add('.some-css-selector')
-      viewport.add('.another-selector')
+      viewport.add(".some-css-selector");
+      viewport.add(".another-selector");
 
       /* ... */
     </script>

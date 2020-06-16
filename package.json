@@ -1,6 +1,6 @@
 {
   "name": "parallax-background-image",
-  "version": "2.3.5",
+  "version": "2.3.6",
   "description": "js parallax background-image",
   "main": "dist/parallax-background-image.js",
   "module": "dist/parallax-background-image.esm.js",

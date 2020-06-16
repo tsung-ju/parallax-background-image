@@ -16,6 +16,7 @@ simple, responsive parallax scrolling effect.
 ## CDN
 
 <!-- begin-script-tag -->
+
 ```html
 <script
   src="https://cdn.jsdelivr.net/gh/ray851107/parallax-background-image@v2.3.5/dist/parallax-background-image.umd.js"
@@ -23,6 +24,7 @@ simple, responsive parallax scrolling effect.
   crossorigin="anonymous"
 ></script>
 ```
+
 <!-- end-script-tag -->
 
 ## Basic usage

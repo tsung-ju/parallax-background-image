@@ -8,9 +8,10 @@
   "unpkg": "dist/parallax-background-image.umd.js",
   "source": "src/main.js",
   "scripts": {
-    "prettier": "prettier --write README.md rollup.config.js demo.html 'src/**/*.js'",
+    "prettier": "prettier --write README.md demo.html 'src/**/*.js' 'tools/**/*.js'",
     "build": "microbundle --name parallax",
-    "version": "node tools/generate-script-tag.js && git add README.md"
+    "generate-script-tag": "node tools/generate-script-tag.js",
+    "version": "npm run generate-script-tag && git add README.md"
   },
   "repository": {
     "type": "git",

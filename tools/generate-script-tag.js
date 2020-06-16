@@ -10,9 +10,9 @@ const integrity = ssri.fromData(content, {
   algorithms: ["sha384"]
 });
 
-const regex = /<!-- begin-script-tag -->\n(.*)<!-- end-script-tag-->/
 
 const markdown = `
+
 \`\`\`html
 <script
   src="https://cdn.jsdelivr.net/gh/ray851107/parallax-background-image@v${version}/${scriptFile}"
@@ -20,8 +20,10 @@ const markdown = `
   crossorigin="anonymous"
 ></script>
 \`\`\`
+
 `;
 
 let readme = fs.readFileSync(readmeFile, "utf8");
-readme = readme.replace(/(?<=<!-- begin-script-tag -->)[^]*?(?=<!-- end-script-tag -->)/, markdown);
+const regex = /(?<=<!-- begin-script-tag -->)[^]*?(?=<!-- end-script-tag -->)/;
+readme = readme.replace(regex, markdown);
 fs.writeFileSync(readmeFile, readme);

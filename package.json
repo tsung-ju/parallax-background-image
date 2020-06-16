@@ -1,6 +1,6 @@
 {
   "name": "parallax-background-image",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "description": "js parallax background-image",
   "main": "dist/parallax-background-image.js",
   "module": "dist/parallax-background-image.esm.js",
@@ -9,7 +9,7 @@
   "source": "src/main.js",
   "scripts": {
     "build": "microbundle --name parallax",
-    "prettier": "prettier --no-semi --single-quote --write README.md rollup.config.js demo.html 'lib/**/*.js'"
+    "prettier": "prettier --write README.md rollup.config.js demo.html 'src/**/*.js'"
   },
   "repository": {
     "type": "git",

@@ -1,12 +1,12 @@
-import { prependStyleSheet } from './style-sheet'
+import { prependStyleSheet } from "./style-sheet";
 
-export const CLASS_PARALLAX_VIEWPORT = 'parallax-background-image-viewport'
+export const CLASS_PARALLAX_VIEWPORT = "parallax-background-image-viewport";
 export const CLASS_PARALLAX_VIEWPORT_3D =
-  'parallax-background-image-viewport-3d'
-export const CLASS_PARALLAX_ELEMENT = 'parallax-background-image-element'
+  "parallax-background-image-viewport-3d";
+export const CLASS_PARALLAX_ELEMENT = "parallax-background-image-element";
 
 export function injectStyle() {
-  prependStyleSheet(STYLE)
+  prependStyleSheet(STYLE);
 }
 
 const STYLE = `
@@ -30,4 +30,4 @@ const STYLE = `
 .${CLASS_PARALLAX_VIEWPORT_3D} {
   perspective: 1px !important;
   perspective-origin: center center !important;
-}`
+}`;

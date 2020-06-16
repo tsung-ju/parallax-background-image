@@ -17,9 +17,10 @@ simple, responsive parallax scrolling effect.
 
 ```html
 <script
-  src="https://cdn.jsdelivr.net/gh/ray851107/parallax-background-image@v2.3.4/dist/parallax-background-image.umd.js"
+  src="https://cdn.jsdelivr.net/gh/ray851107/parallax-background-image@v2.3.5/dist/parallax-background-image.umd.js"
   integrity="zTJ4uk557v9aFAXmQ0LsBORE1LXpQL4TSh0OCmrO3TTaba+hmTv+iImsOnu6i+yA"
-  crossorigin="anonymous"></script>
+  crossorigin="anonymous"
+></script>
 ```
 
 ## Basic usage
@@ -67,32 +68,32 @@ For example,
 
 ```javascript
 /* apply parallax effect to selected elements */
-viewport.add('.select-some-elements')
+viewport.add(".select-some-elements");
 
 /* specify the velocity of the background image.
    more precisely, it's the ratio between velocities of the image and the element.
    values greater than 1 make the image move faster than the element.
    values less than 1 make the image move slower than the element.
    (Default: 0.8) */
-viewport.add('.another-selector', { velocity: 1.2 })
+viewport.add(".another-selector", { velocity: 1.2 });
 
 /* align the background image to the left (Default: 'center') */
-viewport.add('.hello-selector', { alignX: 'left' })
+viewport.add(".hello-selector", { alignX: "left" });
 
 /* use custom background image (Default: read `background-image` from element style) */
-viewport.add('.custom-background-image', { image: 'http://domain/xxx.jpg' })
+viewport.add(".custom-background-image", { image: "http://domain/xxx.jpg" });
 
 /* use different options for each element */
-viewport.add('.random-velocity', element => ({
+viewport.add(".random-velocity", element => ({
   velocity: Math.random() * 2
-}))
+}));
 
 /* declarative style
   <div class="declarative-style" data-background-image="..." data-velocity="..."></div> */
-viewport.add('.declarative-style', element => ({
+viewport.add(".declarative-style", element => ({
   velocity: parseFloat(element.dataset.velocity),
   image: element.dataset.backgroundImage
-}))
+}));
 ```
 
 For complete example see `demo.html`

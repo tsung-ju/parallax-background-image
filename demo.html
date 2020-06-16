@@ -63,17 +63,17 @@
 </div>
 <script src="./dist/parallax-background-image.umd.js"></script>
 <script>
-  var viewport = parallax.createViewport('#wrapper')
-  viewport.add('.slow', { velocity: 0.8, alignX: 'left' })
-  viewport.add('#fast', {
+  var viewport = parallax.createViewport("#wrapper");
+  viewport.add(".slow", { velocity: 0.8, alignX: "left" });
+  viewport.add("#fast", {
     velocity: 1.5,
     image:
-      'https://images.unsplash.com/photo-1444460381791-02e0621c12f4?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max'
-  })
-  viewport.add('.declarative', function(element) {
+      "https://images.unsplash.com/photo-1444460381791-02e0621c12f4?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max"
+  });
+  viewport.add(".declarative", function(element) {
     return {
       velocity: element.dataset.backgroundVelocity,
       image: element.dataset.backgroundImage
-    }
-  })
+    };
+  });
 </script>

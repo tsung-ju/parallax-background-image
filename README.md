@@ -34,33 +34,32 @@ NOTE: Don't use `<body>` as the wrapper.
 For example,
 
 ```html
-<html>
-  <head>
-    <style>
-      #wrapper {
-        position: fixed;
-        height: 100%;
-        width: 100%;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="#wrapper">
-      <!-- site content here -->
-    </div>
+<head>
+  <style>
+    #wrapper {
+      position: fixed;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
 
-    <script>
-      /* create a viewport */
-      var viewport = parallax.createViewport("#wrapper");
+<body>
+  <div id="#wrapper">
+    <!-- site content here -->
+  </div>
 
-      /* apply parallax effect to elements inside the viewport (see below) */
-      viewport.add(".some-css-selector");
-      viewport.add(".another-selector");
+  <script>
+    /* create a viewport */
+    var viewport = parallax.createViewport("#wrapper");
 
-      /* ... */
-    </script>
-  </body>
-</html>
+    /* apply parallax effect to elements inside the viewport (see below) */
+    viewport.add(".some-css-selector");
+    viewport.add(".another-selector");
+
+    /* ... */
+  </script>
+</body>
 ```
 
 ### Apply parallax effect

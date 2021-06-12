@@ -109,10 +109,8 @@ export class ParallaxViewport {
       ...options
     };
 
-    if (options.image == null) {
-      options.image = cssBackgroundImage(element);
-    }
-
+    options.image ??= cssBackgroundImage(element);
+    options.alignX = parsePercentage(options.alignX);
     options.use3d = this.options.use3d;
 
     return options;
@@ -143,6 +141,15 @@ export class ParallaxViewport {
       }
     }
   }
+}
+
+function parsePercentage(str) {
+  if (str === "left") return 0;
+  if (str === "center") return 0.5;
+  if (str === "right") return 1;
+  const num = parseFloat(str);
+  if (!isNaN(num)) return num / 100;
+  return 0.5;
 }
 
 function isChrome() {

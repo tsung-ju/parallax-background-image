@@ -1,5 +1,5 @@
 import { CLASS_PARALLAX_ELEMENT } from "./style.js";
-import { createTransform } from "./transform.js";
+import { transform_ } from "./transform.js";
 
 export class ParallaxElement {
   constructor(element, image, options) {
@@ -7,7 +7,7 @@ export class ParallaxElement {
     this.imageWidth = image.naturalWidth;
     this.imageHeight = image.naturalHeight;
 
-    this.transform_ = createTransform(options);
+    this.options = options;
     this.renderer = new options.renderer(element, image, options);
 
     this.bgRect = { x: NaN, y: NaN, z: NaN, w: NaN, h: NaN };
@@ -27,7 +27,7 @@ export class ParallaxElement {
       w: this.imageWidth,
       h: this.imageHeight
     };
-    this.transform_(bgRect, elementRect, viewportRect);
+    transform_(bgRect, elementRect, viewportRect, this.options);
     if (notEqual(this.bgRect, bgRect)) {
       this.dirty = true;
       copy_(this.bgRect, bgRect);

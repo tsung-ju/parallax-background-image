@@ -1,4 +1,4 @@
-import { ParallaxViewport } from "./parallax-viewport";
+import { ParallaxViewport } from "./parallax-viewport.js";
 import { ImageElementRenderer, PseudoElementRenderer } from "./renderer.js";
 import { injectStyle } from "./style.js";
 

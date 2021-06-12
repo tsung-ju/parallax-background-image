@@ -1,6 +1,9 @@
-import { CLASS_PARALLAX_VIEWPORT, CLASS_PARALLAX_VIEWPORT_3D } from "./style";
-import { ParallaxElement } from "./parallax-element";
-import { ImageElementRenderer } from "./renderer";
+import {
+  CLASS_PARALLAX_VIEWPORT,
+  CLASS_PARALLAX_VIEWPORT_3D
+} from "./style.js";
+import { ParallaxElement } from "./parallax-element.js";
+import { ImageElementRenderer } from "./renderer.js";
 
 export class ParallaxViewport {
   constructor(rootElement, options) {

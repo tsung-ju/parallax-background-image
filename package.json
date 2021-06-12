@@ -2,15 +2,13 @@
   "name": "parallax-background-image",
   "version": "2.3.6",
   "description": "js parallax background-image",
-  "main": "dist/parallax-background-image.js",
-  "module": "dist/parallax-background-image.esm.js",
-  "umd:main": "dist/parallax-background-image.umd.js",
-  "unpkg": "dist/parallax-background-image.umd.js",
-  "source": "src/main.js",
+  "type": "module",
+  "main": "src/main.js",
+  "unpkg": "dist/parallax-background-image.js",
   "scripts": {
     "prettier": "prettier --write README.md demo.html 'src/**/*.js' 'tools/**/*.js'",
     "prebuild": "npm run prettier",
-    "build": "microbundle --name parallax",
+    "build": "esbuild src/main.js --bundle --minify --sourcemap --target=es6 --global-name=parallax --outfile=dist/parallax-background-image.js",
     "preversion": "npm run build",
     "generate-script-tag": "node tools/generate-script-tag.js",
     "version": "npm run generate-script-tag && git add README.md"
@@ -26,8 +24,9 @@
   },
   "homepage": "https://github.com/ray851107/parallax-background-image#readme",
   "devDependencies": {
-    "microbundle": "^0.12.1",
+    "esbuild": "^0.12.8",
     "prettier": "^1.19.1",
     "ssri": "^8.0.1"
-  }
+  },
+  "dependencies": {}
 }

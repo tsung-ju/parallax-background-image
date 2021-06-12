@@ -1,5 +1,5 @@
-import { CLASS_PARALLAX_ELEMENT } from "./style";
-import { createTransform } from "./transform";
+import { CLASS_PARALLAX_ELEMENT } from "./style.js";
+import { createTransform } from "./transform.js";
 
 export class ParallaxElement {
   constructor(element, image, options) {

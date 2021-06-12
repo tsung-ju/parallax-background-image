@@ -1,4 +1,4 @@
-import { appendStyleSheet } from "./style-sheet";
+import { appendStyleSheet } from "./style-sheet.js";
 
 function setupStyle(style, width, height) {
   style.position = "absolute";

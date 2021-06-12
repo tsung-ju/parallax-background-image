@@ -1,4 +1,4 @@
-import { prependStyleSheet } from "./style-sheet";
+import { prependStyleSheet } from "./style-sheet.js";
 
 export const CLASS_PARALLAX_VIEWPORT = "parallax-background-image-viewport";
 export const CLASS_PARALLAX_VIEWPORT_3D =

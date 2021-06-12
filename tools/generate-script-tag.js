@@ -1,8 +1,8 @@
-const fs = require("fs");
-const ssri = require("ssri");
+import * as fs from "fs";
+import * as ssri from "ssri";
 
-const version = require("../package.json").version;
-const scriptFile = "dist/parallax-background-image.umd.js";
+const version = process.env.npm_package_version;
+const scriptFile = "dist/parallax-background-image.js";
 const readmeFile = "README.md";
 
 const content = fs.readFileSync(scriptFile);

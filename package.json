@@ -6,7 +6,7 @@
   "main": "src/main.js",
   "unpkg": "dist/parallax-background-image.js",
   "scripts": {
-    "prettier": "prettier --write README.md demo.html 'src/**/*.js' 'tools/**/*.js'",
+    "prettier": "prettier --write README.md demo.html \"src/**/*.js\" \"tools/**/*.js\"",
     "prebuild": "npm run prettier",
     "build": "esbuild src/main.js --bundle --minify --sourcemap --target=es6 --global-name=parallax --outfile=dist/parallax-background-image.js",
     "preversion": "npm run build",

@@ -14,7 +14,7 @@ const markdown = `
 
 \`\`\`html
 <script
-  src="https://cdn.jsdelivr.net/gh/ray851107/parallax-background-image@v${version}/${scriptFile}"
+  src="https://cdn.jsdelivr.net/gh/tsung-ju/parallax-background-image@v${version}/${scriptFile}"
   integrity="${integrity.toString()}"
   crossorigin="anonymous"
 ></script>

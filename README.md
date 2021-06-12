@@ -11,7 +11,7 @@ simple, responsive parallax scrolling effect.
 
 ## Demo
 
-<https://ray851107.github.io/parallax-background-image/demo.html>
+<https://tsung-ju.github.io/parallax-background-image/demo.html>
 
 ## CDN
 
@@ -19,7 +19,7 @@ simple, responsive parallax scrolling effect.
 
 ```html
 <script
-  src="https://cdn.jsdelivr.net/gh/ray851107/parallax-background-image@v2.3.7/dist/parallax-background-image.js"
+  src="https://cdn.jsdelivr.net/gh/tsung-ju/parallax-background-image@v2.3.7/dist/parallax-background-image.js"
   integrity="sha384-utfUUwQRXiICyokSewoqD1DPWcktDdk1+Mf2gFnJ2SWfxQ/xzcTiMWCmCC9j+C6m"
   crossorigin="anonymous"
 ></script>

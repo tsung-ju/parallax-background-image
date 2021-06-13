@@ -8,7 +8,7 @@
   "scripts": {
     "prettier": "prettier --write README.md demo.html \"src/**/*.js\" \"tools/**/*.js\"",
     "prebuild": "npm run prettier",
-    "build": "esbuild src/main.js --bundle --minify --sourcemap --target=es6 --global-name=parallax --outfile=dist/parallax-background-image.js",
+    "build": "esbuild src/main.js --bundle --minify --sourcemap --target=es6 --outfile=dist/parallax-background-image.js",
     "preversion": "npm run build",
     "generate-script-tag": "node tools/generate-script-tag.js",
     "version": "npm run generate-script-tag && git add README.md"

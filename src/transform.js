@@ -1,7 +1,9 @@
+import { USE_3D } from "./config.js";
+
 export function transform_(bg, element, viewport, options) {
   coverElement_(bg, element, viewport, options);
   alignX_(bg, element, viewport, options);
-  if (options.use3d) {
+  if (USE_3D) {
     parallax3d_(bg, element, viewport, options);
   } else {
     parallax2d_(bg, element, viewport, options);

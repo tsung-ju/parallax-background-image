@@ -1,79 +1,91 @@
-<style>
-  body {
-    margin: 0;
-  }
-  #wrapper {
-    position: fixed;
-    height: 100%;
-    width: 100%;
-  }
-  #wrapper > div {
-    height: 50vh;
-    width: 100%;
-  }
-  #slow1 {
-    background-image: url(https://images.unsplash.com/photo-1446305341947-847fd13db6c4?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max);
-  }
-  .declarative {
-    width: 50%;
-    height: 100%;
-    float: left;
-  }
-  .text {
-    vertical-align: center;
-    padding: 10px;
-    position: absolute;
-    left: 0;
-    width: auto;
-    height: 100%;
-    color: white;
-    background: linear-gradient(rgba(50, 50, 50, 0.9), rgba(50, 50, 50, 0.3));
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: xx-large;
-  }
-</style>
-<div id="wrapper">
-  <div id="slow1" class="slow"><div class="text">A slow div</div></div>
-  <div id="fast" style="height: 60vh"><div class="text">A fast div</div></div>
-  <div
-    id="slow2"
-    class="slow"
-    style="background-image: url(https://images.unsplash.com/photo-1470171119584-533105644520?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max)"
-  >
-    <div class="text">slow div 2</div>
-  </div>
-  <div id="dual">
-    <div
-      id="left"
-      class="declarative"
-      data-background-velocity="0.3"
-      data-background-image="https://images.unsplash.com/photo-1465566829994-b8da8cae5909?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max"
-    >
-      <div class="text">div div</div>
-    </div>
-    <div
-      id="right"
-      class="declarative"
-      data-background-velocity="0.3"
-      data-background-image="https://images.unsplash.com/photo-1465576482687-69f0e0d47126?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max"
-    >
-      <div class="text">much div wow</div>
-    </div>
-  </div>
-</div>
-<script src="./dist/parallax-background-image.js"></script>
-<script>
-  var viewport = parallax.createViewport("#wrapper");
-  viewport.add(".slow", { velocity: 0.8, alignX: "left" });
-  viewport.add("#fast", {
-    velocity: 1.5,
-    image:
-      "https://images.unsplash.com/photo-1444460381791-02e0621c12f4?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max"
-  });
-  viewport.add(".declarative", function(element) {
-    return {
-      velocity: element.dataset.backgroundVelocity,
-      image: element.dataset.backgroundImage
-    };
-  });
-</script>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+      }
+      #wrapper {
+        position: fixed;
+        height: 100%;
+        width: 100%;
+      }
+      #wrapper > parallax-element {
+        height: 100%;
+        width: 100%;
+      }
+      #dual {
+        height: 100%;
+        width: 100%;
+      }
+      .declarative {
+        width: 50%;
+        height: 100%;
+        float: left;
+      }
+      .text {
+        vertical-align: center;
+        padding: 10px;
+        position: absolute;
+        left: 0;
+        width: auto;
+        height: 100%;
+        color: white;
+        background: linear-gradient(
+          rgba(50, 50, 50, 0.9),
+          rgba(50, 50, 50, 0.3)
+        );
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: xx-large;
+      }
+    </style>
+  </head>
+  <body>
+    <parallax-viewport id="wrapper">
+      <parallax-element
+        id="slow1"
+        class="slow"
+        velocity="0.8"
+        align-x="left"
+        image-src="https://images.unsplash.com/photo-1446305341947-847fd13db6c4?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max"
+      >
+        <div class="text">A slow div</div>
+      </parallax-element>
+      <parallax-element
+        id="fast"
+        style="height: 60vh"
+        velocity="1.5"
+        image-src="https://images.unsplash.com/photo-1444460381791-02e0621c12f4?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max"
+      >
+        <div class="text">A fast div</div>
+      </parallax-element>
+      <parallax-element
+        id="slow2"
+        class="slow"
+        image-src="https://images.unsplash.com/photo-1470171119584-533105644520?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max"
+      >
+        <div class="text">slow div 2</div>
+      </parallax-element>
+      <div id="dual">
+        <parallax-element
+          id="left"
+          class="declarative"
+          velocity="0.3"
+          image-src="https://images.unsplash.com/photo-1465566829994-b8da8cae5909?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max"
+        >
+          <div class="text">div div</div>
+        </parallax-element>
+        <parallax-element
+          id="right"
+          class="declarative"
+          velocity="0.3"
+          image-src="https://images.unsplash.com/photo-1465576482687-69f0e0d47126?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max"
+        >
+          <div class="text">much div wow</div>
+        </parallax-element>
+      </div>
+    </parallax-viewport>
+    <script src="./dist/parallax-background-image.js"></script>
+  </body>
+</html>

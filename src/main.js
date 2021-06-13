@@ -1,11 +1,5 @@
 import { ParallaxViewport } from "./parallax-viewport.js";
-import { ImageElementRenderer, PseudoElementRenderer } from "./renderer.js";
-import { injectStyle } from "./style.js";
+import { ParallaxElement } from "./parallax-element.js";
 
-injectStyle();
-
-export function createViewport(rootElement, options = {}) {
-  return new ParallaxViewport(rootElement, options);
-}
-
-export { ImageElementRenderer, PseudoElementRenderer };
+customElements.define("parallax-viewport", ParallaxViewport);
+customElements.define("parallax-element", ParallaxElement);

@@ -16,9 +16,7 @@ template.innerHTML = `
     }
     #image {
       position: absolute;
-      left: 50%;
-      top: 50%;
-      transform-origin: center center 0;
+      transform-origin: 0 0 0;
       will-change: transform;
       pointer-events: none;
     }
@@ -131,8 +129,8 @@ export class ParallaxElement extends HTMLElement {
     if (!this.dirty) return;
     this.dirty = false;
     this.image.style.transform = `
-      translateX(${this.bgRect.x - this.image.naturalWidth / 2}px)
-      translateY(${this.bgRect.y - this.image.naturalHeight / 2}px)
+      translateX(${this.bgRect.x}px)
+      translateY(${this.bgRect.y}px)
       translateZ(${this.bgRect.z}px)
       scale(${this.bgRect.w / this.image.naturalWidth}, ${this.bgRect.h /
       this.image.naturalHeight})
@@ -149,8 +147,8 @@ function equals(a, b) {
 function getRect(element) {
   const rect = element.getBoundingClientRect();
   return {
-    x: (rect.left + rect.right) / 2,
-    y: (rect.top + rect.bottom) / 2,
+    x: rect.left,
+    y: rect.top,
     w: rect.right - rect.left,
     h: rect.bottom - rect.top
   };

@@ -9,7 +9,7 @@ template.innerHTML = `
       overflow-y: scroll;
       -webkit-overflow-scrolling: touch;
       ${USE_3D ? "perspective: 1px;" : ""}
-      ${USE_3D ? "perspective-origin: center center;" : ""}
+      ${USE_3D ? "perspective-origin: 0 0;" : ""}
     }
     :host([hidden]) {
       display: none;

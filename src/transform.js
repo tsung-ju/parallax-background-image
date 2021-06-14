@@ -19,8 +19,9 @@ function scale_(bg, s) {
 }
 
 function coverElement_(bg, element, viewport, options) {
+  const velocity = options.velocity;
   const minWidth = element.w;
-  const minHeight = viewport.h + options.velocity * (viewport.h - element.h);
+  const minHeight = velocity * element.h + Math.abs(1 - velocity) * viewport.h;
   const widthScale = minWidth / bg.w;
   const heightScale = minHeight / bg.h;
   scale_(bg, Math.max(widthScale, heightScale));

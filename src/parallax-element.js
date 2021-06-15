@@ -29,7 +29,7 @@ template.innerHTML = `
 
 export class ParallaxElement extends HTMLElement {
   static get observedAttributes() {
-    return ["image-src"];
+    return ["velocity", "align-x", "image-src"];
   }
 
   get velocity() {
@@ -99,6 +99,7 @@ export class ParallaxElement extends HTMLElement {
     if (name === "image-src") {
       this.image.src = this.imageSrc;
     }
+    this.updateTransform();
   }
 
   updateTransform = () => {

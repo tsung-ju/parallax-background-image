@@ -1,5 +1,5 @@
 import { USE_3D } from "./config.js";
-import { transform_ } from "./transform.js";
+import { createTransform } from "./transform.js";
 
 const template = document.createElement("template");
 template.innerHTML = `
@@ -64,15 +64,18 @@ export class ParallaxElement extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
     this.image = this.shadowRoot.getElementById("image");
-    this.image.addEventListener("load", this.updateRect);
     this.image.src = this.imageSrc;
-    this.bgRect = { x: 0, y: 0, z: 0, w: 0, h: 0 };
-    this.dirty = true;
+    this.transform = null;
+    this.needsRender = false;
 
+    this.image.addEventListener("load", this.updateRect);
     window.addEventListener("resize", this.updateRect);
 
     const renderLoop = () => {
-      this.render();
+      if (this.needsRender) {
+        this.render();
+        this.needsRender = false;
+      }
       window.requestAnimationFrame(renderLoop);
     };
     window.requestAnimationFrame(renderLoop);
@@ -100,48 +103,39 @@ export class ParallaxElement extends HTMLElement {
 
   updateRect = () => {
     if (this.viewport == null) return;
-
-    const viewportRect = getRect(this.viewport);
-    const elementRect = getRect(this);
-
-    elementRect.x -= viewportRect.x;
-    elementRect.y -= viewportRect.y;
-
-    const bgRect = {
-      x: 0,
-      y: 0,
-      z: 0,
+    const imageRect = {
       w: this.image.naturalWidth,
       h: this.image.naturalHeight
     };
+    const viewportRect = getRect(this.viewport);
+    const elementRect = getRect(this);
+    elementRect.x -= viewportRect.x;
+    elementRect.y -= viewportRect.y;
     const options = {
       velocity: this.velocity,
-      alignX: this.alignX
+      alignX: this.alignX,
+      use3d: USE_3D
     };
-    transform_(bgRect, elementRect, viewportRect, options);
-    if (this.bgRect == null || !equals(this.bgRect, bgRect)) {
-      this.dirty = true;
+    const transform = createTransform(
+      imageRect,
+      elementRect,
+      viewportRect,
+      options
+    );
+    if (this.transform == null || !equals(this.transform, transform)) {
+      this.needsRender = true;
+      this.transform = transform;
     }
-    this.bgRect = bgRect;
   };
 
   render() {
-    if (!this.dirty) return;
-    this.dirty = false;
-    this.image.style.transform = `
-      translateX(${this.bgRect.x}px)
-      translateY(${this.bgRect.y}px)
-      translateZ(${this.bgRect.z}px)
-      scale(${this.bgRect.w / this.image.naturalWidth}, ${this.bgRect.h /
-      this.image.naturalHeight})
-    `;
+    const { x, y, z, s } = this.transform;
+    this.image.style.transform = `translate3d(${x}px, ${y}px, ${z}px) scale(${s})`;
   }
 }
 
 function equals(a, b) {
-  return (
-    a.x === b.x && a.y === b.y && a.z === b.z && a.w === b.w && a.h === b.h
-  );
+  return a.x === b.x && a.y === b.y && a.z === b.z && a.s === b.s;
 }
 
 function getRect(element) {

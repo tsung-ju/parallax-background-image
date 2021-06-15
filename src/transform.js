@@ -1,27 +1,23 @@
-import { USE_3D } from "./config.js";
-
-export function transform_(bg, element, viewport, options) {
-  const { alignX, velocity } = options;
+export function createTransform(image, element, viewport, options) {
+  const { alignX, velocity, use3d } = options;
 
   const minWidth = element.w;
   const minHeight = velocity * element.h + Math.abs(1 - velocity) * viewport.h;
-  const coverScale = Math.max(minHeight / bg.h, minWidth / bg.w);
-  bg.w *= coverScale;
-  bg.h *= coverScale;
+  let s = Math.max(minHeight / image.h, minWidth / image.w);
 
-  bg.x = alignX * (element.w - bg.w);
-  bg.y = element.h / 2 - bg.h / 2;
-  bg.z = 0;
+  let x = alignX * (element.w - image.w * s);
+  let y = element.h / 2 - (image.h * s) / 2;
+  let z = 0;
 
   const centerY = viewport.h / 2 - element.h / 2;
-  if (USE_3D) {
-    const z = 1 - 1 / velocity;
-    bg.x -= element.x * z;
-    bg.y += centerY * z;
-    bg.z = z;
-    bg.w /= velocity;
-    bg.h /= velocity;
+  if (use3d) {
+    z = 1 - 1 / velocity;
+    x -= element.x * z;
+    y += centerY * z;
+    s /= velocity;
   } else {
-    bg.y += (element.y - centerY) * (velocity - 1);
+    y += (element.y - centerY) * (velocity - 1);
   }
+
+  return { x, y, z, s };
 }

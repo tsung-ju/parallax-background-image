@@ -1,5 +1,5 @@
 export function createTransform(image, element, viewport, options) {
-  const { alignX, velocity, use3d } = options;
+  const { alignX, velocity, backend } = options;
 
   const minWidth = element.w;
   const minHeight = velocity * element.h + Math.abs(1 - velocity) * viewport.h;
@@ -10,7 +10,7 @@ export function createTransform(image, element, viewport, options) {
   let z = 0;
 
   const centerY = viewport.h / 2 - element.h / 2;
-  if (use3d) {
+  if (backend === "3d") {
     z = 1 - 1 / velocity;
     x -= element.x * z;
     y += centerY * z;

@@ -1,4 +1,3 @@
-import { USE_3D } from "./config.js";
 import { createTransform } from "./transform.js";
 
 const template = document.createElement("template");
@@ -40,13 +39,19 @@ export class ParallaxElement extends HTMLElement {
     this.setAttribute("velocity", value.toString());
   }
   get alignX() {
-    const str = this.getAttribute("align-x");
-    if (str === "left") return 0;
-    if (str === "center") return 0.5;
-    if (str === "right") return 1;
-    const num = parseFloat(str);
-    if (isFinite(num)) return num / 100;
-    return 0.5;
+    switch (this.getAttribute("align-x") ?? "center") {
+      case "left":
+        return 0;
+      case "center":
+        return 0.5;
+      case "right":
+        return 1;
+      default: {
+        const num = parseFloat(str);
+        if (isFinite(num)) return num / 100;
+        return 0.5;
+      }
+    }
   }
   set alignX(value) {
     this.setAttribute("align-x", `${value * 100}%`);
@@ -64,35 +69,30 @@ export class ParallaxElement extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
     this.image = this.shadowRoot.getElementById("image");
+    this.animationRequestId = null;
+
+    this.image.addEventListener("load", this.updateTransform);
+    window.addEventListener("resize", this.updateTransform);
+
     this.image.src = this.imageSrc;
-    this.transform = null;
-    this.needsRender = false;
-
-    this.image.addEventListener("load", this.updateRect);
-    window.addEventListener("resize", this.updateRect);
-
-    const renderLoop = () => {
-      if (this.needsRender) {
-        this.render();
-        this.needsRender = false;
-      }
-      window.requestAnimationFrame(renderLoop);
-    };
-    window.requestAnimationFrame(renderLoop);
   }
 
   connectedCallback() {
     this.viewport = this.closest("parallax-viewport");
-    if (!USE_3D) {
-      this.viewport?.addEventListener("scroll", this.updateRect);
+    if (this.viewport != null && this.viewport.backend !== "3d") {
+      this.viewport.addEventListener("scroll", this.updateTransform);
     }
   }
 
   disconnectedCallback() {
-    if (!USE_3D) {
-      this.viewport?.removeEventListener("scroll", this.updateRect);
+    if (this.viewport != null && this.viewport.backend !== "3d") {
+      this.viewport.removeEventListener("scroll", this.updateTransform);
     }
     this.viewport = null;
+    if (this.animationRequestId != null) {
+      cancelAnimationFrame(this.animationRequestId);
+      this.animationRequestId = null;
+    }
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -101,8 +101,27 @@ export class ParallaxElement extends HTMLElement {
     }
   }
 
-  updateRect = () => {
+  updateTransform = () => {
     if (this.viewport == null) return;
+
+    const transform = this.computeTransform();
+
+    if (this.transform != null && equals(this.transform, transform)) {
+      return;
+    }
+
+    if (this.animationRequestId == null) {
+      cancelAnimationFrame(this.animationRequestId);
+      this.animationRequestId = null;
+    }
+
+    this.animationRequestId = requestAnimationFrame(() => {
+      this.animationRequestId = null;
+      this.renderTransform(transform);
+    });
+  };
+
+  computeTransform() {
     const imageRect = {
       w: this.image.naturalWidth,
       h: this.image.naturalHeight
@@ -114,22 +133,12 @@ export class ParallaxElement extends HTMLElement {
     const options = {
       velocity: this.velocity,
       alignX: this.alignX,
-      use3d: USE_3D
+      backend: this.viewport.backend
     };
-    const transform = createTransform(
-      imageRect,
-      elementRect,
-      viewportRect,
-      options
-    );
-    if (this.transform == null || !equals(this.transform, transform)) {
-      this.needsRender = true;
-      this.transform = transform;
-    }
-  };
+    return createTransform(imageRect, elementRect, viewportRect, options);
+  }
 
-  render() {
-    const { x, y, z, s } = this.transform;
+  renderTransform({ x, y, z, s }) {
     this.image.style.transform = `translate3d(${x}px, ${y}px, ${z}px) scale(${s})`;
   }
 }

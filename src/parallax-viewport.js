@@ -3,8 +3,7 @@ template.innerHTML = `
   <style>
     :host {
       display: block;
-      overflow-x: hidden;
-      overflow-y: scroll;
+      overflow: auto;
       -webkit-overflow-scrolling: touch;
     }
     :host([hidden]) {

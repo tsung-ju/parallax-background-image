@@ -29,32 +29,54 @@ template.innerHTML = `
 
 export class ParallaxElement extends HTMLElement {
   static get observedAttributes() {
-    return ["velocity", "align-x", "image-src"];
+    return ["velocity-x", "velocity-y", "align-x", "align-y", "image-src"];
   }
 
-  get velocity() {
-    return parseFloat(this.getAttribute("velocity") ?? "0.8");
+  get velocityX() {
+    return parseFloat(this.getAttribute("velocity-x"));
   }
-  set velocity(value) {
-    this.setAttribute("velocity", value.toString());
+  set velocityX(value) {
+    this.setAttribute("velocity-x", value.toString());
+  }
+  get velocityY() {
+    return parseFloat(this.getAttribute("velocity-y"));
+  }
+  set velocityY(value) {
+    this.setAttribute("velocity-y", value.toString());
   }
   get alignX() {
-    switch (this.getAttribute("align-x") ?? "center") {
-      case "left":
-        return 0;
-      case "center":
-        return 0.5;
-      case "right":
-        return 1;
-      default: {
-        const num = parseFloat(str);
-        if (isFinite(num)) return num / 100;
-        return 0.5;
-      }
+    const str = this.getAttribute("align-x");
+    if (str === "left") {
+      return 0;
+    } else if (str === "center") {
+      return 0.5;
+    } else if (str === "right") {
+      return 1;
+    } else if (str?.endsWith("%")) {
+      return parseFloat(str);
+    } else {
+      return NaN;
     }
   }
   set alignX(value) {
     this.setAttribute("align-x", `${value * 100}%`);
+  }
+  get alignY() {
+    const str = this.getAttribute("align-y");
+    if (str === "top") {
+      return 0;
+    } else if (str === "center") {
+      return 0.5;
+    } else if (str === "bottom") {
+      return 1;
+    } else if (str?.endsWith("%")) {
+      return parseFloat(str);
+    } else {
+      return NaN;
+    }
+  }
+  set alignY(value) {
+    this.setAttribute("align-y", `${value * 100}%`);
   }
   get imageSrc() {
     return this.getAttribute("image-src");
@@ -65,6 +87,19 @@ export class ParallaxElement extends HTMLElement {
 
   constructor() {
     super();
+
+    if (!this.hasAttribute("velocity-x")) {
+      this.setAttribute("velocity-x", "1");
+    }
+    if (!this.hasAttribute("velocity-y")) {
+      this.setAttribute("velocity-y", "0.8");
+    }
+    if (!this.hasAttribute("align-x")) {
+      this.setAttribute("align-x", "center");
+    }
+    if (!this.hasAttribute("align-y")) {
+      this.setAttribute("align-y", "top");
+    }
 
     this.attachShadow({ mode: "open" });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
@@ -132,8 +167,8 @@ export class ParallaxElement extends HTMLElement {
     elementRect.x -= viewportRect.x;
     elementRect.y -= viewportRect.y;
     const options = {
-      velocity: this.velocity,
-      alignX: this.alignX,
+      velocity: { x: this.velocityX, y: this.velocityY },
+      align: { x: this.alignX, y: this.alignY },
       backend: this.viewport.backend
     };
     return createTransform(imageRect, elementRect, viewportRect, options);

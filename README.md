@@ -63,9 +63,9 @@ For complete example see `demo.html`
 A scrollable container block. Used to measure the scrolling position of each `<parallax-element>` and (when backend=3d) set parameters for perspective transform. Each `<parallax-element>` must be contained (directly or indirectly) in an `<parallax-viewport>` for this library to work.
 
 #### Attributes
-- `backend`
-  Supported values: `2d`, `3d`
-  Defaults to `3d` if the browser is Blink-based, `2d` otherwise.
+- `backend`: Selects the method used to apply the parallax effect.
+  - Supported values: `2d`, `3d`
+  - Defaults to `3d` if the browser is Blink-based, `2d` otherwise.
 
 ### `<parallax-element>`
 
@@ -73,16 +73,13 @@ Element with parallax scrolling effect.
 
 #### Attributes
 
-- `image-src`
-  URL to the background image.
+- `image-src`: URL to the background image.
   - Required.
-- `velocity-x` `velocity-y`
-  Controls how fast the background scrolls.
+- `velocity-x` `velocity-y`: Controls how fast the background scrolls.
   - `velocity=1` means scrolling at the same speed as the parent (no parallaxing).
   - `velocity=0` means the background does not move at all (fixed background).
   - Accepts floating point numbers.
   - `velocity-x` defaults to `1`, `velocity-y` defaults to `0.8`.
-- `align-x` `align-y`
-  Aligns the background to the container.
+- `align-x` `align-y`: Aligns the background to the container.
   - Accepts `center`, `left`, `right`, `top`, `bottom` and percentage strings (e.g. `80%`).
   - `align-x`, `align-y` both defaults to `center`.

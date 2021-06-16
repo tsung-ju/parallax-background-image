@@ -19,8 +19,8 @@ simple, responsive parallax scrolling effect.
 
 ```html
 <script
-  src="https://cdn.jsdelivr.net/gh/tsung-ju/parallax-background-image@v2.3.7/dist/parallax-background-image.js"
-  integrity="sha384-utfUUwQRXiICyokSewoqD1DPWcktDdk1+Mf2gFnJ2SWfxQ/xzcTiMWCmCC9j+C6m"
+  src="https://cdn.jsdelivr.net/gh/tsung-ju/parallax-background-image@v3.0.0/dist/parallax-background-image.js"
+  integrity="sha384-D2/YY2GOVTKWCAYZxDb92cK+QbHUuC65RBQLY4Pv1KlEcuuu0w++8tNkUJqTM+UT"
   crossorigin="anonymous"
 ></script>
 ```
@@ -63,6 +63,7 @@ For complete example see `demo.html`
 A scrollable container block. Used to measure the scrolling position of each `<parallax-element>` and (when backend=3d) set parameters for perspective transform. Each `<parallax-element>` must be contained (directly or indirectly) in an `<parallax-viewport>` for this library to work.
 
 #### Attributes
+
 - `backend`: Selects the method used to apply the parallax effect.
   - Supported values: `2d`, `3d`
   - Defaults to `3d` if the browser is Blink-based, `2d` otherwise.

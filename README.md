@@ -31,9 +31,7 @@ simple, responsive parallax scrolling effect.
 
 ### Setup
 
-Wrap all your site content inside a wrapper element with fixed position and 100% width/height.
-
-NOTE: Don't use `<body>` as the wrapper.
+Wrap all your site content inside a `<parallax-viewport>` with fixed position and 100% width/height.
 
 For example,
 
@@ -49,99 +47,44 @@ For example,
 </head>
 
 <body>
-  <div id="#wrapper">
-    <!-- site content here -->
-  </div>
-
-  <script>
-    /* create a viewport */
-    var viewport = parallax.createViewport("#wrapper");
-
-    /* apply parallax effect to elements inside the viewport (see below) */
-    viewport.add(".some-css-selector");
-    viewport.add(".another-selector");
-
-    /* ... */
-  </script>
+  <parallax-viewport id="wrapper">
+    <parallax-element image-src="my-background-image1.jpg">
+      ... contents
+    </parallax-element>
+    <div>
+      <parallax-element image-src="my-background-image2.jpg">
+        nesting is also supported
+      </parallax-element>
+    </div>
+  </parallax-viewport>
 </body>
-```
-
-### Apply parallax effect
-
-```javascript
-/* apply parallax effect to selected elements */
-viewport.add(".select-some-elements");
-
-/* specify the velocity of the background image.
-   more precisely, it's the ratio between velocities of the image and the element.
-   values greater than 1 make the image move faster than the element.
-   values less than 1 make the image move slower than the element.
-   (Default: 0.8) */
-viewport.add(".another-selector", { velocity: 1.2 });
-
-/* align the background image to the left (Default: 'center') */
-viewport.add(".hello-selector", { alignX: "left" });
-
-/* use custom background image (Default: read `background-image` from element style) */
-viewport.add(".custom-background-image", { image: "http://domain/xxx.jpg" });
-
-/* use different options for each element */
-viewport.add(".random-velocity", element => ({
-  velocity: Math.random() * 2
-}));
-
-/* declarative style
-  <div class="declarative-style" data-background-image="..." data-velocity="..."></div> */
-viewport.add(".declarative-style", element => ({
-  velocity: parseFloat(element.dataset.velocity),
-  image: element.dataset.backgroundImage
-}));
 ```
 
 For complete example see `demo.html`
 
 ## API
 
-### `parallax.createViewport(rootElement[, options])`
+### `<parallax-viewport>`
 
-#### Parameters
+#### Attributes
 
-- `rootElement` **HTMLElement** or **string** (CSS selector) - A scrollable container element.
-  - NOTE: Don't use `<body>` as the viewport.
-- `options` **Object** - All fields are optional
-  - `use3d` **boolean** - If `true`, use perspective transform (pure CSS parallax), otherwise use js-based animation. Default `false` on non-chromium browsers.
+- `backend`
+  Supported values: `2d`, `3d`
+  Defaults to `3d` if the browser is Blink-based, `2d` otherwise.
 
-### Instance Methods
+### `<parallax-element>`
 
-### `viewport.add(elements[, options])`
+#### Attributes
 
-Apply parallax effect to element(s).
-
-#### Parameters
-
-- `elements` - Can be:
-  - A CSS selector
-  - A HTMLElement
-  - A NodeList
-  - An array of HTMLElements
-- `options` - Can be a plain object, or a function which accepts an **HTMLElement** and returns an object. All fields are optional.
-  - `velocity` **Number** - Ratio between velocities of the image and the element. Must be positive. - Default `0.8`
-  - `alignX` **string** - Horizontal alignment for the image. Accepts a percentage string (e.g. `'87%'`). Default `'center'`
-    - shorthands: `'left'` = `'0%'`, `'right'` = `'100%'`, `'center'` = `'50%'`
-  - `image` **string** - Url to the image. - Default `parallax.cssBackgroundImage` (read `background-image` from element style)
-  - `renderer` **RendererClass** - How to render the image - Default `parallax.ImageElementRenderer`
-    - `parallax.ImageElementRenderer` - prepend an `<img>` to the element.
-    - `parallax.PseudoElementRenderer` - use CSS `::before`.
-      - NOTE: It is much slower than `ImageElementRenderer`.
-
-### `viewport.remove(elements)`
-
-Remove parallax effect from element(s).
-
-#### Parameters
-
-- `elements` - Can be:
-  - A CSS selector
-  - A HTMLElement
-  - A NodeList
-  - An array of HTMLElements
+- `image-src`
+  URL to the background image. Required.
+- `velocity-x` `velocity-y`
+  Controls how fast the background scrolls.
+  `velocity=1` means scrolling at the same speed as the parent (no parallaxing).
+  `velocity=0` means the background does not move at all (fixed background).
+  Accepts floating point numbers.
+  `velocity-x` defaults to `1`, `velocity-y` defaults to `0.8`.
+- `align-x` `align-y`
+  Aligns the background to the container.
+  Accepts `center`, `left`, `right`, `top`, `bottom` and percentage strings (e.g. `80%`).
+  `align-x`, `align-y` both defaults to `center`.

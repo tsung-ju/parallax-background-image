@@ -7,13 +7,23 @@ simple, responsive parallax scrolling effect.
 - works on mobile devices
 - automatically switch to [pure CSS parallax effect](https://keithclark.co.uk/articles/pure-css-parallax-websites/) if supported by the browser
 - zero dependencies
-- simple(?) api
+- simple WebComponents-based api
 
 ## Demo
 
 <https://tsung-ju.github.io/parallax-background-image/demo.html>
 
-## CDN
+## Installation
+
+```sh
+npm install parallax-background-image
+```
+
+```js
+import "parallax-background-image";
+```
+
+Or use a CDN:
 
 <!-- begin-script-tag -->
 

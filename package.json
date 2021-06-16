@@ -1,10 +1,14 @@
 {
   "name": "parallax-background-image",
   "version": "3.0.0",
-  "description": "js parallax background-image",
+  "description": "A web component for parallax effect",
   "type": "module",
   "main": "src/main.js",
   "unpkg": "dist/parallax-background-image.js",
+  "files": [
+    "dist/**/*",
+    "src/**/*"
+  ],
   "scripts": {
     "prettier": "prettier --write README.md demo.html \"src/**/*.js\" \"tools/**/*.js\"",
     "prebuild": "npm run prettier",
@@ -15,14 +19,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ray851107/parallax-background-image.git"
+    "url": "git+https://github.com/tsung-ju/parallax-background-image.git"
   },
   "author": "ray851107",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ray851107/parallax-background-image/issues"
+    "url": "https://github.com/tsung-ju/parallax-background-image/issues"
   },
-  "homepage": "https://github.com/ray851107/parallax-background-image#readme",
+  "homepage": "https://github.com/tsung-ju/parallax-background-image#readme",
   "devDependencies": {
     "esbuild": "^0.12.8",
     "prettier": "^1.19.1",

@@ -14,7 +14,6 @@ template.innerHTML = `
       perspective: 1px;
       perspective-origin: 0 0;
     }
-    :host
   </style>
   <slot></slot>
 `;

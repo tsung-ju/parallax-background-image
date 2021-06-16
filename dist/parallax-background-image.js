@@ -13,10 +13,9 @@
       perspective: 1px;
       perspective-origin: 0 0;
     }
-    :host
   </style>
   <slot></slot>
-`;var c=class extends HTMLElement{get backend(){return this.getAttribute("backend")}set backend(t){this.setAttribute("backend",t)}constructor(){super();this.hasAttribute("backend")||this.setAttribute("backend",R()?"3d":"2d"),this.attachShadow({mode:"open"}),this.shadowRoot.appendChild(p.content.cloneNode(!0))}};function R(){let e=navigator.userAgent;return e.indexOf("Chrome/")!==-1&&e.indexOf("Edge/")===-1}function g(e,t,i,n){let{alignX:s,velocity:r,backend:w}=n,b=t.w,x=r*t.h+Math.abs(1-r)*i.h,o=Math.max(x/e.h,b/e.w),d=s*(t.w-e.w*o),l=t.h/2-e.h*o/2,a=0,m=i.h/2-t.h/2;return w==="3d"?(a=1-1/r,d-=t.x*a,l+=m*a,o/=r):l+=(t.y-m)*(r-1),{x:d,y:l,z:a,s:o}}var f=document.createElement("template");f.innerHTML=`
+`;var c=class extends HTMLElement{get backend(){return this.getAttribute("backend")}set backend(t){this.setAttribute("backend",t)}constructor(){super();this.hasAttribute("backend")||this.setAttribute("backend",R()?"3d":"2d"),this.attachShadow({mode:"open"}),this.shadowRoot.appendChild(p.content.cloneNode(!0))}};function R(){let e=navigator.userAgent;return e.indexOf("Chrome/")!==-1&&e.indexOf("Edge/")===-1}function g(e,t,i,n){let{alignX:s,velocity:r,backend:w}=n,b=t.w,x=r*t.h+Math.abs(1-r)*i.h,a=Math.max(x/e.h,b/e.w),d=s*(t.w-e.w*a),l=t.h/2-e.h*a/2,o=0,m=i.h/2-t.h/2;return w==="3d"?(o=1-1/r,d-=t.x*o,l+=m*o,a/=r):l+=(t.y-m)*(r-1),{x:d,y:l,z:o,s:a}}var f=document.createElement("template");f.innerHTML=`
   <style>
     :host {
       display: block;

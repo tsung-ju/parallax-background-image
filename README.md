@@ -29,8 +29,8 @@ Or use a CDN:
 
 ```html
 <script
-  src="https://cdn.jsdelivr.net/gh/tsung-ju/parallax-background-image@v3.0.0/dist/parallax-background-image.js"
-  integrity="sha384-D2/YY2GOVTKWCAYZxDb92cK+QbHUuC65RBQLY4Pv1KlEcuuu0w++8tNkUJqTM+UT"
+  src="https://cdn.jsdelivr.net/npm/parallax-background-image@3.0.0/dist/parallax-background-image.js"
+  integrity="sha384-uVjkBr9MEDumaqLrp1mdd1rSDR8bq/EvUpTpwUBBv4Hz12IFVjhnEAG37S9/YaiE"
   crossorigin="anonymous"
 ></script>
 ```

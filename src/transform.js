@@ -16,9 +16,9 @@ export function createTransform(image, element, viewport, options) {
   let v = backend === "3d" ? velocity.y : 1;
   if (v <= 0) v = 1;
 
-  x = (x - centerX * (velocity.x - 1)) / v + element.x * (velocity.x / v - 1);
-  y = (y - centerY * (velocity.y - 1)) / v + element.y * (velocity.y / v - 1);
-  z = 1 - 1 / v;
+  x = (x + (1 - velocity.x) * centerX + (velocity.x - v) * element.x) / v;
+  y = (y + (1 - velocity.y) * centerY + (velocity.y - v) * element.y) / v;
+  z = (v - 1) / v;
   s = s / v;
 
   return { x, y, z, s };

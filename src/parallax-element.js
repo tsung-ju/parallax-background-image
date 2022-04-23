@@ -104,6 +104,8 @@ export class ParallaxElement extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
     this.image = this.shadowRoot.getElementById("image");
+
+    this.currentTransform = null;
     this.animationRequestId = null;
 
     this.image.addEventListener("load", this.updateTransform);
@@ -140,19 +142,18 @@ export class ParallaxElement extends HTMLElement {
   updateTransform = () => {
     if (this.viewport == null) return;
 
-    const transform = this.computeTransform();
-
-    if (this.transform != null && equals(this.transform, transform)) {
-      return;
-    }
-
-    if (this.animationRequestId == null) {
+    if (this.animationRequestId != null) {
       cancelAnimationFrame(this.animationRequestId);
       this.animationRequestId = null;
     }
 
+    const transform = this.computeTransform();
+
+    if (equals(this.currentTransform, transform)) return;
+
     this.animationRequestId = requestAnimationFrame(() => {
       this.animationRequestId = null;
+      this.currentTransform = transform;
       this.renderTransform(transform);
     });
   };
@@ -180,6 +181,7 @@ export class ParallaxElement extends HTMLElement {
 }
 
 function equals(a, b) {
+  if (a == null) return b == null;
   return a.x === b.x && a.y === b.y && a.z === b.z && a.s === b.s;
 }
 

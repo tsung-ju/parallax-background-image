@@ -1,6 +1,6 @@
 {
   "name": "parallax-background-image",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A web component for parallax effect",
   "type": "module",
   "main": "src/main.js",

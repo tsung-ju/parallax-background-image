@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/tsung-ju/parallax-background-image#readme",
   "devDependencies": {
-    "esbuild": "^0.12.8",
+    "esbuild": "^0.25.0",
     "prettier": "^1.19.1",
     "ssri": "^8.0.1"
   },
